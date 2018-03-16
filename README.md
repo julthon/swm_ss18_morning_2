@@ -1,1 +1,7 @@
-# sew_ss18_morning_2
+# SW-Entwicklung & Wissensmanagement | SW-Technologie | Mobile Applications Project
+Group: XP Morning 2
+Project name: tbd
+Project platform: tbd
+
+## Description
+
