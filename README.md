@@ -1,9 +1,9 @@
 # SW-Entwicklung & Wissensmanagement | SW-Technologie | Mobile Applications Project
 Group: XP Morning 2
 
-Project name: tbd
+Project name: Recipr
 
-Project platform: tbd
+Project platform: TeamXtreme
 
 ## Description
 
