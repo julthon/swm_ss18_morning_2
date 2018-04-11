@@ -1,4 +1,4 @@
-package teamxtreme.recipr;
+package at.tugraz.recipro.recipro;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package teamxtreme.recipr;
+package at.tugraz.recipro.recipro;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("teamxtreme.recipr", appContext.getPackageName());
+        assertEquals("at.tugraz.recipro.recipro", appContext.getPackageName());
     }
 }
