@@ -5,18 +5,26 @@
  */
 package at.tugraz.recipro;
 
+import at.tugraz.recipro.recipes.control.RecipeManager;
+import at.tugraz.recipro.recipes.entity.Recipe;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import javax.inject.Inject;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  *
  * @author Edith
  */
 public class RecipeTest {
+    
+    @Inject
+    RecipeManager recipeManager;
+    
     
     public RecipeTest() {
     }

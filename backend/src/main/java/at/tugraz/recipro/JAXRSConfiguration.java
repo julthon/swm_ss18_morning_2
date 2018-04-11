@@ -1,4 +1,4 @@
-package com.airhacks;
+package at.tugraz.recipro;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

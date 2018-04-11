@@ -19,10 +19,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
-            <scope>provided</scope>
+            <type>jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
