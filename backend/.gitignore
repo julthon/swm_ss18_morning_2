@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+db.development.sqlite
+.idea
+.netbeans
+.eclipse
