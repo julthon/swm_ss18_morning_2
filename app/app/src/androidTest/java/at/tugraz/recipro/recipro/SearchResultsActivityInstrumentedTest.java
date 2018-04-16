@@ -1,8 +1,3 @@
-
-/**
- * Created by Richard on 16.04.2018.
- */
-
 package at.tugraz.recipro.recipro;
 
 import android.support.test.rule.ActivityTestRule;
@@ -76,6 +71,4 @@ public class SearchResultsActivityInstrumentedTest {
         onData(anything()).inAdapterView(withId(R.id.lvSearchResults)).atPosition(3).onChildView(withId(R.id.tvTime)).check(matches(withText("30min")));
         onData(anything()).inAdapterView(withId(R.id.lvSearchResults)).atPosition(3).onChildView(withId(R.id.rbRating)).check(matches(isDisplayed()));
     }
-
-
 }

@@ -1,9 +1,5 @@
 package at.tugraz.recipro.data;
 
-/**
- * Created by Richard on 16.04.2018.
- */
-
 public class Recipe {
 
     private String title;
