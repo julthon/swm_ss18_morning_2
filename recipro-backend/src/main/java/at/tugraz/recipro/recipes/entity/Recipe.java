@@ -31,12 +31,14 @@ public class Recipe {
     
     @Id
     @GeneratedValue
-    @JsonbTransient
     private long id;
     
     private String title;
     private int preparationTime;
     private List<RecipeType> recipeTypes;
+    private String description;
+
+    
     
     static final String PREFIX = "recipes.entity.Recipe.";
     public static final String FIND_ALL = PREFIX + "findAll";
@@ -76,5 +78,13 @@ public class Recipe {
 
     public void setRecipeTypes(List<RecipeType> recipeTypes) {
         this.recipeTypes = recipeTypes;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

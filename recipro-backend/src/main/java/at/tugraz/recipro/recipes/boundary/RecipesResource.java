@@ -34,10 +34,10 @@ public class RecipesResource {
     }
     
     @GET
-    @Path("{title}")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Recipe> find(@PathParam("title") String title) {
-        return recipesManager.findByTitle(title);
+    public Recipe findById(@PathParam("id") long id) {
+        return recipesManager.findById(id);
     }
     
     @GET

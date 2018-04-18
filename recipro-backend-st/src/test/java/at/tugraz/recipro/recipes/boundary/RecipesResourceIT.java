@@ -57,6 +57,7 @@ public class RecipesResourceIT {
                 .add("title", "Erdbeerkuchen")
                 .add("preparationTime", 120)
                 .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Best recipe ever.")
                 .build();
         
         Response response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
@@ -66,6 +67,7 @@ public class RecipesResourceIT {
                 .add("title", "Kuchen")
                 .add("preparationTime", 140)
                 .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Best recipe ever.")
                 .build();
         
         response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
@@ -75,28 +77,37 @@ public class RecipesResourceIT {
                 .add("title", "Torte")
                 .add("preparationTime", 60)
                 .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Best recipe ever.")
                 .build();
         
         response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
         assertThat(response.getStatus(), is(204));
     }
     
+    
     @Test
-    public void findRecipesByTitle() {
-        String title = "Kuchen";
+    public void findRecipeById(){
+        int id = 1;
         
         Response response = this.provider.target()
-                .path(title)
+                .path(Integer.toString(id))
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
         assertThat(response.getStatus(), is(200));
-         
-        JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("findRecipesByTitle payload " + payload);
+
+        JsonObject payload = response.readEntity(JsonObject.class);
+        System.out.println("findRecipeById payload " + payload);
         
-        assertThat(payload.size(), is(2));
-        assert(payload.stream().allMatch(x -> ((JsonObject) x).getString("title").toLowerCase().contains(title.toLowerCase())));
+        assertThat(payload.getInt("id"), is(1));
+        assertThat(payload.getString("title"), is("Erdbeerkuchen"));
+        assertThat(payload.getInt("preparationTime"), is(120));
+        assertThat(payload.getString("description"), is("Best recipe ever."));
+        assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
+        assertThat(payload.getJsonArray("recipeTypes").getJsonString(1), is("DESSERT"));
+        assertThat(payload.getJsonArray("recipeTypes").getJsonString(2), is("SNACK"));
+
+
     }
     
     @Test
@@ -112,5 +123,11 @@ public class RecipesResourceIT {
         System.out.println("findAllRecipes payload " + payload);
         
         assertThat(payload.size(), is(3));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getInt("id") > 0));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getInt("preparationTime") > 0));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getString("description") != null));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getString("title") != null));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes") != null));
+
     }
 }

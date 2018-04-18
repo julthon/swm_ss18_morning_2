@@ -36,4 +36,9 @@ public class RecipesManager {
         return this.entityManager.createNamedQuery(Recipe.FIND_ALL, Recipe.class)
                 .getResultList();
     }
+
+    public Recipe findById(long id) {
+        System.out.println(this.entityManager.find(Recipe.class, id).getTitle());
+        return this.entityManager.find(Recipe.class, id);
+    }
 }
