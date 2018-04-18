@@ -111,6 +111,31 @@ public class RecipesResourceIT {
     }
     
     @Test
+    public void findRecipesByTitleAndType(){
+        JsonObjectBuilder findQueryBuilder = Json.createObjectBuilder();
+        JsonObject findQuery = findQueryBuilder
+                .add("title", "Kuchen")
+                .add("type", "dessert")
+                .build();
+        
+        Response response = this.provider.target()
+                .path("find")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(findQuery));
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("findRecipesByTitleAndType payload " + payload);
+        
+        assertThat(payload.size(), is(2));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getString("title").contains("kuchen")));                
+
+
+    }
+    //{"title": "cake", "type": "dessert", "time_to_prepare": "45", "min_rating": "3"}
+    
+    @Test
     public void findAllRecipes() {
         Response response = this.provider.target()
                 .path("all")

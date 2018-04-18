@@ -7,6 +7,8 @@ package at.tugraz.recipro.recipes.boundary;
 
 import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
+import at.tugraz.recipro.recipes.entity.RecipeQuery;
+import java.util.Collections;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,6 +33,12 @@ public class RecipesResource {
     @POST
     public void create(Recipe recipe) {
         recipesManager.save(recipe);
+    }
+    
+    @POST
+    @Path("find")
+    public List<Recipe> find(RecipeQuery query){
+       return Collections.emptyList();
     }
     
     @GET
