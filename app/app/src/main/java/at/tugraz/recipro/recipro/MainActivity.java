@@ -6,6 +6,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,14 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity {
+import java.util.ArrayList;
+
+import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Recipe;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ListView lvSearchResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,10 @@ public class MainActivity extends ListActivity {
             public boolean onQueryTextChange(String s) {
                 return true;
             }
+
         });
+
+        
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -47,9 +58,26 @@ public class MainActivity extends ListActivity {
             searchFor(query);
         }
 
+        lvSearchResults = (ListView) findViewById(android.R.id.list);
+        ArrayList<Recipe> recipies = new ArrayList<Recipe>();
+        RecipesAdapter adapter = new RecipesAdapter(this, recipies);
+        lvSearchResults.setAdapter(adapter);
+
     }
 
     private void searchFor(String query) {
-        Toast.makeText(this, "Query: " + query, Toast.LENGTH_SHORT).show();
+        RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
+        adapter.clear();
+        adapter.add(new Recipe("Recipe #1", 20, 5.0));
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void fillWithTestData() {
+        RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
+        adapter.clear();
+        adapter.add(new Recipe("Recipe #1", 20, 5.0));
+        adapter.add(new Recipe("Recipe #2", 40, 4.0));
+        adapter.add(new Recipe("Recipe #3", 10, 1.0));
+        adapter.add(new Recipe("Recipe #4", 30, 3.0));
     }
 }
