@@ -117,24 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        /*
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        restTemplate.g
-        String result = restTemplate.getForObject(url, String.class, "Android");
-        */
-
-        /*
-        ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Kalbschnitzel"), "4"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Salz"), "eine Prise"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Eier"), "3"));
-
-        Recipe recipe = new Recipe("Schnitzel", 50, 4.5, recipeIngredients, "Für das Wiener Schnitzel...\ntest\nanother line\nadlfjadsf");
-        adapter.add(recipe);*/
-
-
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
