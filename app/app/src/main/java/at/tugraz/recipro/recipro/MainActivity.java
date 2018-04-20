@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -19,7 +20,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.data.RecipeIngredient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,24 +63,41 @@ public class MainActivity extends AppCompatActivity {
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<Recipe>();
-        RecipesAdapter adapter = new RecipesAdapter(this, recipies);
+        final RecipesAdapter adapter = new RecipesAdapter(this, recipies);
         lvSearchResults.setAdapter(adapter);
+
+        lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
+                intent.putExtra("Recipe", adapter.getItem(position));
+
+                startActivity(intent);
+            }
+        });
 
     }
 
     private void searchFor(String query) {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
-        adapter.add(new Recipe("Recipe #1", 20, 5.0));
+        ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
+        recipeIngredients.add(new RecipeIngredient(new Ingredient("Kalbschnitzel"), "4"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient("Salz"), "eine Prise"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient("Eier"), "3"));
+
+        Recipe recipe = new Recipe("Schnitzel", 50, 4.5, recipeIngredients, "Für das Wiener Schnitzel...\ntest\nanother line\nadlfjadsf");
+        adapter.add(recipe);
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void fillWithTestData() {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
-        adapter.add(new Recipe("Recipe #1", 20, 5.0));
-        adapter.add(new Recipe("Recipe #2", 40, 4.0));
-        adapter.add(new Recipe("Recipe #3", 10, 1.0));
-        adapter.add(new Recipe("Recipe #4", 30, 3.0));
+        ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
+        adapter.add(new Recipe("Recipe #1", 20, 5.0, recipeIngredients, ""));
+        adapter.add(new Recipe("Recipe #2", 40, 4.0, recipeIngredients, ""));
+        adapter.add(new Recipe("Recipe #3", 10, 1.0, recipeIngredients, ""));
+        adapter.add(new Recipe("Recipe #4", 30, 3.0, recipeIngredients, ""));
     }
 }
