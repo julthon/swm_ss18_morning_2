@@ -1,15 +1,22 @@
 package at.tugraz.recipro.data;
 
-public class Recipe {
+import java.io.Serializable;
+import java.util.List;
+
+public class Recipe implements Serializable{
 
     private String title;
     private int time;
     private double rating;
+    private  String description;
+    private List<RecipeIngredient> ingredients;
 
-    public Recipe(String title, int time, double rating) {
+    public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
         this.title = title;
         this.time = time;
         this.rating = rating;
+        this.ingredients = ingredients;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -36,4 +43,19 @@ public class Recipe {
         this.rating = rating;
     }
 
+    public List<RecipeIngredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<RecipeIngredient> ingredientList) {
+        this.ingredients = ingredientList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
