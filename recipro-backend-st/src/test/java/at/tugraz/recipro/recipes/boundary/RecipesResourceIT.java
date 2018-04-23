@@ -109,6 +109,23 @@ public class RecipesResourceIT {
     }
     
     @Test
+    public void filterByTitle() {
+        Response response = this.provider.target()
+                .path("filter")
+                .queryParam("title", "Torte")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByTitle payload " + payload);
+        
+        assertThat(payload.size(), is(1));
+        JsonObject obj = payload.getJsonObject(0);
+        assertEquals(obj.getString("title"), "Torte");
+    }
+    
+    @Test
     public void filterPrepTime() {
         Response response = this.provider.target()
                 .path("filter")
@@ -134,7 +151,7 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(200));
         
         JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("filterPrepTime payload " + payload);
+        System.out.println("filterByType payload " + payload);
         
         assertThat(payload.size(), is(1));
         JsonObject obj = payload.getJsonObject(0);
