@@ -6,7 +6,6 @@
 package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -23,40 +22,35 @@ import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
+import org.junit.runners.MethodSorters;
 
 /**
  *
  * @author Dominik
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RecipesResourceIT {
     
     @Rule
     public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
     
     /*private Client client;
-    private WebTarget target;
-    
-    @Before
-    public void initClient() {
-        this.client = ClientBuilder.newClient();
-        this.target = this.client.target("http://localhost:8080/recipro-backend/api/recipes");
-    }
-    */
+    private WebTarget target;*/
     
     @Test
-    public void createRecipes() {
+    public void _createRecipes() {
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
         JsonArray recipeTypesToCreate = recipeTypeBuilder
                 .add("DESSERT")
-                .add("SNACK")
                 .build();
         
         JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
         JsonObject recipeToCreate = recipeBuilder
                 .add("title", "Erdbeerkuchen")
                 .add("preparationTime", 120)
-                .add("recipeTypes", recipeTypesToCreate)
+                .add("recipeTypes", recipeTypeBuilder.add("DESSERT").build())
                 .build();
         
         Response response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
@@ -65,7 +59,7 @@ public class RecipesResourceIT {
         recipeToCreate = recipeBuilder
                 .add("title", "Kuchen")
                 .add("preparationTime", 140)
-                .add("recipeTypes", recipeTypesToCreate)
+                .add("recipeTypes", recipeTypeBuilder.add("SNACK").build())
                 .build();
         
         response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
@@ -74,7 +68,7 @@ public class RecipesResourceIT {
         recipeToCreate = recipeBuilder
                 .add("title", "Torte")
                 .add("preparationTime", 60)
-                .add("recipeTypes", recipeTypesToCreate)
+                .add("recipeTypes", recipeTypeBuilder.add("MAIN_COURSE").build())
                 .build();
         
         response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
@@ -112,5 +106,55 @@ public class RecipesResourceIT {
         System.out.println("findAllRecipes payload " + payload);
         
         assertThat(payload.size(), is(3));
+    }
+    
+    @Test
+    public void filterByTitle() {
+        Response response = this.provider.target()
+                .path("filter")
+                .queryParam("title", "Torte")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByTitle payload " + payload);
+        
+        assertThat(payload.size(), is(1));
+        JsonObject obj = payload.getJsonObject(0);
+        assertEquals(obj.getString("title"), "Torte");
+    }
+    
+    @Test
+    public void filterPrepTime() {
+        Response response = this.provider.target()
+                .path("filter")
+                .queryParam("minpreptime", "61")
+                .queryParam("maxpreptime", "139")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterPrepTime payload " + payload);
+        
+        assertThat(payload.size(), is(1));
+    }
+    
+    @Test
+    public void filterByType() {
+        Response response = this.provider.target()
+                .path("filter")
+                .queryParam("types", "MAIN_COURSE")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByType payload " + payload);
+        
+        assertThat(payload.size(), is(1));
+        JsonObject obj = payload.getJsonObject(0);
+        assertEquals(obj.getString("title"), "Torte");
     }
 }
