@@ -1,14 +1,26 @@
 package at.tugraz.recipro.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Serializable{
 
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("preparationTime")
     private int time;
+
+    @SerializedName("rating")
     private double rating;
-    private  String description;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("ingredients")
     private List<RecipeIngredient> ingredients;
 
     public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
@@ -17,6 +29,10 @@ public class Recipe implements Serializable{
         this.rating = rating;
         this.ingredients = ingredients;
         this.description = description;
+    }
+
+    public Recipe() {
+        ingredients = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -57,5 +73,16 @@ public class Recipe implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "title='" + title + '\'' +
+                ", time=" + time +
+                ", rating=" + rating +
+                ", description='" + description + '\'' +
+                ", ingredients=" + ingredients +
+                '}';
     }
 }
