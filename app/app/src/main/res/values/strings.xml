@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">ReciPro</string>
-    <string name="search_hint">Suche nach Rezepte</string>
-    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="search_hint">Search for recipes</string>
 </resources>
