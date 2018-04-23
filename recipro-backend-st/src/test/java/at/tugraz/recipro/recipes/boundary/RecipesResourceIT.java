@@ -113,4 +113,21 @@ public class RecipesResourceIT {
         
         assertThat(payload.size(), is(3));
     }
+    
+        @Test
+    public void filterPrepTime() {
+        Response response = this.provider.target()
+                .path("filter")
+                .queryParam(RecipesResource.FILTER_MIN_PREPARATION_TIME,  61)
+                .queryParam(RecipesResource.FILTER_MAX_PREPARATION_TIME,  139)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterPrepTime payload " + payload);
+        
+        assertThat(payload.size(), is(1));
+    }
 }

@@ -42,7 +42,18 @@ public class RecipesResourceTest {
     public void findAllRecipes() {
         when(this.recipesResource.recipesManager.findAll()).thenReturn(new ArrayList<>());
         recipesResource.findAll();
+    }
+    
+    @Test
+    public void filterPrepTime() {
+        Recipe recipe1 = new Recipe("Torte", 60);
+        Recipe recipe2 = new Recipe("Kuchen", 45);
+        Recipe recipe3 = new Recipe("Strudel", 30);
+        recipesResource.create(recipe1);
+        recipesResource.create(recipe2);
+        recipesResource.create(recipe3);
         
+        assertEquals(recipe2, recipesResource.recipesManager.filter(31, 59).get(0));
     }
     
 }
