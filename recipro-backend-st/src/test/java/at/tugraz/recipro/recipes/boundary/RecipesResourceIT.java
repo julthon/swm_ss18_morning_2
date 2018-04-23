@@ -166,7 +166,6 @@ public class RecipesResourceIT {
         
         
         response = this.provider.target()
-                .path("filter")
                 .queryParam("title", title.toLowerCase())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
@@ -206,7 +205,6 @@ public class RecipesResourceIT {
         int minpreptime = 50;
         int maxpreptime = 200;
         response = this.provider.target()
-                .path("filter")
                 .queryParam("minpreptime", Integer.toString(minpreptime))
                 .queryParam("maxpreptime", Integer.toString(maxpreptime))
                 .request(MediaType.APPLICATION_JSON)
@@ -216,14 +214,40 @@ public class RecipesResourceIT {
         JsonArray payload = response.readEntity(JsonArray.class);
         System.out.println("filterPrepTime payload " + payload);
          
-        assert(payload.stream().allMatch(x -> ((JsonObject) x).getInt("minpreptime") >= minpreptime
-                                            && ((JsonObject) x).getInt("maxpreptime") <= maxpreptime));
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getInt("preparationTime") >= minpreptime
+                                            && ((JsonObject) x).getInt("preparationTime") <= maxpreptime));
     }
     
     @Test
     public void filterByType() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Schnitzel")
+                .add("preparationTime", 100)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very good.")
+                .build();
+        
         Response response = this.provider.target()
-                .path("filter")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Auflauf")
+                .add("preparationTime", 40)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .build();
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
                 .queryParam("types", "MAIN_COURSE")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
@@ -232,8 +256,6 @@ public class RecipesResourceIT {
         JsonArray payload = response.readEntity(JsonArray.class);
         System.out.println("filterByType payload " + payload);
         
-        assertThat(payload.size(), is(1));
-        JsonObject obj = payload.getJsonObject(0);
-        assertEquals(obj.getString("title"), "Torte");
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
 }
