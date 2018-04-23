@@ -22,8 +22,8 @@ public class RecipesManager {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void save(Recipe recipe) {
-        this.entityManager.merge(recipe);
+    public Recipe save(Recipe recipe) {
+        return this.entityManager.merge(recipe);
     }
 
     public List<Recipe> findByTitle(String title) {
@@ -38,7 +38,6 @@ public class RecipesManager {
     }
 
     public Recipe findById(long id) {
-        System.out.println(this.entityManager.find(Recipe.class, id).getTitle());
         return this.entityManager.find(Recipe.class, id);
     }
 }

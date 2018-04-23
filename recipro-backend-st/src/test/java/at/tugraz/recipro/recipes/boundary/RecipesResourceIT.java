@@ -11,17 +11,12 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.runners.MethodSorters;
@@ -76,21 +71,52 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void findRecipesByTitle() {
-        String title = "Kuchen";
+    public void createAndFindRecipeById(){
+        
+        String title = "Bananenkuchen";
+        String description = "Best recipe ever.";
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("DESSERT")
+                .add("SNACK")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", title)
+                .add("preparationTime", 120)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", description)
+                .build();
         
         Response response = this.provider.target()
-                .path(title)
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        String location = response.getHeaderString("Location");
+        System.out.println("findRecipeById location " + location);
+        
+        response = this.provider
+                .target(location)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
         assertThat(response.getStatus(), is(200));
-         
-        JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("findRecipesByTitle payload " + payload);
+
+        JsonObject payload = response.readEntity(JsonObject.class);
+        System.out.println("findRecipeById payload " + payload);
+
+        int id = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
         
-        assertThat(payload.size(), is(2));
-        assert(payload.stream().allMatch(x -> ((JsonObject) x).getString("title").toLowerCase().contains(title.toLowerCase())));
+        assertThat(payload.getInt("id"), is(id));
+        assertThat(payload.getString("title"), is(title));
+        assertThat(payload.getInt("preparationTime"), is(120));
+        assertThat(payload.getString("description"), is(description));
+        assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
+        assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
     }
     
     @Test
