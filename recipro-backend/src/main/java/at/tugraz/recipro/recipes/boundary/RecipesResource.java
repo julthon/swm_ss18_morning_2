@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 public class RecipesResource {
     
+    public static final String FILTER_TITLE = "title";
     public static final String FILTER_MIN_PREPARATION_TIME = "minpreptime";
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
@@ -52,7 +53,8 @@ public class RecipesResource {
     @GET
     @Path("filter")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Recipe> filter(@DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
+    public List<Recipe> filter(@DefaultValue("") @QueryParam(FILTER_TITLE) String title,
+                               @DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
                                @DefaultValue("999999") @QueryParam(FILTER_MAX_PREPARATION_TIME) int maxpreptime,
                                @QueryParam(FILTER_TYPES) List<String> types) {
         ArrayList<RecipeType> typeList = new ArrayList<>();
@@ -63,8 +65,10 @@ public class RecipesResource {
         return recipesManager
                 .findAll()
                 .stream()
-                .filter((Recipe r) -> (r.getPreparationTime() > minpreptime && 
-                        r.getPreparationTime() < maxpreptime) && 
+                .filter((Recipe r) -> (
+                        (title.isEmpty() || r.getTitle().toLowerCase().contains(title.toLowerCase())) && 
+                        (r.getPreparationTime() > minpreptime && 
+                         r.getPreparationTime() < maxpreptime)) && 
                         (typeList.size() == 0 || r.getRecipeTypes()
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
