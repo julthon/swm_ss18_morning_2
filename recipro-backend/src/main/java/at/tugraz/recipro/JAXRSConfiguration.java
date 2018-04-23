@@ -3,7 +3,7 @@ package at.tugraz.recipro;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-/**
+/*
  * /register
  * /login
  * /recipes/create
