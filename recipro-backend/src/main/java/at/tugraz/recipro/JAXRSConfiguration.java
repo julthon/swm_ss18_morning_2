@@ -6,13 +6,20 @@ import javax.ws.rs.core.Application;
 /*
  * /register
  * /login
- * /recipes/create
- * /recipes/find (Post)
- *   {"title": "cake", "type": "dessert", "time_to_prepare": "45", "min_rating": "3"}
- * /recipes/{title}
- *   [{"preparationTime": 10, "recipeTypes": ["DESSERT"], "title": "{title}"}]
- * /recipes/filter?minpreptime=1&maxpreptime=999 (Get)
- *   [{"preparationTime": 10, "recipeTypes": ["DESSERT"], "title": "Kuchen"}]
+ *
+ * /recipes (POST)
+ *   takes: {"description": "Best recipe ever.", "preparationTime": 120, "recipeTypes": ["DESSERT","SNACK"], "title": "Bananenkuchen"}
+ *   returns: 201 and location header for created recipe
+ *
+ * /recipes (GET)
+ *   returns: 200 and [{"description": "Schnell und einfach" ,"id": 3, "preparationTime": 235, "recipeTypes": ["MAIN_COURSE"], "title": "Gulasch"}]
+ * 
+ * /recipes/{id} (GET)
+ *   returns: 200 and {"id": {id}, "description": "Best recipe ever.", "preparationTime": 120, "recipeTypes": ["DESSERT","SNACK"], "title": "Bananenkuchen"}
+ *
+ * /recipes?title=kuchen&minpreptime=1&maxpreptime=999 (GET)
+ *   returns: 200 and [{"preparationTime": 10, "recipeTypes": ["DESSERT"], "title": "Kuchen"}]
+ *
  * /recipes/delete
  * /recipes/update
  */

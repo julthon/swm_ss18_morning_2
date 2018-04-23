@@ -51,14 +51,18 @@ public class RecipesResource {
     }
     
     @GET
-    @Path("{title}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Recipe> find(@PathParam("title") String title) {
-        return recipesManager.findByTitle(title);
+    public List<Recipe> findAll() {
+        return recipesManager.findAll();
     }
     
     @GET
-    @Path("filter")
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Recipe findById(@PathParam("id") long id) {
+        return recipesManager.findById(id);
+    }
+    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Recipe> filter(@DefaultValue("") @QueryParam(FILTER_TITLE) String title,
                                @DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
@@ -80,11 +84,5 @@ public class RecipesResource {
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
                 .collect(Collectors.toList());
-    }
-    
-    @GET
-    @Path("all")
-    public List<Recipe> findAll() {
-        return recipesManager.findAll();
     }
 }

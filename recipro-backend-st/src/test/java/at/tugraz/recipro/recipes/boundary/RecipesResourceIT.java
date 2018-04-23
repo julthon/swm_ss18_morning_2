@@ -14,6 +14,8 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -30,45 +32,6 @@ public class RecipesResourceIT {
     
     @Rule
     public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
-    
-    /*private Client client;
-    private WebTarget target;*/
-    
-    @Test
-    public void _createRecipes() {
-        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
-        JsonArray recipeTypesToCreate = recipeTypeBuilder
-                .add("DESSERT")
-                .build();
-        
-        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
-        JsonObject recipeToCreate = recipeBuilder
-                .add("title", "Erdbeerkuchen")
-                .add("preparationTime", 120)
-                .add("recipeTypes", recipeTypeBuilder.add("DESSERT").build())
-                .build();
-        
-        Response response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
-        assertThat(response.getStatus(), is(204));
-        
-        recipeToCreate = recipeBuilder
-                .add("title", "Kuchen")
-                .add("preparationTime", 140)
-                .add("recipeTypes", recipeTypeBuilder.add("SNACK").build())
-                .build();
-        
-        response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
-        assertThat(response.getStatus(), is(204));
-        
-        recipeToCreate = recipeBuilder
-                .add("title", "Torte")
-                .add("preparationTime", 60)
-                .add("recipeTypes", recipeTypeBuilder.add("MAIN_COURSE").build())
-                .build();
-        
-        response = this.provider.target().request(MediaType.APPLICATION_JSON).post(Entity.json(recipeToCreate));
-        assertThat(response.getStatus(), is(204));
-    }
     
     @Test
     public void createAndFindRecipeById(){
@@ -121,8 +84,27 @@ public class RecipesResourceIT {
     
     @Test
     public void findAllRecipes() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Gulasch")
+                .add("preparationTime", 235)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Schnell und einfach")
+                .build();
+        
         Response response = this.provider.target()
-                .path("all")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
@@ -131,7 +113,7 @@ public class RecipesResourceIT {
         JsonArray payload = response.readEntity(JsonArray.class);
         System.out.println("findAllRecipes payload " + payload);
         
-        assertThat(payload.size(), is(3));
+        assert(payload.size() > 0);
     }
     
     @Test
