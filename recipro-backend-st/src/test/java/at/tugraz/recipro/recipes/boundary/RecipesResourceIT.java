@@ -243,6 +243,8 @@ public class RecipesResourceIT {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(recipeToCreate));
         
+        assertThat(response.getStatus(), is(201));
+        
         recipeToCreate = recipeBuilder
                 .add("title", "Auflauf")
                 .add("preparationTime", 40)
@@ -250,12 +252,17 @@ public class RecipesResourceIT {
                 .add("description", "Nice.")
                 .build();
         
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
         assertThat(response.getStatus(), is(201));
         
         response = this.provider.target()
                 .queryParam("types", "MAIN_COURSE")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
+        
         assertThat(response.getStatus(), is(200));
         
         JsonArray payload = response.readEntity(JsonArray.class);

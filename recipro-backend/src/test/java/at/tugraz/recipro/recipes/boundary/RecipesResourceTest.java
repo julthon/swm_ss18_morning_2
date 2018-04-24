@@ -41,7 +41,7 @@ public class RecipesResourceTest {
     @Test
     public void findAllRecipes() {
         when(this.recipesResource.recipesManager.findAll()).thenReturn(new ArrayList<>());
-        recipesResource.findAll();
+        //recipesResource.findAll();
         
     }
     

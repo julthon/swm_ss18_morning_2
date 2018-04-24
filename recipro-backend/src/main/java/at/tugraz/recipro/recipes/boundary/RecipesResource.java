@@ -8,6 +8,7 @@ package at.tugraz.recipro.recipes.boundary;
 import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
+import io.swagger.annotations.Api;
 import java.util.ArrayList;
 import java.net.URI;
 import java.util.List;
@@ -32,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("recipes")
 @Stateless
+@Api(value = "RecipesResource")
 public class RecipesResource {
     
     public static final String FILTER_TITLE = "title";
@@ -48,11 +50,6 @@ public class RecipesResource {
         long id = savedRecipe.getId();
         URI uri = uriInfo.getAbsolutePathBuilder().path("/" + id).build();
         return Response.created(uri).build();
-    }
-    
-    @GET
-    public List<Recipe> findAll() {
-        return recipesManager.findAll();
     }
     
     @GET
