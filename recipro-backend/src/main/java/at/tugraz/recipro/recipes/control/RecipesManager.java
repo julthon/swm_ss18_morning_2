@@ -22,8 +22,8 @@ public class RecipesManager {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void save(Recipe recipe) {
-        this.entityManager.merge(recipe);
+    public Recipe save(Recipe recipe) {
+        return this.entityManager.merge(recipe);
     }
 
     public List<Recipe> findByTitle(String title) {
@@ -35,5 +35,9 @@ public class RecipesManager {
     public List<Recipe> findAll() {
         return this.entityManager.createNamedQuery(Recipe.FIND_ALL, Recipe.class)
                 .getResultList();
+    }
+
+    public Recipe findById(long id) {
+        return this.entityManager.find(Recipe.class, id);
     }
 }

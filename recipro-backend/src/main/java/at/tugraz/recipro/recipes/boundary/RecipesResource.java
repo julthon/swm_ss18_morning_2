@@ -9,6 +9,7 @@ import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
@@ -20,7 +21,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -39,19 +43,26 @@ public class RecipesResource {
     RecipesManager recipesManager;
     
     @POST
-    public void create(Recipe recipe) {
-        recipesManager.save(recipe);
+    public Response create(Recipe recipe, @Context UriInfo uriInfo) {
+        Recipe savedRecipe = recipesManager.save(recipe);
+        long id = savedRecipe.getId();
+        URI uri = uriInfo.getAbsolutePathBuilder().path("/" + id).build();
+        return Response.created(uri).build();
     }
     
     @GET
-    @Path("{title}")
+    public List<Recipe> findAll() {
+        return recipesManager.findAll();
+    }
+    
+    @GET
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Recipe> find(@PathParam("title") String title) {
-        return recipesManager.findByTitle(title);
+    public Recipe findById(@PathParam("id") long id) {
+        return recipesManager.findById(id);
     }
     
     @GET
-    @Path("filter")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Recipe> filter(@DefaultValue("") @QueryParam(FILTER_TITLE) String title,
                                @DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
@@ -73,11 +84,5 @@ public class RecipesResource {
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
                 .collect(Collectors.toList());
-    }
-    
-    @GET
-    @Path("all")
-    public List<Recipe> findAll() {
-        return recipesManager.findAll();
     }
 }
