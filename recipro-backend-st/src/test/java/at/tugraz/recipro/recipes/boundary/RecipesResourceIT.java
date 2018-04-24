@@ -47,14 +47,40 @@ public class RecipesResourceIT {
         JsonArray recipeTypesToCreate = recipeTypeBuilder
                 .add("DESSERT")
                 .add("SNACK")
-                .build();       
+                .build();
         
         JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject milk = recipeBuilder
+                .add("name", "Milk")
+                .build();
+        
+        JsonObject flour = recipeBuilder
+                .add("name", "Flour")
+                .build();
+        
+        JsonObject ingredient_milk = recipeBuilder
+                .add("ingredient", milk)
+                .add("quantity", "200ml")
+                .build();
+        
+        JsonObject ingredient_flour = recipeBuilder
+                .add("ingredient", flour)
+                .add("quantity", "500g")
+                .build();
+        
+        JsonArrayBuilder ingredientsListBuilder = Json.createArrayBuilder();
+        JsonArray ingredients = ingredientsListBuilder
+                .add(ingredient_milk)
+                .add(ingredient_flour)
+                .build();
+        
+        recipeBuilder = Json.createObjectBuilder();
         JsonObject recipeToCreate = recipeBuilder
                 .add("title", title)
                 .add("preparationTime", preparationTime)
                 .add("recipeTypes", recipeTypesToCreate)
                 .add("description", description)
+                .add("ingredients", ingredients)
                 .add("rating", rating)
                 .build();
         
@@ -85,6 +111,7 @@ public class RecipesResourceIT {
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
+        assertThat(payload.getJsonArray("ingredients"), is(ingredients));
         assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
     }
     
@@ -270,4 +297,5 @@ public class RecipesResourceIT {
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
+    
 }
