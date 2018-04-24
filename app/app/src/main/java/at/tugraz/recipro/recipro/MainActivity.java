@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 
@@ -41,6 +43,8 @@ import at.tugraz.recipro.data.RecipeIngredient;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvSearchResults;
+
+    private static final String BACKEND_URL = "http://10.0.2.2:8080/recipro-backend/api";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void searchFor(final String query) {
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
@@ -97,7 +102,12 @@ public class MainActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, Recipe[]>() {
             @Override
             protected Recipe[] doInBackground(Void... voids) {
-                String url = "http://10.0.2.2:8080/recipro-backend/api/recipes/" + query;
+
+                String url = BACKEND_URL + "/recipes";
+                UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
+                        .queryParam("title", query);
+
+                Log.d("RECIPES", "REQUEST URL: " + uriBuilder.build().toUriString());
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
@@ -106,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-                ResponseEntity<Recipe[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Recipe[].class);
+                ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
                 Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
 
                 return response.getBody();
