@@ -37,6 +37,7 @@ public class Recipe {
     private int preparationTime;
     private List<RecipeType> recipeTypes;
     private String description;
+    private double rating;
 
     
     
@@ -87,4 +88,14 @@ public class Recipe {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+    
+   
 }

@@ -37,8 +37,11 @@ public class RecipesResourceIT {
     @Test
     public void createAndFindRecipeById(){
         
+        
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
+        double rating = 3.7; 
+        int preparationTime = 120;
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
         JsonArray recipeTypesToCreate = recipeTypeBuilder
@@ -49,9 +52,10 @@ public class RecipesResourceIT {
         JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
         JsonObject recipeToCreate = recipeBuilder
                 .add("title", title)
-                .add("preparationTime", 120)
+                .add("preparationTime", preparationTime)
                 .add("recipeTypes", recipeTypesToCreate)
                 .add("description", description)
+                .add("rating", rating)
                 .build();
         
         Response response = this.provider.target()
@@ -77,10 +81,11 @@ public class RecipesResourceIT {
         
         assertThat(payload.getInt("id"), is(id));
         assertThat(payload.getString("title"), is(title));
-        assertThat(payload.getInt("preparationTime"), is(120));
+        assertThat(payload.getInt("preparationTime"), is(preparationTime));
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
+        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
     }
     
     @Test
