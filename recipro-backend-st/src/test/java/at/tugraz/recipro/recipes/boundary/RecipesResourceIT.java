@@ -6,6 +6,8 @@
 package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
+import java.io.File;
+import java.net.URL;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -36,7 +38,6 @@ public class RecipesResourceIT {
     
     @Test
     public void createAndFindRecipeById(){
-        
         
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
@@ -297,5 +298,33 @@ public class RecipesResourceIT {
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
+    
+    @Test
+    public void storeAndGetImage() {
+        
+        URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
+        File image = new File(url.getPath());
+        
+        assert(image.exists());
+        
+        
+        
+        Response response = this.provider
+          .target()
+          .path("1/image")
+          .request("image/jpeg")
+          .post(Entity.entity(image, "image/jpeg"));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
+                .path("1/image")
+                .request("image/jpeg")
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+    }
+    
     
 }

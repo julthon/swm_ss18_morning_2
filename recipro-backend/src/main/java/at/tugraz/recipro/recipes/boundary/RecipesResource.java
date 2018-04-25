@@ -9,14 +9,22 @@ import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import io.swagger.annotations.Api;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,6 +51,9 @@ public class RecipesResource {
     
     @Inject
     RecipesManager recipesManager;
+    
+    @Context
+    ServletContext servletContext;
     
     @POST
     public Response create(Recipe recipe, @Context UriInfo uriInfo) {
@@ -81,5 +92,26 @@ public class RecipesResource {
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
                 .collect(Collectors.toList());
+    }
+    
+    @POST
+    @Consumes("image/jpeg")
+    @Path("{id}/image")
+    public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize) throws IOException {
+        //InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize
+        
+        String fileName = id + "image";
+        
+        if (fileType.equals("image/jpeg")) {
+            fileName += ".jpg";
+        } else {
+            fileName += ".png";
+        }
+        
+        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
+        Files.copy(in, Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
+        
+        URI uri = uriInfo.getAbsolutePathBuilder().path("/" + fileName).build();
+        return Response.created(uri).build();
     }
 }
