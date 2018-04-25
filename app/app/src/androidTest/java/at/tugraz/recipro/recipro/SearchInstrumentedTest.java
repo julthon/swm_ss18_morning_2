@@ -52,31 +52,9 @@ public class SearchInstrumentedTest {
     @Test
     public void searchSubmitSearch() {
         onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("Test"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
 
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
-    }
-
-    public class ToastMatcher extends TypeSafeMatcher<Root> {
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("is toast");
-        }
-
-        @Override
-        public boolean matchesSafely(Root root) {
-            int type = root.getWindowLayoutParams().get().type;
-            if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
-                IBinder windowToken = root.getDecorView().getWindowToken();
-                IBinder appToken = root.getDecorView().getApplicationWindowToken();
-                if (windowToken == appToken) {
-                    //means this window isn't contained by any other windows.
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     @Before
@@ -121,5 +99,13 @@ public class SearchInstrumentedTest {
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(3).onChildView(withId(R.id.tvTitle)).check(matches(withText("Recipe #4")));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(3).onChildView(withId(R.id.tvTime)).check(matches(withText("30min")));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(3).onChildView(withId(R.id.rbRating)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testPreparationTimeExists() {
+        onView(withId(R.id.tvMinTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvMaxTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.etMinTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.etMaxTime)).check(matches(isDisplayed()));
     }
 }
