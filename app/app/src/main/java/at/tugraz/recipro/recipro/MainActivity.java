@@ -1,38 +1,21 @@
 package at.tugraz.recipro.recipro;
 
 import android.annotation.SuppressLint;
-import android.app.ListActivity;
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
-import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ResourceAccessHelper.setApp(this);
 
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
@@ -74,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 return true;
             }
-
         });
 
         // Get the intent, verify the action and get the query
@@ -85,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<Recipe>();
+        ArrayList<Recipe> recipies = new ArrayList<>();
         final RecipesAdapter adapter = new RecipesAdapter(this, recipies);
         lvSearchResults.setAdapter(adapter);
 
@@ -93,12 +77,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                intent.putExtra("Recipe", adapter.getItem(position));
-
+                intent.putExtra(getResources().getString(R.string.recipe), adapter.getItem(position));
                 startActivity(intent);
             }
         });
-
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -113,13 +95,24 @@ public class MainActivity extends AppCompatActivity {
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
 
-                queryParams.put("title", query);
+                queryParams.put(getResources().getString(R.string.request_title), query);
                 if(!mintime.isEmpty())
-                    queryParams.put("minpreptime", mintime);
+                    queryParams.put(getResources().getString(R.string.min_prep), mintime);
                 if(!maxtime.isEmpty())
-                    queryParams.put("maxpreptime", maxtime);
-
-                return WSConnection.sendQuery(queryParams);
+                    queryParams.put(getResources().getString(R.string.max_prep), maxtime);
+                try {
+                    return WSConnection.sendQuery(queryParams);
+                } catch (RestClientException ex) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this,
+                                    getResources().getString(R.string.error_connect),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return new ArrayList<>();
+                }
             }
 
             @Override
