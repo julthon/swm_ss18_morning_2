@@ -1,51 +1,31 @@
 package at.tugraz.recipro.recipro;
 
 import android.annotation.SuppressLint;
-import android.app.ListActivity;
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
-import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,9 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // set resource strings to ws connection
-        WSConnection.backend_url = getResources().getString(R.string.connect_url);
-        WSConnection.backend_path = getResources().getString(R.string.connect_path_recipes);
+        ResourceAccessHelper.setApp(this);
 
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
