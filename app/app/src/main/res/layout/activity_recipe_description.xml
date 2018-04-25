@@ -37,7 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include" />
 
-        <ListView
+        <at.tugraz.recipro.Views.NonScrollListView
             android:id="@+id/lvIngredients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
