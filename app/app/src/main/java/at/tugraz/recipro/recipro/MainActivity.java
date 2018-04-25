@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -49,12 +51,16 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvSearchResults;
     private EditText etMinTime;
     private EditText etMaxTime;
+    private TableLayout tlFilters;
+    private ImageButton ibFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tlFilters = findViewById(R.id.tlFilters);
+        ibFilters = findViewById(R.id.ibFilters);
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
 
@@ -75,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+        });
+
+        ibFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
         });
 
         // Get the intent, verify the action and get the query
