@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -36,6 +37,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Ingredient;
@@ -45,13 +49,16 @@ import at.tugraz.recipro.data.RecipeIngredient;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvSearchResults;
-
-    private static final String BACKEND_URL = "http://10.0.2.2:8080/recipro-backend/api";
+    private EditText etMinTime;
+    private EditText etMaxTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        etMinTime = findViewById(R.id.etMinTime);
+        etMaxTime = findViewById(R.id.etMaxTime);
 
         final SearchView searchBar = findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -69,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 return true;
             }
-
         });
 
         // Get the intent, verify the action and get the query
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<Recipe>();
+        ArrayList<Recipe> recipies = new ArrayList<>();
         final RecipesAdapter adapter = new RecipesAdapter(this, recipies);
         lvSearchResults.setAdapter(adapter);
 
@@ -88,12 +94,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                intent.putExtra("Recipe", adapter.getItem(position));
-
+                String recipe = getResources().getString(R.string.recipe);
+                recipe = recipe.substring(0, 1) + recipe.substring(1);
+                intent.putExtra(recipe, adapter.getItem(position));
                 startActivity(intent);
             }
         });
-
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -101,27 +107,20 @@ public class MainActivity extends AppCompatActivity {
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
 
-        new AsyncTask<Void, Void, Recipe[]>() {
+        new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
-            protected Recipe[] doInBackground(Void... voids) {
+            protected List<Recipe> doInBackground(Void... voids) {
+                Map<String, String> queryParams = new HashMap<>();
+                String mintime = etMinTime.getText().toString();
+                String maxtime = etMaxTime.getText().toString();
 
-                String url = BACKEND_URL + "/recipes";
-                UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
-                        .queryParam("title", query);
-
-                Log.d("RECIPES", "REQUEST URL: " + uriBuilder.build().toUriString());
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+                queryParams.put(getResources().getString(R.string.request_title), query);
+                if(!mintime.isEmpty())
+                    queryParams.put(getResources().getString(R.string.min_prep), mintime);
+                if(!maxtime.isEmpty())
+                    queryParams.put(getResources().getString(R.string.max_prep), maxtime);
                 try {
-                    ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
-                    Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-
-                    return response.getBody();
+                    return WSConnection.sendQuery(queryParams);
                 } catch (RestClientException ex) {
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
@@ -131,16 +130,14 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
-                    return new Recipe[0];
+                    return new ArrayList<>();
                 }
             }
 
             @Override
-            protected void onPostExecute(Recipe[] recipes) {
+            protected void onPostExecute(List<Recipe> recipes) {
                 adapter.addAll(recipes);
             }
-
-
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
