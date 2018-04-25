@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
@@ -57,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // set resource strings to ws connection
+        WSConnection.backend_url = getResources().getString(R.string.connect_url);
+        WSConnection.backend_path = getResources().getString(R.string.connect_path_recipes);
+
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
 
@@ -94,9 +99,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                String recipe = getResources().getString(R.string.recipe);
-                recipe = recipe.substring(0, 1) + recipe.substring(1);
-                intent.putExtra(recipe, adapter.getItem(position));
+                intent.putExtra(getResources().getString(R.string.recipe), adapter.getItem(position));
                 startActivity(intent);
             }
         });

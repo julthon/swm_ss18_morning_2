@@ -1,21 +1,15 @@
 package at.tugraz.recipro.recipro;
 
-import android.support.annotation.NonNull;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import at.tugraz.recipro.data.Recipe;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class MainActivityTest {
 
