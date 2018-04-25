@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -34,6 +35,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Ingredient;
@@ -43,13 +47,16 @@ import at.tugraz.recipro.data.RecipeIngredient;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvSearchResults;
-
-    private static final String BACKEND_URL = "http://10.0.2.2:8080/recipro-backend/api";
+    private EditText etMinTime;
+    private EditText etMaxTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        etMinTime = findViewById(R.id.etMinTime);
+        etMaxTime = findViewById(R.id.etMaxTime);
 
         final SearchView searchBar = findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -99,31 +106,24 @@ public class MainActivity extends AppCompatActivity {
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
 
-        new AsyncTask<Void, Void, Recipe[]>() {
+        new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
-            protected Recipe[] doInBackground(Void... voids) {
+            protected List<Recipe> doInBackground(Void... voids) {
+                Map<String, String> queryParams = new HashMap<>();
+                String mintime = etMinTime.getText().toString();
+                String maxtime = etMaxTime.getText().toString();
 
-                String url = BACKEND_URL + "/recipes";
-                UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
-                        .queryParam("title", query);
+                queryParams.put("title", query);
+                if(!mintime.isEmpty())
+                    queryParams.put("minpreptime", mintime);
+                if(!maxtime.isEmpty())
+                    queryParams.put("maxpreptime", maxtime);
 
-                Log.d("RECIPES", "REQUEST URL: " + uriBuilder.build().toUriString());
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-
-                ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
-                Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-
-                return response.getBody();
+                return WSConnection.sendQuery(queryParams);
             }
 
             @Override
-            protected void onPostExecute(Recipe[] recipes) {
+            protected void onPostExecute(List<Recipe> recipes) {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
