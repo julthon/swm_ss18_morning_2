@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">ReciPro</string>
     <string name="search_hint">Search for recipes</string>
+    <string name="error_connect">Could not connect to server</string>
+    <string name="request_title">title</string>
+    <string name="min_prep">minpreptime</string>
+    <string name="max_prep">maxpreptime</string>
+    <string name="recipe">Recipe</string>
+    <string name="connect_url">https://aughrany.com/recipro-backend/api</string>
+    <string name="connect_path_recipes">/recipes</string>
 </resources>
