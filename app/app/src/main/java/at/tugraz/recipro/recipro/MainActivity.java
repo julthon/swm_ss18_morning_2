@@ -30,9 +30,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
@@ -115,17 +117,30 @@ public class MainActivity extends AppCompatActivity {
 
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+                try {
+                    ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
+                    Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
 
-                ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
-                Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-
-                return response.getBody();
+                    return response.getBody();
+                } catch (RestClientException ex) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this,
+                                    getResources().getString(R.string.error_connect),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return new Recipe[0];
+                }
             }
 
             @Override
             protected void onPostExecute(Recipe[] recipes) {
                 adapter.addAll(recipes);
             }
+
+
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
