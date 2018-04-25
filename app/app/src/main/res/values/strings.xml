@@ -8,4 +8,17 @@
     <string name="recipe">Recipe</string>
     <string name="connect_url">http://10.0.2.2:8080/recipro-backend/api</string>
     <string name="connect_path_recipes">/recipes</string>
+    <string name="ingredients_header">Ingredients:</string>
+    <string name="description_header">Description:</string>
+    <string name="filter_types">types</string>
+    <string name="type_dessert">Dessert</string>
+    <string name="type_snack">Snack</string>
+    <string name="type_main">Main course</string>
+    <string-array name="recipe_types">
+        <item></item>
+        <item>@string/type_dessert</item>
+        <item>@string/type_snack</item>
+        <item>@string/type_main</item>
+    </string-array>
+
 </resources>
