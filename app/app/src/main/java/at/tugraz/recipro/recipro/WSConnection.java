@@ -1,6 +1,5 @@
 package at.tugraz.recipro.recipro;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -18,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 class WSConnection {
-    public static String backend_url = null;
-    public static String backend_path = null;
+    public static String backend_url = ResourceAccessHelper.getStringFromId(R.string.connect_url);
+    public static String backend_path = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
 
     public static List<Recipe> sendQuery(Map<String, String> queryParams) throws RestClientException {
         String url = backend_url + backend_path;

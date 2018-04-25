@@ -16,6 +16,7 @@ import java.util.List;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -44,7 +45,7 @@ public class RecipeDescriptionInstrumentedTest {
             recipeIngredients.add(new RecipeIngredient(new Ingredient("Eier"), "3"));
 
             recipe = new Recipe("Schnitzel", 50, 4.5, recipeIngredients, "Für das Wiener Schnitzel...");
-            result.putExtra("Recipe", recipe);
+            result.putExtra(ResourceAccessHelper.getStringFromId(R.string.recipe), recipe);
             return result;
         }
     };
