@@ -29,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText etMinTime;
     private EditText etMaxTime;
     private Spinner spRecipeType;
-
+    private TableLayout tlFilters;
+    private ImageButton ibFilters;
+  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         ResourceAccessHelper.setApp(this);
 
+        tlFilters = findViewById(R.id.tlFilters);
+        ibFilters = findViewById(R.id.ibFilters);
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
 
@@ -55,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 return true;
+            }
+        });
+
+        ibFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
         });
 
