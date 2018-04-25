@@ -90,6 +90,7 @@ public class SearchInstrumentedTest {
 
     @Test
     public void testPreparationTimeExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.tvMinTime)).check(matches(isDisplayed()));
         onView(withId(R.id.tvMaxTime)).check(matches(isDisplayed()));
         onView(withId(R.id.etMinTime)).check(matches(isDisplayed()));
@@ -99,12 +100,14 @@ public class SearchInstrumentedTest {
 
     @Test
     public void testRecipeTypeExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.tvRecipeType)).check(matches(isDisplayed()));
         onView(withId(R.id.spRecipeType)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testRecipeTypeReturnsSomething() {
+        onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.spRecipeType)).perform(click());
         onView(withText(R.string.type_dessert)).perform(click());
         onView(withHint(R.string.search_hint)).perform(click());
