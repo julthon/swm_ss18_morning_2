@@ -52,7 +52,7 @@ public class SearchInstrumentedTest {
     @Test
     public void searchSubmitSearch() {
         onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("Test"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
 
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
