@@ -9,13 +9,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TableLayout;
-import android.widget.Toast;
+import android.widget.*;
 
 import org.springframework.web.client.RestClientException;
 
@@ -34,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvSearchResults;
     private EditText etMinTime;
     private EditText etMaxTime;
+    private Spinner spRecipeType;
     private TableLayout tlFilters;
     private ImageButton ibFilters;
-
+  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,17 +78,26 @@ public class MainActivity extends AppCompatActivity {
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<>();
-        final RecipesAdapter adapter = new RecipesAdapter(this, recipies);
-        lvSearchResults.setAdapter(adapter);
+        final RecipesAdapter recipesAdapter = new RecipesAdapter(this, recipies);
+        lvSearchResults.setAdapter(recipesAdapter);
 
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                intent.putExtra(getResources().getString(R.string.recipe), adapter.getItem(position));
+                intent.putExtra(getResources().getString(R.string.recipe), recipesAdapter.getItem(position));
                 startActivity(intent);
             }
         });
+
+
+        spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.recipe_types, android.R.layout.simple_spinner_item);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRecipeType.setAdapter(typeAdapter);
+        
+        
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -107,12 +111,16 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> queryParams = new HashMap<>();
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
+                String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
 
                 queryParams.put(getResources().getString(R.string.request_title), query);
                 if(!mintime.isEmpty())
                     queryParams.put(getResources().getString(R.string.min_prep), mintime);
                 if(!maxtime.isEmpty())
                     queryParams.put(getResources().getString(R.string.max_prep), maxtime);
+                if(type != null && !type.isEmpty())
+                    queryParams.put(getResources().getString(R.string.filter_types), type);
+
                 try {
                     return WSConnection.sendQuery(queryParams);
                 } catch (RestClientException ex) {

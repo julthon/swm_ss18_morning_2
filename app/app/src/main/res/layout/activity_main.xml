@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="at.tugraz.recipro.recipro.MainActivity">
-
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="at.tugraz.recipro.recipro.MainActivity">
     <TableLayout
         android:id="@+id/tlFilters"
         android:layout_width="0dp"
@@ -29,14 +28,14 @@
                 android:gravity="center_vertical"
                 android:text="min time"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
+                tools:layout_editor_absoluteY="37dp"/>
 
             <EditText
                 android:id="@+id/etMinTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"/>
         </TableRow>
 
         <TableRow
@@ -50,14 +49,34 @@
                 android:gravity="center_vertical"
                 android:text="max time"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
+                tools:layout_editor_absoluteY="37dp"/>
 
             <EditText
                 android:id="@+id/etMaxTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"/>
+
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvRecipeType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="max time"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp"/>
+
+            <Spinner
+                android:id="@+id/spRecipeType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </TableRow>
     </TableLayout>
 

@@ -1,18 +1,26 @@
 package at.tugraz.recipro.recipro;
 
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import at.tugraz.recipro.data.Recipe;
-import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 import static org.junit.Assert.assertTrue;
 
+@RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
+
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() throws Exception {
@@ -24,8 +32,8 @@ public class MainActivityTest {
         int minpreptime = 50;
         int maxpreptime = 200;
 
-        queryParams.put(ResourceAccessHelper.getStringFromId(R.string.min_prep), Integer.toString(minpreptime));
-        queryParams.put(ResourceAccessHelper.getStringFromId(R.string.max_prep), Integer.toString(maxpreptime));
+        queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.min_prep), Integer.toString(minpreptime));
+        queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.max_prep), Integer.toString(maxpreptime));
         List<Recipe> recipes = WSConnection.sendQuery(queryParams);
 
         for (Recipe recipe: recipes) {
