@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvSearchResults;
     private EditText etMinTime;
     private EditText etMaxTime;
+    private TableLayout tlFilters;
+    private ImageButton ibFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         ResourceAccessHelper.setApp(this);
 
+        tlFilters = findViewById(R.id.tlFilters);
+        ibFilters = findViewById(R.id.ibFilters);
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
 
@@ -58,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 return true;
+            }
+        });
+
+        ibFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
         });
 
