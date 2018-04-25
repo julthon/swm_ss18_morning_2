@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,11 +20,11 @@ import java.util.Map;
 import at.tugraz.recipro.data.Recipe;
 
 class WSConnection {
+    public static String backend_url = null;
+    public static String backend_path = null;
 
-    private static final String BACKEND_URL = "http://10.0.2.2:8080/recipro-backend/api";
-
-    public static List<Recipe> sendQuery(Map<String, String> queryParams) {
-        String url = BACKEND_URL + "/recipes";
+    public static List<Recipe> sendQuery(Map<String, String> queryParams) throws RestClientException {
+        String url = backend_url + backend_path;
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url);
         for(Map.Entry<String, String> entry : queryParams.entrySet()){
