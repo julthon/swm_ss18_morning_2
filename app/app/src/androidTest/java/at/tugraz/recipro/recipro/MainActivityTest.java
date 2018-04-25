@@ -1,21 +1,16 @@
 package at.tugraz.recipro.recipro;
 
-import android.support.annotation.NonNull;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class MainActivityTest {
 
@@ -29,8 +24,8 @@ public class MainActivityTest {
         int minpreptime = 50;
         int maxpreptime = 200;
 
-        queryParams.put("minpreptime", Integer.toString(minpreptime));
-        queryParams.put("maxpreptime", Integer.toString(maxpreptime));
+        queryParams.put(ResourceAccessHelper.getStringFromId(R.string.min_prep), Integer.toString(minpreptime));
+        queryParams.put(ResourceAccessHelper.getStringFromId(R.string.max_prep), Integer.toString(maxpreptime));
         List<Recipe> recipes = WSConnection.sendQuery(queryParams);
 
         for (Recipe recipe: recipes) {
