@@ -20,11 +20,11 @@ import java.util.Map;
 import at.tugraz.recipro.data.Recipe;
 
 class WSConnection {
-    public static final String BACKEND_URL = Resources.getSystem().getString(R.string.connect_url);
-    private static final String BACKEND_PATH = Resources.getSystem().getString(R.string.connect_path_recipes);
+    public static String backend_url = null;
+    public static String backend_path = null;
 
     public static List<Recipe> sendQuery(Map<String, String> queryParams) throws RestClientException {
-        String url = BACKEND_URL + BACKEND_PATH;
+        String url = backend_url + backend_path;
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url);
         for(Map.Entry<String, String> entry : queryParams.entrySet()){
