@@ -35,6 +35,8 @@ captures/
 # Intellij
 *.iml
 .idea
+nbproject
+nb-configuration.xml
 
 # Keystore files
 *.jks
