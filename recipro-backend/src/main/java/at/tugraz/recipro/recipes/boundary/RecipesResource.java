@@ -98,7 +98,6 @@ public class RecipesResource {
     @Consumes("image/jpeg")
     @Path("{id}/image")
     public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize) throws IOException {
-        //InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize
         
         String fileName = id + ".jpg";
         String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
@@ -111,12 +110,11 @@ public class RecipesResource {
     @GET
     @Produces("image/jpeg")
     @Path("{id}/image")
-    public InputStream  getImage(@PathParam("id") long id) throws IOException {
+    public InputStream getImage(@PathParam("id") long id) throws IOException {
         
         String fileName = id + ".jpg";
         String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
-        java.nio.file.Path dest = Paths.get(fullPath);
         
-        return Files.newInputStream(dest);
+        return Files.newInputStream(Paths.get(fullPath));
     }
 }
