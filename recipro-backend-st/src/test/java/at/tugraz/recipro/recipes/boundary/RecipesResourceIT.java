@@ -345,5 +345,20 @@ public class RecipesResourceIT {
         assertThat(payload.length(), is(image.length()));
     }
     
+    @Test
+    public void getNonexistingImage() {
+                
+        int Max = 5000;
+        int Min = 100;
+        int randomId = Min + (int)(Math.random() * ((Max - Min) + 1));
+        assertTrue((randomId >= 100) && (randomId <= 5000));
+        
+        Response response = this.provider.target()
+                .path(randomId + "/image")
+                .request("image/jpeg")
+                .get();
+        
+        assertThat(response.getStatus(), is(404));
+    }
     
 }

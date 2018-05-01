@@ -110,11 +110,19 @@ public class RecipesResource {
     @GET
     @Produces("image/jpeg")
     @Path("{id}/image")
-    public InputStream getImage(@PathParam("id") long id) throws IOException {
+    public Response getImage(@PathParam("id") long id) throws IOException {
         
         String fileName = id + ".jpg";
+        
         String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
         
-        return Files.newInputStream(Paths.get(fullPath));
+        if(Files.exists(Paths.get(fullPath)))
+        {
+            return Response.ok().entity(Files.newInputStream(Paths.get(fullPath))).build();   
+        }
+        else
+        {
+            return Response.status(Response.Status.NOT_FOUND).build();  
+        }    
     }
 }
