@@ -11,7 +11,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +25,9 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".RecipeDescriptionActivity"></activity>
+        <activity
+            android:name=".RecipeDescriptionActivity"
+            android:screenOrientation="portrait"
+        ></activity>
     </application>
-
 </manifest>

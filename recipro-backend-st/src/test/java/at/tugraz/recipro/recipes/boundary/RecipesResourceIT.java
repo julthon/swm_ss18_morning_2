@@ -33,7 +33,7 @@ import org.junit.runners.MethodSorters;
 public class RecipesResourceIT {
     
     @Rule
-    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
+    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughray.com/recipro-backend/api/recipes");
     
     
     @Test

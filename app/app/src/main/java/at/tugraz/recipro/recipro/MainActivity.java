@@ -1,55 +1,48 @@
 package at.tugraz.recipro.recipro;
 
 import android.annotation.SuppressLint;
-import android.app.ListActivity;
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.*;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
-import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvSearchResults;
-
-    private static final String BACKEND_URL = "http://10.0.2.2:8080/recipro-backend/api";
-
+    private EditText etMinTime;
+    private EditText etMaxTime;
+    private Spinner spRecipeType;
+    private TableLayout tlFilters;
+    private ImageButton ibFilters;
+  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ResourceAccessHelper.setApp(this);
+
+        tlFilters = findViewById(R.id.tlFilters);
+        ibFilters = findViewById(R.id.ibFilters);
+        etMinTime = findViewById(R.id.etMinTime);
+        etMaxTime = findViewById(R.id.etMaxTime);
 
         final SearchView searchBar = findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -67,7 +60,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 return true;
             }
+        });
 
+        ibFilters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
         });
 
         // Get the intent, verify the action and get the query
@@ -78,20 +77,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<Recipe>();
-        final RecipesAdapter adapter = new RecipesAdapter(this, recipies);
-        lvSearchResults.setAdapter(adapter);
+        ArrayList<Recipe> recipies = new ArrayList<>();
+        final RecipesAdapter recipesAdapter = new RecipesAdapter(this, recipies);
+        lvSearchResults.setAdapter(recipesAdapter);
 
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                intent.putExtra("Recipe", adapter.getItem(position));
-
+                intent.putExtra(getResources().getString(R.string.recipe), recipesAdapter.getItem(position));
                 startActivity(intent);
             }
         });
 
+
+        spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.recipe_types, android.R.layout.simple_spinner_item);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRecipeType.setAdapter(typeAdapter);
+        
+        
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -99,31 +105,39 @@ public class MainActivity extends AppCompatActivity {
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
 
-        new AsyncTask<Void, Void, Recipe[]>() {
+        new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
-            protected Recipe[] doInBackground(Void... voids) {
+            protected List<Recipe> doInBackground(Void... voids) {
+                Map<String, String> queryParams = new HashMap<>();
+                String mintime = etMinTime.getText().toString();
+                String maxtime = etMaxTime.getText().toString();
+                String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
 
-                String url = BACKEND_URL + "/recipes";
-                UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
-                        .queryParam("title", query);
+                queryParams.put(getResources().getString(R.string.request_title), query);
+                if(!mintime.isEmpty())
+                    queryParams.put(getResources().getString(R.string.min_prep), mintime);
+                if(!maxtime.isEmpty())
+                    queryParams.put(getResources().getString(R.string.max_prep), maxtime);
+                if(type != null && !type.isEmpty())
+                    queryParams.put(getResources().getString(R.string.filter_types), type);
 
-                Log.d("RECIPES", "REQUEST URL: " + uriBuilder.build().toUriString());
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-
-                ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.GET, entity, Recipe[].class);
-                Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-
-                return response.getBody();
+                try {
+                    return WSConnection.sendQuery(queryParams);
+                } catch (RestClientException ex) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this,
+                                    getResources().getString(R.string.error_connect),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return new ArrayList<>();
+                }
             }
 
             @Override
-            protected void onPostExecute(Recipe[] recipes) {
+            protected void onPostExecute(List<Recipe> recipes) {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

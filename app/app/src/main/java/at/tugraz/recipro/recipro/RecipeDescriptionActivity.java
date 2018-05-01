@@ -33,7 +33,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         Recipe recipe;
         if(extras != null) {
-            recipe = (Recipe) extras.get("Recipe");
+            recipe = (Recipe) extras.get(getResources().getString(R.string.recipe));
         }
         else {
             finish();
