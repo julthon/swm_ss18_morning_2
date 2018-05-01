@@ -44,7 +44,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
         lvIngredients.setAdapter(ingredientsAdapter);
 
         tvTitle.setText(recipe.getTitle());
-        tvTime.setText(String.valueOf(recipe.getTime()));
+        tvTime.setText(String.valueOf(recipe.getTime()) + "min");
         rbRating.setRating(((float) recipe.getRating()));
         tvDescription.setText(recipe.getDescription());
     }

@@ -19,7 +19,7 @@ import java.util.Map;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 
-class WSConnection {
+public abstract class WSConnection {
     public static String backend_url = ResourceAccessHelper.getStringFromId(R.string.connect_url);
     public static String backend_path = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
 
