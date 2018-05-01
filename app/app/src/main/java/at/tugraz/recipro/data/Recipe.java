@@ -74,15 +74,4 @@ public class Recipe implements Serializable{
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                "title='" + title + '\'' +
-                ", time=" + time +
-                ", rating=" + rating +
-                ", description='" + description + '\'' +
-                ", ingredients=" + ingredients +
-                '}';
-    }
 }
