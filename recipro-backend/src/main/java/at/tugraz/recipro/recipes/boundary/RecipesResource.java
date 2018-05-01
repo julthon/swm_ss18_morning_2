@@ -100,18 +100,23 @@ public class RecipesResource {
     public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize) throws IOException {
         //InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize
         
-        String fileName = id + "image";
-        
-        if (fileType.equals("image/jpeg")) {
-            fileName += ".jpg";
-        } else {
-            fileName += ".png";
-        }
-        
+        String fileName = id + ".jpg";
         String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
         Files.copy(in, Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
         
-        URI uri = uriInfo.getAbsolutePathBuilder().path("/" + fileName).build();
+        URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
         return Response.created(uri).build();
+    }
+    
+    @GET
+    @Produces("image/jpeg")
+    @Path("{id}/image")
+    public InputStream  getImage(@PathParam("id") long id) throws IOException {
+        
+        String fileName = id + ".jpg";
+        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
+        java.nio.file.Path dest = Paths.get(fullPath);
+        
+        return Files.newInputStream(dest);
     }
 }

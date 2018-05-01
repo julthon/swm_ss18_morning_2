@@ -33,7 +33,7 @@ import org.junit.runners.MethodSorters;
 public class RecipesResourceIT {
     
     @Rule
-    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughray.com/recipro-backend/api/recipes");
+    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
     
     
     @Test
@@ -303,11 +303,10 @@ public class RecipesResourceIT {
     public void storeAndGetImage() {
         
         URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
+        assertNotNull(url);
         File image = new File(url.getPath());
         
         assert(image.exists());
-        
-        
         
         Response response = this.provider
           .target()
@@ -316,14 +315,16 @@ public class RecipesResourceIT {
           .post(Entity.entity(image, "image/jpeg"));
         
         assertThat(response.getStatus(), is(201));
+        String location = response.getHeaderString("Location");
+        assertNotNull(location);
         
-        response = this.provider.target()
-                .path("1/image")
+        response = this.provider.target(location)
                 .request("image/jpeg")
                 .get();
         
         assertThat(response.getStatus(), is(200));
-        
+        File payload = response.readEntity(File.class); 
+        assertThat(payload.length(), is(image.length()));
     }
     
     
