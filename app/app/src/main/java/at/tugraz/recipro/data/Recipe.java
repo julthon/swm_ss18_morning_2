@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Recipe implements Serializable{
 
+    @SerializedName("id")
+    private long id;
+
     @SerializedName("title")
     private String title;
 
@@ -22,6 +25,15 @@ public class Recipe implements Serializable{
 
     @SerializedName("ingredients")
     private List<RecipeIngredient> ingredients;
+
+    public Recipe(long id, String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
+        this.id = id;
+        this.title = title;
+        this.time = time;
+        this.rating = rating;
+        this.ingredients = ingredients;
+        this.description = description;
+    }
 
     public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
         this.title = title;
@@ -75,14 +87,11 @@ public class Recipe implements Serializable{
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                "title='" + title + '\'' +
-                ", time=" + time +
-                ", rating=" + rating +
-                ", description='" + description + '\'' +
-                ", ingredients=" + ingredients +
-                '}';
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

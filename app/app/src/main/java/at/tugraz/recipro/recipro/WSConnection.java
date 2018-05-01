@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -46,5 +47,9 @@ class WSConnection {
         Log.d("WSCONNECTION", "Returned: " + response.getBody().length);
 
         return Arrays.asList(response.getBody());
+    }
+
+    public static Bitmap getImage(long id) {
+        return null;
     }
 }
