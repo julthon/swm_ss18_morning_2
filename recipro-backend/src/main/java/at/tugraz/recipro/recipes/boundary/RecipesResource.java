@@ -94,14 +94,18 @@ public class RecipesResource {
                 .collect(Collectors.toList());
     }
     
+    private java.nio.file.Path getJPGImagePath(long id) {
+        String fileName = id + ".jpg";
+        return Paths.get(servletContext.getRealPath("WEB-INF") + fileName);
+    }
+    
     @POST
     @Consumes("image/jpeg")
     @Path("{id}/image")
     public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize) throws IOException {
         
-        String fileName = id + ".jpg";
-        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
-        Files.copy(in, Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
+        java.nio.file.Path fullPath = getJPGImagePath(id);
+        Files.copy(in, fullPath, StandardCopyOption.REPLACE_EXISTING);
         
         URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
         return Response.created(uri).build();
@@ -112,16 +116,11 @@ public class RecipesResource {
     @Path("{id}/image")
     public Response getImage(@PathParam("id") long id) throws IOException {
         
-        String fileName = id + ".jpg";
+        java.nio.file.Path fullPath = getJPGImagePath(id);
         
-        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
-        
-        if(Files.exists(Paths.get(fullPath)))
-        {
-            return Response.ok().entity(Files.newInputStream(Paths.get(fullPath))).build();   
-        }
-        else
-        {
+        if(Files.exists(fullPath)) {
+            return Response.ok().entity(Files.newInputStream(fullPath)).build();   
+        } else {
             return Response.status(Response.Status.NOT_FOUND).build();  
         }    
     }

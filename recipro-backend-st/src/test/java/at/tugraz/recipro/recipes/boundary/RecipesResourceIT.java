@@ -334,6 +334,7 @@ public class RecipesResourceIT {
         
         assertThat(postImageResponse.getStatus(), is(201));
         String imageLocation = postImageResponse.getHeaderString("Location");
+        System.out.println("storeAndGetImage location " + imageLocation);
         assertNotNull(imageLocation);
         
         Response getImageResponse = this.provider.target(imageLocation)
@@ -348,10 +349,10 @@ public class RecipesResourceIT {
     @Test
     public void getNonexistingImage() {
                 
-        int Max = 5000;
-        int Min = 100;
-        int randomId = Min + (int)(Math.random() * ((Max - Min) + 1));
-        assertTrue((randomId >= 100) && (randomId <= 5000));
+        int max = 5000;
+        int min = 1000;
+        int randomId = min + (int)(Math.random() * ((max - min) + 1));
+        assertTrue((randomId >= min) && (randomId <= max));
         
         Response response = this.provider.target()
                 .path(randomId + "/image")
