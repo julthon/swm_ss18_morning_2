@@ -300,7 +300,7 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void storeAndGetImage() {
+    public void storeAndGetJpegImage() {
         
         URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
         assertNotNull(url);
@@ -360,6 +360,53 @@ public class RecipesResourceIT {
                 .get();
         
         assertThat(response.getStatus(), is(404));
+    }
+    
+    @Test
+    public void storeAndGetPngImage() {
+        
+        URL url = getClass().getClassLoader().getResource("test_image2.png");
+        assertNotNull(url);
+        File image = new File(url.getPath());
+        assert(image.exists());
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Vegetable Patty")
+                .add("preparationTime", 30)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Kinda Patty.")
+                .build();
+        
+        Response postRecipeResponse = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(postRecipeResponse.getStatus(), is(201));
+        String recipeLocation = postRecipeResponse.getHeaderString("Location");
+        
+        Response postImageResponse = this.provider.target(recipeLocation)
+          .path("/image")
+          .request("image/png")
+          .post(Entity.entity(image, "image/png"));
+        
+        assertThat(postImageResponse.getStatus(), is(201));
+        String imageLocation = postImageResponse.getHeaderString("Location");
+        System.out.println("storeAndGetImage location " + imageLocation);
+        assertNotNull(imageLocation);
+        
+        Response getImageResponse = this.provider.target(imageLocation)
+                .request("image/png")
+                .get();
+        
+        assertThat(getImageResponse.getStatus(), is(200));
+        File payload = getImageResponse.readEntity(File.class); 
+        assertThat(payload.length(), is(image.length()));
     }
     
 }
