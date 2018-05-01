@@ -7,6 +7,7 @@ package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -300,11 +301,11 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void storeAndGetJpegImage() {
+    public void storeAndGetJpegImage() throws URISyntaxException {
         
         URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
         assertNotNull(url);
-        File image = new File(url.getPath());
+        File image = new File(url.toURI());
         assert(image.exists());
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
@@ -363,11 +364,11 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void storeAndGetPngImage() {
+    public void storeAndGetPngImage() throws URISyntaxException {
         
         URL url = getClass().getClassLoader().getResource("test_image2.png");
         assertNotNull(url);
-        File image = new File(url.getPath());
+        File image = new File(url.toURI());
         assert(image.exists());
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();

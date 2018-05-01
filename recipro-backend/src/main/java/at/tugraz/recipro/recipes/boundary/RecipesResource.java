@@ -9,6 +9,7 @@ import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import io.swagger.annotations.Api;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -96,7 +97,8 @@ public class RecipesResource {
     
     private java.nio.file.Path getImagePath(long id, String fileType) {
         String fileName = id + "." + fileType;
-        return Paths.get(servletContext.getRealPath("WEB-INF") + fileName);
+        java.nio.file.Path fullPath = Paths.get(servletContext.getRealPath("WEB-INF"), fileName);
+        return fullPath;
     }
     
     @POST
@@ -106,15 +108,13 @@ public class RecipesResource {
         
         java.nio.file.Path fullPath;
         
-        if(fileType.equals("image/jpeg"))
-        {    
+        if(fileType.equals("image/jpeg")) {    
             fullPath = getImagePath(id, "jpeg");
-        }
-        else
-        {
+        } else {
             fullPath = getImagePath(id, "png");
         }    
         
+        System.out.println("create image: " + fullPath);
         Files.copy(in, fullPath, StandardCopyOption.REPLACE_EXISTING);
         
         URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
@@ -122,30 +122,19 @@ public class RecipesResource {
     }
     
     @GET
-    @Produces("image/jpeg")
+    @Produces({"image/jpeg", "image/png"})
     @Path("{id}/image")
-    public Response getJpegImage(@PathParam("id") long id) throws IOException {
+    public Response getImage(@PathParam("id") long id) throws IOException {
         
-        java.nio.file.Path fullPath = getImagePath(id, "jpeg");
+        java.nio.file.Path fullPathJpeg = getImagePath(id, "jpeg");
+        java.nio.file.Path fullPathPng = getImagePath(id, "png");
         
-        if(Files.exists(fullPath)) {
-            return Response.ok().entity(Files.newInputStream(fullPath)).build();   
+        if (Files.exists(fullPathJpeg)) {
+            return Response.ok().entity(Files.newInputStream(fullPathJpeg)).type("image/jpeg").build();   
+        } else if (Files.exists(fullPathPng)) {
+            return Response.ok().entity(Files.newInputStream(fullPathPng)).type("image/png").build();   
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();  
-        }    
-    }
-    
-    @GET
-    @Produces("image/png")
-    @Path("{id}/image")
-    public Response getPngImage(@PathParam("id") long id) throws IOException {
-        
-        java.nio.file.Path fullPath = getImagePath(id, "png");
-        
-        if(Files.exists(fullPath)) {
-            return Response.ok().entity(Files.newInputStream(fullPath)).build();   
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();  
-        }    
+        } 
     }
 }
