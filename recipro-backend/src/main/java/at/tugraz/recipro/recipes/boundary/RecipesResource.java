@@ -9,6 +9,7 @@ import at.tugraz.recipro.recipes.control.RecipesManager;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import io.swagger.annotations.Api;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -94,35 +95,46 @@ public class RecipesResource {
                 .collect(Collectors.toList());
     }
     
+    private java.nio.file.Path getImagePath(long id, String fileType) {
+        String fileName = id + "." + fileType;
+        java.nio.file.Path fullPath = Paths.get(servletContext.getRealPath("WEB-INF"), fileName);
+        return fullPath;
+    }
+    
     @POST
-    @Consumes("image/jpeg")
+    @Consumes({"image/jpeg", "image/png"})
     @Path("{id}/image")
-    public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType, @HeaderParam("Content-Length") long fileSize) throws IOException {
+    public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType) throws IOException {
         
-        String fileName = id + ".jpg";
-        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
-        Files.copy(in, Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
+        java.nio.file.Path fullPath;
+        
+        if(fileType.equals("image/jpeg")) {    
+            fullPath = getImagePath(id, "jpeg");
+        } else {
+            fullPath = getImagePath(id, "png");
+        }    
+        
+        System.out.println("create image: " + fullPath);
+        Files.copy(in, fullPath, StandardCopyOption.REPLACE_EXISTING);
         
         URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
         return Response.created(uri).build();
     }
     
     @GET
-    @Produces("image/jpeg")
+    @Produces({"image/jpeg", "image/png"})
     @Path("{id}/image")
     public Response getImage(@PathParam("id") long id) throws IOException {
         
-        String fileName = id + ".jpg";
+        java.nio.file.Path fullPathJpeg = getImagePath(id, "jpeg");
+        java.nio.file.Path fullPathPng = getImagePath(id, "png");
         
-        String fullPath = servletContext.getRealPath("WEB-INF") + fileName;
-        
-        if(Files.exists(Paths.get(fullPath)))
-        {
-            return Response.ok().entity(Files.newInputStream(Paths.get(fullPath))).build();   
-        }
-        else
-        {
+        if (Files.exists(fullPathJpeg)) {
+            return Response.ok().entity(Files.newInputStream(fullPathJpeg)).type("image/jpeg").build();   
+        } else if (Files.exists(fullPathPng)) {
+            return Response.ok().entity(Files.newInputStream(fullPathPng)).type("image/png").build();   
+        } else {
             return Response.status(Response.Status.NOT_FOUND).build();  
-        }    
+        } 
     }
 }

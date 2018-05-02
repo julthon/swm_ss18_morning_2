@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -26,7 +26,7 @@ import java.util.Map;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 
-class WSConnection {
+public abstract class WSConnection {
     public static String backend_url = ResourceAccessHelper.getStringFromId(R.string.connect_url);
     public static String backend_path = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
 
@@ -71,8 +71,7 @@ class WSConnection {
     }
 
 
-    public Bitmap getImage(int recipeId)
-    {
+    public Bitmap getImage(int recipeId) {
         String urlString = backend_url + backend_path + "/" + recipeId + "/image";
 
         try {
