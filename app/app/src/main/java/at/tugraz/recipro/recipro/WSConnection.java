@@ -1,5 +1,7 @@
 package at.tugraz.recipro.recipro;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -12,6 +14,11 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -46,5 +53,39 @@ class WSConnection {
         Log.d("WSCONNECTION", "Returned: " + response.getBody().length);
 
         return Arrays.asList(response.getBody());
+    }
+
+    static public void postImage(int recipeId)
+    {
+        String urlString = backend_url + backend_path + "/" + recipeId + "/image";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(urlString);
+        ResponseEntity<Recipe[]> response = restTemplate.exchange(uriBuilder.build().toUriString(), HttpMethod.POST, entity, Recipe[].class);
+    }
+
+
+    public Bitmap getImage(int recipeId)
+    {
+        String urlString = backend_url + backend_path + "/" + recipeId + "/image";
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap imageBitmap = BitmapFactory.decodeStream(input);
+            return imageBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
