@@ -114,4 +114,16 @@ public class SearchInstrumentedTest {
         onView(withHint(R.string.search_hint)).perform(pressKey(KeyEvent.KEYCODE_T), pressKey(KeyEvent.KEYCODE_ENTER));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testIngredientsContainsExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.tvIngredientContains)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testIngredientExcludeExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.tvIngredientExclude)).check(matches(isDisplayed()));
+    }
 }
