@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.boundary;
 
 import at.tugraz.recipro.recipes.control.RecipesManager;
@@ -29,7 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  *
- * @author Dominik
+ * @author Dominik, Julian
  */
 @Path("recipes")
 @Stateless
@@ -81,5 +76,12 @@ public class RecipesResource {
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
                 .collect(Collectors.toList());
+    }
+    
+    @GET
+    @Path("/types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<RecipeType> getAllTypes() {
+        return recipesManager.findAllTypes();
     }
 }
