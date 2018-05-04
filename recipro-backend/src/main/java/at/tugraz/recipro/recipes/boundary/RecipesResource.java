@@ -1,6 +1,7 @@
 package at.tugraz.recipro.recipes.boundary;
 
 import at.tugraz.recipro.recipes.control.RecipesManager;
+import at.tugraz.recipro.recipes.entity.Ingredient;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import io.swagger.annotations.Api;
@@ -83,5 +84,12 @@ public class RecipesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<RecipeType> getAllTypes() {
         return recipesManager.findAllTypes();
+    }
+  
+    @GET
+    @Path("/ingredients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Ingredient> getAllIngredients() {
+        return recipesManager.findAllIngredients();
     }
 }
