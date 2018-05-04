@@ -80,6 +80,13 @@ public class RecipesResource {
     }
     
     @GET
+    @Path("/types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<RecipeType> getAllTypes() {
+        return recipesManager.findAllTypes();
+    }
+  
+    @GET
     @Path("/ingredients")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Ingredient> getAllIngredients() {
