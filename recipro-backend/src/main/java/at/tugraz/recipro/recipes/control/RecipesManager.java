@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.control;
 
+import at.tugraz.recipro.recipes.entity.Ingredient;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +35,10 @@ public class RecipesManager {
 
     public Recipe findById(long id) {
         return this.entityManager.find(Recipe.class, id);
+    }
+    
+    public List<Ingredient> findAllIngredients() {
+        return this.entityManager.createNamedQuery(Ingredient.FIND_ALL, Ingredient.class)
+                .getResultList();
     }
 }

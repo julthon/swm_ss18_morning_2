@@ -298,4 +298,8 @@ public class RecipesResourceIT {
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
     
+    @Test
+    public void allergenesExist() {
+        
+    }
 }
