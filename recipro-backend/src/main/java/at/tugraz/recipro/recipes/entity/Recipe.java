@@ -39,8 +39,6 @@ public class Recipe {
     private String description;
     private List<RecipeIngredient> ingredients;
     private double rating;
-
-    
     
     static final String PREFIX = "recipes.entity.Recipe.";
     public static final String FIND_ALL = PREFIX + "findAll";
