@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:chip="http://schemas.android.com/apk/res-auto"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
@@ -16,6 +17,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchbar">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <at.tugraz.recipro.Views.OurChipView
+                android:id="@+id/chip_tag_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                chip:chip_corner_radius="6dp"
+                chip:chip_line_spacing="4dp"
+                chip:chip_padding="10dp"
+                chip:chip_side_padding="10dp"
+                chip:chip_spacing="4dp" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -57,8 +76,6 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:inputType="number"/>
-
-
         </TableRow>
         <TableRow
             android:layout_width="match_parent"
