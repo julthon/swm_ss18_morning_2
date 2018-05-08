@@ -17,6 +17,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
     RatingBar rbRating;
     ListView lvIngredients;
     TextView tvDescription;
+    EditText etPortions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
         rbRating = findViewById(R.id.rbRating);
         lvIngredients = findViewById(R.id.lvIngredients);
         tvDescription = findViewById(R.id.tvDescription);
+        etPortions = findViewById(R.id.etNumberOfPortions);
 
 
         Bundle extras = getIntent().getExtras();
@@ -47,5 +49,6 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
         tvTime.setText(String.valueOf(recipe.getTime()) + "min");
         rbRating.setRating(((float) recipe.getRating()));
         tvDescription.setText(recipe.getDescription());
+        etPortions.setText(recipe.getServings());
     }
 }
