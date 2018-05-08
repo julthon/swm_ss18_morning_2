@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Recipe implements Serializable{
 
+    @SerializedName("id")
+    private long id;
+
     @SerializedName("title")
     private String title;
 
@@ -73,5 +76,9 @@ public class Recipe implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -14,6 +14,8 @@ import android.widget.*;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import at.tugraz.recipro.Views.OurChipView;
 import at.tugraz.recipro.Views.OurTagImplementation;
 import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
@@ -157,6 +160,37 @@ public class MainActivity extends AppCompatActivity {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public List<Recipe> filterRecipes(ArrayList<Recipe> recipes, List<RecipeIngredient> ingredients) {
+
+        Map<Recipe, Integer> ingredientMatchings = new HashMap<>();
+        List<Recipe> sortedRecipes = new ArrayList<>();
+
+        for (Recipe recipe : recipes) {
+            ingredientMatchings.put(recipe, 0);
+        }
+
+        for (Recipe recipe : recipes) {
+            for (RecipeIngredient ingredient : ingredients) {
+                if (recipe.getIngredients().contains(ingredient))
+                    ingredientMatchings.put(recipe, ingredientMatchings.get(recipe) + 1);
+            }
+        }
+
+        List<Map.Entry<Recipe, Integer>> ingredientMatchingsList = new ArrayList<>(ingredientMatchings.entrySet());
+        Collections.sort(ingredientMatchingsList, new Comparator<Map.Entry<Recipe, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Recipe, Integer> e1, Map.Entry<Recipe, Integer> e2) {
+                return e1.getValue().compareTo(e2.getValue());
+            }
+        });
+
+        for (Map.Entry<Recipe, Integer> entry: ingredientMatchingsList) {
+            sortedRecipes.add(entry.getKey());
+        }
+
+        return sortedRecipes;
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
