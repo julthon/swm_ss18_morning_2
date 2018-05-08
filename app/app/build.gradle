@@ -43,4 +43,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 }

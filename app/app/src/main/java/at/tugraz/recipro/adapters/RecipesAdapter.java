@@ -11,17 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.recipro.R;
-import at.tugraz.recipro.recipro.RecipeDescriptionActivity;
-import at.tugraz.recipro.recipro.WSConnection;
+import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipesAdapter extends ArrayAdapter<Recipe> {
     private static class ViewHolder {

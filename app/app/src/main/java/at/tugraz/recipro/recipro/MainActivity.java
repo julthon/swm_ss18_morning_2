@@ -22,6 +22,7 @@ import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
+import at.tugraz.recipro.ws.WSConnection;
 
 public class MainActivity extends AppCompatActivity {
 

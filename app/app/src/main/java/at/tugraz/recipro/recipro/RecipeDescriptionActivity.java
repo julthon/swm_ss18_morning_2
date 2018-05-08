@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -14,13 +13,9 @@ import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipeDescriptionActivity extends AppCompatActivity {
 
@@ -70,14 +65,6 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
                 try {
                     return WSConnection.getImage(recipe.getId());
                 } catch (RestClientException ex) {
-                    RecipeDescriptionActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(RecipeDescriptionActivity.this,
-                                    getResources().getString(R.string.error_connect),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
                     return null;
                 }
             }

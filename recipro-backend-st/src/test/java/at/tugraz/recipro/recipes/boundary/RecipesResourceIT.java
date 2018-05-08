@@ -353,7 +353,6 @@ public class RecipesResourceIT {
         int max = 5000;
         int min = 1000;
         int randomId = min + (int)(Math.random() * ((max - min) + 1));
-        assertTrue((randomId >= min) && (randomId <= max));
         
         Response response = this.provider.target()
                 .path(randomId + "/image")

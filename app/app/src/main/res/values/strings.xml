@@ -6,8 +6,9 @@
     <string name="min_prep">minpreptime</string>
     <string name="max_prep">maxpreptime</string>
     <string name="recipe">Recipe</string>
-    <string name="connect_url">http://localhost/recipro-backend/api</string>
-    <string name="connect_path_recipes">/recipes</string>
+    <string name="connect_url">http://10.0.2.2:8080/recipro-backend/api</string>
+    <string name="connect_path_recipes">recipes</string>
+    <string name="connect_path_image">image</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
     <string name="filter_types">types</string>
