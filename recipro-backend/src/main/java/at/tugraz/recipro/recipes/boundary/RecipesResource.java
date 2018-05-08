@@ -1,31 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.boundary;
 
 import at.tugraz.recipro.recipes.control.RecipesManager;
+import at.tugraz.recipro.recipes.entity.Ingredient;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
 import io.swagger.annotations.Api;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -38,7 +25,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  *
- * @author Dominik
+ * @author Dominik, Julian
  */
 @Path("recipes")
 @Stateless
@@ -52,9 +39,6 @@ public class RecipesResource {
     
     @Inject
     RecipesManager recipesManager;
-    
-    @Context
-    ServletContext servletContext;
     
     @POST
     public Response create(Recipe recipe, @Context UriInfo uriInfo) {
@@ -95,46 +79,17 @@ public class RecipesResource {
                 .collect(Collectors.toList());
     }
     
-    private java.nio.file.Path getImagePath(long id, String fileType) {
-        String fileName = id + "." + fileType;
-        java.nio.file.Path fullPath = Paths.get(servletContext.getRealPath("WEB-INF"), fileName);
-        return fullPath;
-    }
-    
-    @POST
-    @Consumes({"image/jpeg", "image/png"})
-    @Path("{id}/image")
-    public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType) throws IOException {
-        
-        java.nio.file.Path fullPath;
-        
-        if(fileType.equals("image/jpeg")) {    
-            fullPath = getImagePath(id, "jpeg");
-        } else {
-            fullPath = getImagePath(id, "png");
-        }    
-        
-        System.out.println("create image: " + fullPath);
-        Files.copy(in, fullPath, StandardCopyOption.REPLACE_EXISTING);
-        
-        URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
-        return Response.created(uri).build();
-    }
-    
     @GET
-    @Produces({"image/jpeg", "image/png"})
-    @Path("{id}/image")
-    public Response getImage(@PathParam("id") long id) throws IOException {
-        
-        java.nio.file.Path fullPathJpeg = getImagePath(id, "jpeg");
-        java.nio.file.Path fullPathPng = getImagePath(id, "png");
-        
-        if (Files.exists(fullPathJpeg)) {
-            return Response.ok().entity(Files.newInputStream(fullPathJpeg)).type("image/jpeg").build();   
-        } else if (Files.exists(fullPathPng)) {
-            return Response.ok().entity(Files.newInputStream(fullPathPng)).type("image/png").build();   
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();  
-        } 
+    @Path("/types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<RecipeType> getAllTypes() {
+        return recipesManager.findAllTypes();
+    }
+  
+    @GET
+    @Path("/ingredients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Ingredient> getAllIngredients() {
+        return recipesManager.findAllIngredients();
     }
 }

@@ -86,7 +86,7 @@ public class RecipeDescriptionInstrumentedTest {
     @Test
     public void checkContent() {
         onView(withText(recipe.getTitle())).check(matches(isDisplayed()));
-        onView(withText(String.valueOf(recipe.getTime()))).check(matches(isDisplayed()));
+        onView(withText(String.valueOf(recipe.getTime()) + "min")).check(matches(isDisplayed()));
         onView(withText(recipe.getDescription())).check(matches(isDisplayed()));
 
         List<RecipeIngredient> ingredients = recipe.getIngredients();

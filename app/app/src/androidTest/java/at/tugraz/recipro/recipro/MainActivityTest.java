@@ -39,16 +39,42 @@ public class MainActivityTest {
 
     @Test
     public void testPreparationTime() {
-        Map<String, String> queryParams = new HashMap<>();
         int minpreptime = 50;
         int maxpreptime = 200;
 
+        Map<String, String> queryParams = new HashMap<>();
         queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.min_prep), Integer.toString(minpreptime));
         queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.max_prep), Integer.toString(maxpreptime));
         List<Recipe> recipes = WSConnection.sendQuery(queryParams);
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getTime() > minpreptime);
+            assertTrue(recipe.getTime() < maxpreptime);
+        }
+    }
+
+    @Test
+    public void testMinPreparationTime() {
+        int minpreptime = 50;
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.min_prep), Integer.toString(minpreptime));
+        List<Recipe> recipes = WSConnection.sendQuery(queryParams);
+
+        for (Recipe recipe : recipes) {
+            assertTrue(recipe.getTime() > minpreptime);
+        }
+    }
+
+    @Test
+    public void testMaxPreparationTime() {
+        int maxpreptime = 200;
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.max_prep), Integer.toString(maxpreptime));
+        List<Recipe> recipes = WSConnection.sendQuery(queryParams);
+
+        for (Recipe recipe : recipes) {
             assertTrue(recipe.getTime() < maxpreptime);
         }
     }
