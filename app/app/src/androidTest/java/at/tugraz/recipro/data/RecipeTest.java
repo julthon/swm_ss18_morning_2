@@ -72,6 +72,10 @@ public class RecipeTest {
         recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
         this.recipe.setIngredients(recipeIngredients);
         assertEquals(this.recipe.getIngredients().size(), recipeIngredients.size());
+
+        int servings = 1;
+        this.recipe.setServings(servings);
+        assertEquals(this.recipe.getServings(), servings);
     }
 
     @Test
