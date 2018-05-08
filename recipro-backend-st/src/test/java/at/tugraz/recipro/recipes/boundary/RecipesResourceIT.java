@@ -31,17 +31,17 @@ import org.junit.runners.MethodSorters;
 public class RecipesResourceIT {
     
     @Rule
-    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughray.com/recipro-backend/api/recipes");
+    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughrany.com/recipro-backend/api/recipes");
     
     
     @Test
     public void createAndFindRecipeById(){
         
-        
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
         double rating = 3.7; 
         int preparationTime = 120;
+        int servings = 4;
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
         JsonArray recipeTypesToCreate = recipeTypeBuilder
@@ -82,6 +82,7 @@ public class RecipesResourceIT {
                 .add("description", description)
                 .add("ingredients", ingredients)
                 .add("rating", rating)
+                .add("servings", servings)
                 .build();
         
         Response response = this.provider.target()
@@ -113,6 +114,7 @@ public class RecipesResourceIT {
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
         assertThat(payload.getJsonArray("ingredients"), is(ingredients));
         assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
+        assertThat(payload.getInt("servings"), is(servings));
     }
     
     @Test
