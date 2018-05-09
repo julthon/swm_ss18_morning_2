@@ -2,6 +2,7 @@ package at.tugraz.recipro.recipro;
 
 import android.util.Log;
 
+import at.tugraz.recipro.data.Ingredient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -46,5 +47,28 @@ public abstract class WSConnection {
         Log.d("WSCONNECTION", "Returned: " + response.getBody().length);
 
         return Arrays.asList(response.getBody());
+    }
+
+    public static List<Ingredient> getIngredients(){
+        String url = backend_url + backend_path + "/types";
+
+        Log.d("INGREDIENTS", "REQUEST URL: " + url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+
+        ResponseEntity<Ingredient[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Ingredient[].class);
+        Log.d("INGREDIENTS", "RESPONSE STATUS CODE: " + response.getStatusCode());
+        Log.d("WSCONNECTION", "Returned: " + response.getBody().length);
+
+        return Arrays.asList(response.getBody());
+    }
+
+    public static List<String> getRecipeTypes() {
+        return null;
     }
 }

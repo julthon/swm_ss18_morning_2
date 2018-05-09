@@ -4,19 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.AsyncTask;
+import android.provider.BaseColumns;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import at.tugraz.recipro.data.Ingredient;
 import org.springframework.web.client.RestClientException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Executor;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
@@ -31,7 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spRecipeType;
     private TableLayout tlFilters;
     private ImageButton ibFilters;
-  
+    private SearchView searchExclude;
+    private SearchView searchIngredient;
+
+    private List<Ingredient> ingredients = Collections.emptyList();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            searchFor(query);
+        }
+
         ibFilters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,12 +82,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            searchFor(query);
-        }
+
+        searchIngredient = findViewById(R.id.searchbarIngredientContains);
+        initializeIngredientSearch(searchManager, searchIngredient);
+        searchExclude = findViewById(R.id.searchbarIngredientExclude);
+        initializeIngredientSearch(searchManager, searchExclude);
+
+        initializeIngredients();
+
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<>();
@@ -98,6 +113,80 @@ public class MainActivity extends AppCompatActivity {
         spRecipeType.setAdapter(typeAdapter);
         
         
+    }
+
+    private void initializeIngredientSearch(SearchManager searchManager, final SearchView searchIngredient) {
+        searchIngredient.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchIngredient.setSubmitButtonEnabled(true);
+        searchIngredient.setIconifiedByDefault(false);
+        final String[] from = new String[] {"ingredientName"};
+        final int[] to = new int[] {android.R.id.text1};
+        final SimpleCursorAdapter ingredientAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        searchIngredient.setSuggestionsAdapter(ingredientAdapter);
+        searchIngredient.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Cursor cursor = searchIngredient.getSuggestionsAdapter().getCursor();
+                cursor.moveToPosition(position);
+                searchIngredient.setQuery(cursor.getString(cursor.getColumnIndex("ingredientName")), true);
+                return true;
+            }
+        });
+        searchIngredient.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                searchIngredient.setQuery("", false);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                updateIngredientSuggestions(query, ingredientAdapter);
+                return true;
+            }
+        });
+        searchIngredient.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    return;
+                updateIngredientSuggestions(searchIngredient.getQuery().toString(), ingredientAdapter);
+            }
+        });
+    }
+
+    private void updateIngredientSuggestions(String query, SimpleCursorAdapter ingredientAdapter) {
+        MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, "ingredientName", "object"});
+        query = query.toLowerCase();
+        int id = 0;
+        for (Ingredient ingredient : ingredients) {
+            if(ingredient.getName().toLowerCase().contains(query))
+                cursor.addRow(new Object[]{id++, ingredient.getName(), ingredient});
+        }
+        ingredientAdapter.changeCursor(cursor);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void initializeIngredients() {
+        /*new AsyncTask<Void, Void, List<Ingredient>>() {
+            @Override
+            protected List<Ingredient> doInBackground(Void... voids) {
+                return WSConnection.getIngredients();
+            }
+
+            @Override
+            protected void onPostExecute(List<Ingredient> ingredients) {
+                MainActivity.this.ingredients = ingredients;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
+        ingredients = new ArrayList<Ingredient>();
+        ingredients.add(new Ingredient("Menschenfleisch"));
     }
 
     @SuppressLint("StaticFieldLeak")
