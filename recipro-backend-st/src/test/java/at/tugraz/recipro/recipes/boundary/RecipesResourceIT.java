@@ -104,8 +104,7 @@ public class RecipesResourceIT {
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
-        assertThat(payload.getJsonArray("ingredients"), is(ingredients));
-        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
+        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));       
     }
     
     @Test
@@ -289,6 +288,18 @@ public class RecipesResourceIT {
         System.out.println("filterByType payload " + payload);
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
+    }
+    
+    @Test
+    public void getAllIngredients() {
+        Response response = this.provider.target()
+                .path("types")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("getAllIngredients payload " + payload);
+        assertThat(payload.size(), is(3));
     }
     
     @Test
