@@ -35,14 +35,6 @@ public class Recipe implements Serializable{
         this.description = description;
     }
 
-    public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
-        this.title = title;
-        this.time = time;
-        this.rating = rating;
-        this.ingredients = ingredients;
-        this.description = description;
-    }
-
     public Recipe() {
         ingredients = new ArrayList<>();
     }
@@ -87,11 +79,11 @@ public class Recipe implements Serializable{
         this.description = description;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

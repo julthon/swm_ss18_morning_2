@@ -1,6 +1,7 @@
 package at.tugraz.recipro.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class RecipeIngredient implements Serializable{
     private Ingredient ingredient;
@@ -25,5 +26,19 @@ public class RecipeIngredient implements Serializable{
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeIngredient that = (RecipeIngredient) o;
+        return Objects.equals(ingredient, that.ingredient) &&
+                Objects.equals(quantity, that.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ingredient, quantity);
     }
 }

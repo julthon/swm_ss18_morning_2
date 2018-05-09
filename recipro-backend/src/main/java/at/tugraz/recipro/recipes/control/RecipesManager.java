@@ -40,7 +40,7 @@ public class RecipesManager {
     }
     
     public List<RecipeType> findAllTypes() {
-        return RecipeType.getAllTypes();
+        return Arrays.asList(RecipeType.DESSERT, RecipeType.MAIN_COURSE, RecipeType.SNACK);
     }
   
     public List<Ingredient> findAllIngredients() {

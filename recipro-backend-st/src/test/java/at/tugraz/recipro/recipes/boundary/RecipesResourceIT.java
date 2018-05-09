@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
@@ -14,8 +9,6 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -31,7 +24,7 @@ import org.junit.runners.MethodSorters;
 public class RecipesResourceIT {
     
     @Rule
-    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughray.com/recipro-backend/api/recipes");
+    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
     
     
     @Test
@@ -111,8 +104,7 @@ public class RecipesResourceIT {
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
-        assertThat(payload.getJsonArray("ingredients"), is(ingredients));
-        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
+        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));       
     }
     
     @Test
@@ -296,6 +288,18 @@ public class RecipesResourceIT {
         System.out.println("filterByType payload " + payload);
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
+    }
+    
+    @Test
+    public void getAllIngredients() {
+        Response response = this.provider.target()
+                .path("types")
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("getAllIngredients payload " + payload);
+        assertThat(payload.size(), is(3));
     }
     
     @Test
