@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
@@ -14,8 +9,6 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -31,7 +24,8 @@ import org.junit.runners.MethodSorters;
 public class RecipesResourceIT {
     
     @Rule
-    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("https://aughrany.com/recipro-backend/api/recipes");
+    public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
+
     
     
     @Test
