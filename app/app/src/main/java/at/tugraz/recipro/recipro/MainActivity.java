@@ -182,12 +182,13 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(ingredientMatchingsList, new Comparator<Map.Entry<Recipe, Integer>>() {
             @Override
             public int compare(Map.Entry<Recipe, Integer> e1, Map.Entry<Recipe, Integer> e2) {
-                return e1.getValue().compareTo(e2.getValue());
+                return e2.getValue().compareTo(e1.getValue());
             }
         });
 
         for (Map.Entry<Recipe, Integer> entry: ingredientMatchingsList) {
-            sortedRecipes.add(entry.getKey());
+            if (entry.getValue() > 0)
+                sortedRecipes.add(entry.getKey());
         }
 
         return sortedRecipes;
@@ -198,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
         ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        adapter.add(new Recipe("Recipe #1", 20, 5.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #2", 40, 4.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #3", 10, 1.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #4", 30, 3.0, recipeIngredients, ""));
+        adapter.add(new Recipe(1, "Recipe #1", 20, 5.0, recipeIngredients, ""));
+        adapter.add(new Recipe(2, "Recipe #2", 40, 4.0, recipeIngredients, ""));
+        adapter.add(new Recipe(3, "Recipe #3", 10, 1.0, recipeIngredients, ""));
+        adapter.add(new Recipe(4, "Recipe #4", 30, 3.0, recipeIngredients, ""));
     }
 }

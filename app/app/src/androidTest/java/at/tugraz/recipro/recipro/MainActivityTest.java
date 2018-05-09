@@ -18,8 +18,11 @@ import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 
+import static org.hamcrest.CoreMatchers.either;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -33,7 +36,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testPreparationTime() {
+    public void preparationTime() {
         int minpreptime = 50;
         int maxpreptime = 200;
 
@@ -49,7 +52,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testMinPreparationTime() {
+    public void minPreparationTime() {
         int minpreptime = 50;
 
         Map<String, String> queryParams = new HashMap<>();
@@ -62,7 +65,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testMaxPreparationTime() {
+    public void maxPreparationTime() {
         int maxpreptime = 200;
 
         Map<String, String> queryParams = new HashMap<>();
@@ -75,8 +78,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void filterByIngredients() {
-
+    public void filterByIngredientsAllMatches() {
         List<RecipeIngredient> ingredients = new ArrayList<>();
         RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
         RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
@@ -84,11 +86,41 @@ public class MainActivityTest {
         RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
 
-        List<Recipe> recipes = new ArrayList<>();
+        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cheese, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
+        List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
-        recipes.add(new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake"));
-        recipes.add(new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake"));
-        recipes.add(new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel"));
+        List<RecipeIngredient> filterIngredients = new ArrayList<>();
+        filterIngredients.add(flour);
+        filterIngredients.add(cheese);
+        filterIngredients.add(salt);
+        filterIngredients.add(sugar);
+
+        List<Recipe> filteredRecipes = mActivityRule.getActivity().filterRecipes(recipes, filterIngredients);
+
+        assertThat(filteredRecipes.size(), is(3));
+
+        for (Recipe recipe : filteredRecipes) {
+            assertThat(recipe.getIngredients(), either(hasItem(flour)).or(hasItem(cheese)).or(hasItem(salt)).or(hasItem(sugar)));
+        }
+
+        assertThat(filteredRecipes, contains(recipe1, recipe3, recipe2));
+    }
+
+    @Test
+    public void filterByIngredientsPartialMatches() {
+        List<RecipeIngredient> ingredients = new ArrayList<>();
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
+        RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
+        RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
+        RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
+        RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
+        
+        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
+        List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
         filterIngredients.add(flour);
@@ -99,8 +131,31 @@ public class MainActivityTest {
         assertThat(filteredRecipes.size(), is(2));
 
         for (Recipe recipe : filteredRecipes) {
-            //recipe.getIngredients().stream().anyMatch(x -> x.getIngredient().getName());
-            //for (RecipeIngredient recipeIngredients : )
+            assertThat(recipe.getIngredients(), either(hasItem(flour)).or(hasItem(cacao)));
         }
+
+        assertThat(filteredRecipes, contains(recipe1, recipe3));
+    }
+
+    @Test
+    public void filterByIngredientsNoMatches() {
+        List<RecipeIngredient> ingredients = new ArrayList<>();
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
+        RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
+        RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
+        RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
+        RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
+
+        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(flour), "Good schnitzel");
+        List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
+
+        List<RecipeIngredient> filterIngredients = new ArrayList<>();
+        filterIngredients.add(salt);
+
+        List<Recipe> filteredRecipes = mActivityRule.getActivity().filterRecipes(recipes, filterIngredients);
+
+        assertThat(filteredRecipes.size(), is(0));
     }
 }
