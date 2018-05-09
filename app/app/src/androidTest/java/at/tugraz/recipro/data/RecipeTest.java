@@ -27,7 +27,7 @@ public class RecipeTest {
         this.recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
         this.recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT2_NAME), INGREDIENT2_QUANTITY));
 
-        this.recipe = new Recipe(TITLE, TIME, RATING, this.recipeIngredients, DESC);
+        this.recipe = new Recipe(1, TITLE, TIME, RATING, this.recipeIngredients, DESC);
     }
 
     @Test

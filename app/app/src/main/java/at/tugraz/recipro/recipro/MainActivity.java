@@ -14,14 +14,18 @@ import android.widget.*;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import at.tugraz.recipro.Views.OurChipView;
 import at.tugraz.recipro.Views.OurTagImplementation;
 import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
@@ -159,14 +163,29 @@ public class MainActivity extends AppCompatActivity {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public List<Recipe> filterRecipes(List<Recipe> recipes, List<RecipeIngredient> ingredients) {
+        Map<Recipe, Long> ingredientMatchings = new HashMap<>();
+
+        recipes.stream().forEach(r -> ingredientMatchings.put(r,
+                ingredients.stream().filter(i -> r.getIngredients().contains(i)).count()));
+
+        List<Recipe> sortedRecipes = ingredientMatchings.entrySet().stream()
+                .filter(e -> e.getValue() != 0L)
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        return sortedRecipes;
+    }
+
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void fillWithTestData() {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
         ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        adapter.add(new Recipe("Recipe #1", 20, 5.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #2", 40, 4.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #3", 10, 1.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #4", 30, 3.0, recipeIngredients, ""));
+        adapter.add(new Recipe(1, "Recipe #1", 20, 5.0, recipeIngredients, ""));
+        adapter.add(new Recipe(2, "Recipe #2", 40, 4.0, recipeIngredients, ""));
+        adapter.add(new Recipe(3, "Recipe #3", 10, 1.0, recipeIngredients, ""));
+        adapter.add(new Recipe(4, "Recipe #4", 30, 3.0, recipeIngredients, ""));
     }
 }
