@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import at.tugraz.recipro.Views.OurChipView;
 import at.tugraz.recipro.Views.OurTagImplementation;
@@ -163,33 +164,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List<Recipe> filterRecipes(List<Recipe> recipes, List<RecipeIngredient> ingredients) {
+        Map<Recipe, Long> ingredientMatchings = new HashMap<>();
 
-        Map<Recipe, Integer> ingredientMatchings = new HashMap<>();
-        List<Recipe> sortedRecipes = new ArrayList<>();
+        recipes.stream().forEach(r -> ingredientMatchings.put(r,
+                ingredients.stream().filter(i -> r.getIngredients().contains(i)).count()));
 
-        for (Recipe recipe : recipes) {
-            ingredientMatchings.put(recipe, 0);
-        }
-
-        for (Recipe recipe : recipes) {
-            for (RecipeIngredient ingredient : ingredients) {
-                if (recipe.getIngredients().contains(ingredient))
-                    ingredientMatchings.put(recipe, ingredientMatchings.get(recipe) + 1);
-            }
-        }
-
-        List<Map.Entry<Recipe, Integer>> ingredientMatchingsList = new ArrayList<>(ingredientMatchings.entrySet());
-        Collections.sort(ingredientMatchingsList, new Comparator<Map.Entry<Recipe, Integer>>() {
-            @Override
-            public int compare(Map.Entry<Recipe, Integer> e1, Map.Entry<Recipe, Integer> e2) {
-                return e2.getValue().compareTo(e1.getValue());
-            }
-        });
-
-        for (Map.Entry<Recipe, Integer> entry: ingredientMatchingsList) {
-            if (entry.getValue() > 0)
-                sortedRecipes.add(entry.getKey());
-        }
+        List<Recipe> sortedRecipes = ingredientMatchings.entrySet().stream()
+                .filter(e -> e.getValue() != 0L)
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         return sortedRecipes;
     }

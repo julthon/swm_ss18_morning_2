@@ -79,7 +79,6 @@ public class MainActivityTest {
 
     @Test
     public void filterByIngredientsAllMatches() {
-        List<RecipeIngredient> ingredients = new ArrayList<>();
         RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
         RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
         RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
@@ -110,13 +109,12 @@ public class MainActivityTest {
 
     @Test
     public void filterByIngredientsPartialMatches() {
-        List<RecipeIngredient> ingredients = new ArrayList<>();
         RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
         RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
         RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
         RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
-        
+
         Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
         Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
         Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
@@ -139,7 +137,6 @@ public class MainActivityTest {
 
     @Test
     public void filterByIngredientsNoMatches() {
-        List<RecipeIngredient> ingredients = new ArrayList<>();
         RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
         RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
         RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
@@ -157,5 +154,21 @@ public class MainActivityTest {
         List<Recipe> filteredRecipes = mActivityRule.getActivity().filterRecipes(recipes, filterIngredients);
 
         assertThat(filteredRecipes.size(), is(0));
+    }
+
+    @Test
+    public void filterByIngredientsDifferentReferences() {
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
+        RecipeIngredient flour2 = new RecipeIngredient(new Ingredient("flour"), "120");
+
+        Recipe recipe = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour), "Good cake");
+        List<Recipe> recipes = Arrays.asList(recipe);
+
+        List<RecipeIngredient> filterIngredients = new ArrayList<>();
+        filterIngredients.add(flour2);
+
+        List<Recipe> filteredRecipes = mActivityRule.getActivity().filterRecipes(recipes, filterIngredients);
+
+        assertThat(filteredRecipes.size(), is(1));
     }
 }
