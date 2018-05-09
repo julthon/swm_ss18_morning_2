@@ -11,6 +11,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import at.tugraz.recipro.Views.OurChipView;
 import at.tugraz.recipro.Views.OurTagImplementation;
 
@@ -37,5 +40,25 @@ public class ChipViewTest {
         Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE).size(), 1);
         Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.ALLERGEN).size(), 1);
         Assert.assertEquals(cv.getListOfType(null).size(), 4);
+    }
+
+    @Test
+    public void testTagRemove() {
+        OurTagImplementation tag1 = cv.getListOfType(OurTagImplementation.TagType.RECIPE_TYPE).get(1);
+        Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.RECIPE_TYPE).size(), 1);
+        cv.remove(tag1);
+        Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.RECIPE_TYPE).size(), 0);
+        cv.add(tag1);
+        Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.RECIPE_TYPE).size(), 1);
+    }
+
+    @Test
+    public void testRemoveAll() {
+        HashMap<Integer, OurTagImplementation> listOfType = cv.getListOfType(null);
+        cv.removeAllChips();
+        Assert.assertEquals(cv.getListOfType(null).size(), 0);
+        for(Map.Entry<Integer, OurTagImplementation> entry : listOfType.entrySet())
+            cv.add(entry.getValue());
+        Assert.assertEquals(cv.getListOfType(null).size(), listOfType.entrySet().size());
     }
 }

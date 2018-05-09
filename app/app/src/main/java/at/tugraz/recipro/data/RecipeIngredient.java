@@ -2,7 +2,7 @@ package at.tugraz.recipro.data;
 
 import java.io.Serializable;
 
-public class RecipeIngredient implements Serializable{
+public class RecipeIngredient implements Serializable {
     private Ingredient ingredient;
     private String quantity;
 

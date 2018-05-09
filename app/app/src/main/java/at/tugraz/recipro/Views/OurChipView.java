@@ -9,7 +9,9 @@ import com.plumillonforge.android.chipview.ChipView;
 import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OurChipView extends ChipView {
 
@@ -37,13 +39,18 @@ public class OurChipView extends ChipView {
         addChipClickListener();
     }
 
-    public List<Integer> getListOfType(OurTagImplementation.TagType type) {
-        ArrayList<Integer> includedIngredients = new ArrayList<>();
+    public HashMap<Integer, OurTagImplementation> getListOfType(OurTagImplementation.TagType type) {
+        HashMap<Integer, OurTagImplementation> includedIngredients = new HashMap<>();
         for(Chip chip : super.getChipList()) {
             OurTagImplementation c = (OurTagImplementation) chip;
             if(c.getTagType() == type || type == null)
-                includedIngredients.add(c.getId());
+                includedIngredients.put(c.getId(), c);
         }
         return includedIngredients;
+    }
+
+    public void removeAllChips() {
+        for(Map.Entry<Integer, OurTagImplementation> entry : getListOfType(null).entrySet())
+            this.remove(entry.getValue());
     }
 }
