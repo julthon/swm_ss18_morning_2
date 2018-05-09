@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public List<Recipe> filterRecipes(ArrayList<Recipe> recipes, List<RecipeIngredient> ingredients) {
+    public List<Recipe> filterRecipes(List<Recipe> recipes, List<RecipeIngredient> ingredients) {
 
         Map<Recipe, Integer> ingredientMatchings = new HashMap<>();
         List<Recipe> sortedRecipes = new ArrayList<>();

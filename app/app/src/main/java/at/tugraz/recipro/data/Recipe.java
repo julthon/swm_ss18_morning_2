@@ -26,7 +26,8 @@ public class Recipe implements Serializable{
     @SerializedName("ingredients")
     private List<RecipeIngredient> ingredients;
 
-    public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
+    public Recipe(long id, String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
+        this.id = id;
         this.title = title;
         this.time = time;
         this.rating = rating;
@@ -76,6 +77,10 @@ public class Recipe implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Long getId() {
