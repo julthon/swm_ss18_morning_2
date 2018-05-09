@@ -20,10 +20,17 @@ import org.springframework.web.client.RestClientException;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import at.tugraz.recipro.Views.OurChipView;
+import at.tugraz.recipro.Views.OurTagImplementation;
+import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
+
+import com.plumillonforge.android.chipview.Chip;
+import com.plumillonforge.android.chipview.ChipView;
+import com.plumillonforge.android.chipview.OnChipClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -112,7 +119,16 @@ public class MainActivity extends AppCompatActivity {
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRecipeType.setAdapter(typeAdapter);
         
-        
+        // testing
+        final OurChipView chipView = (OurChipView) findViewById(R.id.chip_tag_view);
+        chipView.setAdapter(new OurChipViewAdapterImplementation(this));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.ALLERGEN));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.RECIPE_TYPE));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.ALLERGEN));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
+        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_INCLUDE));
     }
 
     private void initializeIngredientSearch(SearchManager searchManager, final SearchView searchIngredient) {

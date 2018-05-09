@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="chip_background">#BDBDBD</color>
+    <color name="chip_background_selected">#9E9E9E</color>
+    <color name="tag_ingredient_include">#A3CB38</color>
+    <color name="tag_ingredient_exclude">#D980FA</color>
+    <color name="tag_allergen_exclude">#F79F1F</color>
+    <color name="tag_recipe_type">#0fbcf9</color>
 </resources>
