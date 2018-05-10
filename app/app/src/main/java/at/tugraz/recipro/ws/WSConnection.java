@@ -28,64 +28,85 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.recipro.R;
 
-public abstract class WSConnection {
-    public static String backend_url = ResourceAccessHelper.getStringFromId(R.string.connect_url);
-    public static String recipe_path = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
-    public static String image_path = ResourceAccessHelper.getStringFromId(R.string.connect_path_image);
+public class WSConnection {
 
-    public static List<Recipe> sendQuery(Map<String, String> queryParams) throws RestClientException {
-        Uri.Builder uriBuilder = Uri.parse(backend_url)
+    private static WSConnection instance;
+
+    private WSConnection() { }
+
+    public static WSConnection getInstance() {
+        if(instance == null)
+            instance = new WSConnection();
+        return instance;
+    }
+
+    private static String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
+    private static String backend_path_recipes = "recipes";
+    private static String backend_path_image = "recipes/%d/image";
+    private static String backend_path_ingredients = "recipes/ingredients";
+
+    private static final String HTTP_LOCATION_HEADER = "location";
+    private static final String LOG_TAG = WSConnection.class.getName();
+
+    private ResponseEntity getRequest(String path, Map<String, String> queryParams, Class clazz) {
+        Uri.Builder uriBuilder = Uri.parse(backend_uri)
                 .buildUpon()
-                .appendPath(recipe_path);
+                .appendEncodedPath(path);
 
-        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-            uriBuilder.appendQueryParameter(entry.getKey(), entry.getValue());
-        }
+        if(queryParams != null)
+            for (Map.Entry<String, String> entry : queryParams.entrySet())
+                uriBuilder.appendQueryParameter(entry.getKey(), entry.getValue());
 
         String uri = uriBuilder.build().toString();
-
-        Log.d("RECIPES", "REQUEST URL: " + uri);
+        Log.d(LOG_TAG, "request_uri=" + uri);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        return restTemplate.exchange(uri, HttpMethod.GET, entity, clazz);
+    }
 
-        ResponseEntity<Recipe[]> response = restTemplate.exchange(uri, HttpMethod.GET, entity, Recipe[].class);
-        Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-        Log.d("WSCONNECTION", "Returned: " + response.getBody().length);
+    public List<Ingredient> requestIngredients() throws RestClientException {
+        ResponseEntity<Ingredient[]> response = getRequest(backend_path_ingredients, null, Ingredient[].class);
+        Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
+        return Arrays.asList(response.getBody());
+    }
 
+    public List<Recipe> requestRecipes(Map<String, String> queryParams) throws RestClientException {
+        ResponseEntity<Recipe[]> response = getRequest(backend_path_recipes, queryParams, Recipe[].class);
+        Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
         return Arrays.asList(response.getBody());
     }
 
     public static boolean postImage(long recipeId, byte[] image, ImageType imageType) {
-        String uri = Uri.parse(backend_url)
+        String path = String.format(backend_path_image, recipeId);
+        String uri = Uri.parse(backend_uri)
                 .buildUpon()
-                .appendPath(recipe_path)
-                .appendPath(Long.toString(recipeId))
-                .appendPath(image_path)
+                .appendEncodedPath(path)
                 .build()
                 .toString();
 
-        Log.d("RECIPES", "POST IMAGE URL: " + uri);
+        Log.d(LOG_TAG, "post_image_uri=" + uri);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(imageType == ImageType.JPEG ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG);
-        HttpEntity<byte[]> entity = new HttpEntity<byte[]>(image, headers);
+        HttpEntity<byte[]> entity = new HttpEntity<>(image, headers);
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
 
-        Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
-        Log.d("RECIPES", "CREATED URL: " + response.getHeaders().getFirst("location"));
+        Log.d(LOG_TAG, "status=" + response.getStatusCode());
+        Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(HTTP_LOCATION_HEADER));
 
         if (response.getStatusCode() == HttpStatus.CREATED)
             return true;
@@ -94,15 +115,14 @@ public abstract class WSConnection {
     }
 
     public static Bitmap getImage(long recipeId) {
-        String uri = Uri.parse(backend_url)
+        String path = String.format(backend_path_image, recipeId);
+        String uri = Uri.parse(backend_uri)
                 .buildUpon()
-                .appendPath(recipe_path)
-                .appendPath(Long.toString(recipeId))
-                .appendPath(image_path)
+                .appendEncodedPath(path)
                 .build()
                 .toString();
 
-        Log.d("RECIPES", "GET IMAGE URL: " + uri);
+        Log.d(LOG_TAG, "get_image_uri=" + uri);
 
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<String>(headers);
@@ -112,7 +132,7 @@ public abstract class WSConnection {
 
         try {
             ResponseEntity<Resource> response = restTemplate.exchange(uri, HttpMethod.GET, entity, Resource.class);
-            Log.d("RECIPES", "RESPONSE STATUS CODE: " + response.getStatusCode());
+            Log.d(LOG_TAG, "status=" + response.getStatusCode());
 
             InputStream responseInputStream;
             responseInputStream = response.getBody().getInputStream();
@@ -121,13 +141,13 @@ public abstract class WSConnection {
 
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-                Log.d("RECIPES", "IMAGE NOT FOUND");
+                Log.d(LOG_TAG, "image not found");
                 return null;
             }
             throw ex;
 
         } catch (IOException ex) {
-            Log.d("RECIPES", "COULD NOT DECODE IMAGE");
+            Log.d(LOG_TAG, "could not decode image");
             return null;
         }
     }
