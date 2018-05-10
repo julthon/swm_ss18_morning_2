@@ -15,7 +15,6 @@ import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +24,9 @@ import at.tugraz.recipro.Views.OurChipView;
 import at.tugraz.recipro.Views.OurTagImplementation;
 import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
-import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
-
-import com.plumillonforge.android.chipview.Chip;
-import com.plumillonforge.android.chipview.ChipView;
-import com.plumillonforge.android.chipview.OnChipClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
   
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ResourceAccessHelper.setApp(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ResourceAccessHelper.setApp(this);
 
         tlFilters = findViewById(R.id.tlFilters);
         ibFilters = findViewById(R.id.ibFilters);
@@ -142,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     queryParams.put(getResources().getString(R.string.filter_types), type);
 
                 try {
-                    return WSConnection.sendQuery(queryParams);
+                    return WSConnection.getInstance().requestRecipes(queryParams);
                 } catch (RestClientException ex) {
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
