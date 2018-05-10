@@ -163,21 +163,6 @@ public class MainActivity extends AppCompatActivity {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public List<Recipe> filterRecipes(List<Recipe> recipes, List<RecipeIngredient> ingredients) {
-        Map<Recipe, Long> ingredientMatchings = new HashMap<>();
-
-        recipes.stream().forEach(r -> ingredientMatchings.put(r,
-                ingredients.stream().filter(i -> r.getIngredients().contains(i)).count()));
-
-        List<Recipe> sortedRecipes = ingredientMatchings.entrySet().stream()
-                .filter(e -> e.getValue() != 0L)
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-        return sortedRecipes;
-    }
-
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     public void fillWithTestData() {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
