@@ -34,7 +34,7 @@ public class WSConnection {
 
     private static String backend_url = ResourceAccessHelper.getStringFromId(R.string.connect_url);
     private static String backend_path_recipes = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
-    private static String backend_path_ingredients = ResourceAccessHelper.getStringFromId(R.string.connect_path_recipes);
+    private static String backend_path_ingredients = ResourceAccessHelper.getStringFromId(R.string.connect_path_ingredients);
 
     /*public List<Recipe> requestRecipes(Map<String, String> queryParams) throws RestClientException {
         String url = backend_url + backend_path_recipes;
@@ -84,8 +84,8 @@ public class WSConnection {
     }
 
     public List<Recipe> requestRecipes(Map<String, String> queryParams) throws RestClientException {
-        ResponseEntity<Recipe[]> response = getRequest(backend_url + backend_path_ingredients, queryParams, Recipe[].class);
-        Log.i("INGREDIENTS", "status=" + response.getStatusCode() + " length=" + response.getBody().length);
+        ResponseEntity<Recipe[]> response = getRequest(backend_url + backend_path_recipes, queryParams, Recipe[].class);
+        Log.i("RECIPES", "status=" + response.getStatusCode() + " length=" + response.getBody().length);
         return Arrays.asList(response.getBody());
     }
 }

@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.recipe_types, android.R.layout.simple_spinner_item);
@@ -104,13 +103,6 @@ public class MainActivity extends AppCompatActivity {
         // testing
         final OurChipView chipView = (OurChipView) findViewById(R.id.chip_tag_view);
         chipView.setAdapter(new OurChipViewAdapterImplementation(this));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.ALLERGEN));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_INCLUDE));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.RECIPE_TYPE));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.ALLERGEN));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
-        chipView.add(new OurTagImplementation(1, "test2", OurTagImplementation.TagType.INGREDIENT_INCLUDE));
     }
 
     @SuppressLint("StaticFieldLeak")
