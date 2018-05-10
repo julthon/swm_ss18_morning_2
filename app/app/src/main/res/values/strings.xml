@@ -17,6 +17,8 @@
     <string name="type_dessert">Dessert</string>
     <string name="type_snack">Snack</string>
     <string name="type_main">Main course</string>
+    <string name="nav_home">home</string>
+    <string name="nav_pantry">my pantry</string>
     <string-array name="recipe_types">
         <item></item>
         <item>@string/type_dessert</item>

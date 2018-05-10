@@ -3,8 +3,6 @@ package at.tugraz.recipro.recipro;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.plumillonforge.android.chipview.ChipView;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +17,7 @@ public class ChipViewTest {
     private OurChipView cv;
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<RecipesActivity> mActivityRule = new ActivityTestRule<>(RecipesActivity.class);
 
     @Before
     public void setUp() throws Exception {

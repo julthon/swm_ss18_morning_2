@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.anything;
 public class SearchInstrumentedTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<RecipesActivity> mActivityRule = new ActivityTestRule<>(RecipesActivity.class);
 
     @Test
     public void searchBarAvailable() {
@@ -46,7 +46,7 @@ public class SearchInstrumentedTest {
 
     @Before
     public void fillSearchResultList() {
-        final MainActivity activity = mActivityRule.getActivity();
+        final RecipesActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(new Runnable(){
             @Override
             public void run() {
