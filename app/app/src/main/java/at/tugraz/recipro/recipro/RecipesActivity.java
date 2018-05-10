@@ -5,11 +5,19 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
@@ -24,6 +32,7 @@ import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
+import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipesActivity extends AppCompatActivity {
 
@@ -69,13 +78,6 @@ public class RecipesActivity extends AppCompatActivity {
                 tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             }
         });
-
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            searchFor(query);
-        }
 
         lvSearchResults = (ListView) findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<>();

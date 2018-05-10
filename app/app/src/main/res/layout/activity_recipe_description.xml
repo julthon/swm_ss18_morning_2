@@ -12,20 +12,71 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/item_recipe"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvDescTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/ivDescImage"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="300dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescTitle"
+            app:srcCompat="@android:drawable/ic_input_get" />
+
+        <ImageView
+            android:id="@+id/ivDescTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDescImage"
+            app:srcCompat="@drawable/ic_watch_later_black_24dp" />
+
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvDescTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="left|center_vertical"
+            android:lineSpacingExtra="10sp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/ivDescTime"
+            app:layout_constraintTop_toBottomOf="@+id/ivDescImage" />
+
+        <RatingBar
+            android:id="@+id/rbDescRating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:numStars="5"
+            android:rating="3.5"
+            android:stepSize="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDescImage" />
+
+        <TextView
+            android:id="@+id/tvIngredients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -35,7 +86,7 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintTop_toBottomOf="@+id/rbDescRating" />
 
         <at.tugraz.recipro.Views.NonScrollListView
             android:id="@+id/lvIngredients"
@@ -46,7 +97,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tvIngredients" />
 
         <TextView
             android:id="@+id/textView3"
