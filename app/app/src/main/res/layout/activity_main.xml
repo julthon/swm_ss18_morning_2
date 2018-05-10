@@ -41,6 +41,48 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tvIngredientInclude"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/with_ing"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp"/>
+
+            <at.tugraz.recipro.Views.IngredientSpinner
+                android:id="@+id/isIngredientInclude"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:tooltipText="INGREDIENT_INCLUDE"
+                chip:refChipView="@+id/chip_tag_view" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvIngredientExclude"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/without_ing"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp"/>
+
+            <at.tugraz.recipro.Views.IngredientSpinner
+                android:id="@+id/isIngredientExclude"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:tooltipText="INGREDIENT_EXCLUDE"
+                chip:refChipView="@+id/chip_tag_view" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
                 android:id="@+id/tvMinTime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

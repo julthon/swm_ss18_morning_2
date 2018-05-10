@@ -3,7 +3,7 @@ package at.tugraz.recipro.data;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Ingredient implements Serializable{
+public class Ingredient implements Serializable {
     private String name;
 
     public Ingredient(String name) {
@@ -20,14 +20,20 @@ public class Ingredient implements Serializable{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(name, that.name);
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        return Objects.equals(name, ((Ingredient) o).name);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

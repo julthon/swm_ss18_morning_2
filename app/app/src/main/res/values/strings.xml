@@ -5,9 +5,12 @@
     <string name="request_title">title</string>
     <string name="min_prep">minpreptime</string>
     <string name="max_prep">maxpreptime</string>
+    <string name="with_ing">Include Ingredient</string>
+    <string name="without_ing">Exclude Ingredient</string>
     <string name="recipe">Recipe</string>
-    <string name="connect_url">https://aughrany.com/recipro-backend/api</string>
+    <string name="connect_url">http://192.168.42.20:8080/recipro-backend/api</string>
     <string name="connect_path_recipes">/recipes</string>
+    <string name="connect_path_ingredients">/recipes/ingredients</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
     <string name="filter_types">types</string>

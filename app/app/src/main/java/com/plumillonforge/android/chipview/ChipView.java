@@ -35,7 +35,7 @@ import java.util.Observer;
  * Created by Plumillon Forge on 17/09/15.
  */
 public class ChipView extends ViewGroup implements Observer {
-    private ChipViewAdapter mAdapter;
+    protected ChipViewAdapter mAdapter;
     private OnChipClickListener mListener;
 
     // Data
