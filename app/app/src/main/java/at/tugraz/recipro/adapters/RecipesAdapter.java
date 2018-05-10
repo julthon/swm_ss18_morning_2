@@ -53,7 +53,7 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
 
         final Recipe recipe = getItem(position);
         viewHolder.tvTitle.setText(recipe.getTitle());
-        viewHolder.tvTime.setText(String.valueOf(recipe.getTime()) + "min");
+        viewHolder.tvTime.setText(String.valueOf(recipe.getTime()) + this.getContext().getResources().getString(R.string.minutes));
         viewHolder.rbRating.setRating((float) recipe.getRating());
 
         new AsyncTask<Void, Void, Bitmap>() {
