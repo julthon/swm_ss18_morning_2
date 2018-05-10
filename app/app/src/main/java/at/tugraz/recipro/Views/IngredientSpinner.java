@@ -3,20 +3,14 @@ package at.tugraz.recipro.Views;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.nfc.Tag;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.plumillonforge.android.chipview.Chip;
-import com.plumillonforge.android.chipview.ChipView;
-import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +18,7 @@ import java.util.List;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.recipro.R;
-import at.tugraz.recipro.recipro.WSConnection;
+import at.tugraz.recipro.ws.WSConnection;
 
 public class IngredientSpinner extends AppCompatSpinner {
     private int chipviewId = -1;

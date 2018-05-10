@@ -1,6 +1,9 @@
 package at.tugraz.recipro.recipes.boundary;
 
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -300,6 +303,115 @@ public class RecipesResourceIT {
         JsonArray payload = response.readEntity(JsonArray.class);
         System.out.println("getAllIngredients payload " + payload);
         assertThat(payload.size(), is(3));
+    }
+    
+        @Test
+    public void storeAndGetJpegImage() throws URISyntaxException {
+        
+        URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
+        assertNotNull(url);
+        File image = new File(url.toURI());
+        assert(image.exists());
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Taco")
+                .add("preparationTime", 20)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very taco.")
+                .build();
+        
+        Response postRecipeResponse = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(postRecipeResponse.getStatus(), is(201));
+        String recipeLocation = postRecipeResponse.getHeaderString("Location");
+        
+        Response postImageResponse = this.provider.target(recipeLocation)
+          .path("/image")
+          .request("image/jpeg")
+          .post(Entity.entity(image, "image/jpeg"));
+        
+        assertThat(postImageResponse.getStatus(), is(201));
+        String imageLocation = postImageResponse.getHeaderString("Location");
+        System.out.println("storeAndGetImage location " + imageLocation);
+        assertNotNull(imageLocation);
+        
+        Response getImageResponse = this.provider.target(imageLocation)
+                .request("image/jpeg")
+                .get();
+        
+        assertThat(getImageResponse.getStatus(), is(200));
+        File payload = getImageResponse.readEntity(File.class); 
+        assertThat(payload.length(), is(image.length()));
+    }
+    
+    @Test
+    public void getNonexistingImage() {
+                
+        int max = 5000;
+        int min = 1000;
+        int randomId = min + (int)(Math.random() * ((max - min) + 1));
+        
+        Response response = this.provider.target()
+                .path(randomId + "/image")
+                .request("image/jpeg")
+                .get();
+        
+        assertThat(response.getStatus(), is(404));
+    }
+    
+    @Test
+    public void storeAndGetPngImage() throws URISyntaxException {
+        
+        URL url = getClass().getClassLoader().getResource("test_image2.png");
+        assertNotNull(url);
+        File image = new File(url.toURI());
+        assert(image.exists());
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Vegetable Patty")
+                .add("preparationTime", 30)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Kinda Patty.")
+                .build();
+        
+        Response postRecipeResponse = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(postRecipeResponse.getStatus(), is(201));
+        String recipeLocation = postRecipeResponse.getHeaderString("Location");
+        
+        Response postImageResponse = this.provider.target(recipeLocation)
+          .path("/image")
+          .request("image/png")
+          .post(Entity.entity(image, "image/png"));
+        
+        assertThat(postImageResponse.getStatus(), is(201));
+        String imageLocation = postImageResponse.getHeaderString("Location");
+        System.out.println("storeAndGetImage location " + imageLocation);
+        assertNotNull(imageLocation);
+        
+        Response getImageResponse = this.provider.target(imageLocation)
+                .request("image/png")
+                .get();
+        
+        assertThat(getImageResponse.getStatus(), is(200));
+        File payload = getImageResponse.readEntity(File.class); 
+        assertThat(payload.length(), is(image.length()));
     }
     
     @Test

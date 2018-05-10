@@ -76,9 +76,9 @@ public class RecipeDescriptionInstrumentedTest {
 
     @Test
     public void checkExists() {
-        onView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.tvTime)).check(matches(isDisplayed()));
-        onView(withId(R.id.rbRating)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDescTitle)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDescTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.rbDescRating)).check(matches(isDisplayed()));
         onView(withId(R.id.lvIngredients)).check(matches(isDisplayed()));
         onView(withId(R.id.tvDescription)).check(matches(isDisplayed()));
     }
