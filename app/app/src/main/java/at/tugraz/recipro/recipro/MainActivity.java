@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spRecipeType;
     private TableLayout tlFilters;
     private ImageButton ibFilters;
+    private RatingBar rbMinRating;
   
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         ibFilters = findViewById(R.id.ibFilters);
         etMinTime = findViewById(R.id.etMinTime);
         etMaxTime = findViewById(R.id.etMaxTime);
+        rbMinRating = findViewById(R.id.rbMinRating);
 
         final SearchView searchBar = findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
                 String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
+                String rating = Float.toString(rbMinRating.getRating());
 
                 queryParams.put(getResources().getString(R.string.request_title), query);
                 if(!mintime.isEmpty())
@@ -126,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                     queryParams.put(getResources().getString(R.string.max_prep), maxtime);
                 if(type != null && !type.isEmpty())
                     queryParams.put(getResources().getString(R.string.filter_types), type);
+                if(!rating.isEmpty())
+                    queryParams.put(getResources().getString(R.string.min_rating), rating);
 
                 try {
                     return WSConnection.getInstance().requestRecipes(queryParams);
