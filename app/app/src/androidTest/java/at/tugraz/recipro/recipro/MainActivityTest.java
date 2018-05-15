@@ -116,4 +116,17 @@ public class MainActivityTest {
         Bitmap receivedImage = WSConnection.getImage(random);
         assertNull(receivedImage);
     }
+
+    @Test
+    public void minRating() {
+        double minrating = 2;
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(mActivityRule.getActivity().getResources().getString(R.string.min_rating), Double.toString(minrating));
+        List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+
+        for (Recipe recipe : recipes) {
+            assertTrue(recipe.getRating() > minrating);
+        }
+    }
 }
