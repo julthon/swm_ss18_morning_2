@@ -331,7 +331,7 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(201));
         
         response = this.provider.target()
-                .queryParam("minRating", 3)
+                .queryParam("minrating", 3)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
@@ -381,7 +381,7 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(201));
         
         response = this.provider.target()
-                .queryParam("maxRating", 3)
+                .queryParam("maxrating", 3)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
