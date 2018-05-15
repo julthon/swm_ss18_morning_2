@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:stretchColumns="1"
+        android:stretchColumns="0"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -155,14 +155,14 @@
 
             <RatingBar
                 android:id="@+id/rbMinRating"
-                style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
-                android:numStars="5"
-                android:stepSize="0.5"
                 android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="0.5"
                 chip:layout_constraintEnd_toEndOf="parent"
                 chip:layout_constraintTop_toBottomOf="parent" />
 
