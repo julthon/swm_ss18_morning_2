@@ -293,6 +293,106 @@ public class RecipesResourceIT {
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
     
+        @Test
+    public void filterByMinRating() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Schnitzel")
+                .add("preparationTime", 100)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very good.")
+                .add("rating", 4)
+                .build();
+        
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Auflauf")
+                .add("preparationTime", 40)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 2.7)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
+                .queryParam("minRating", 3)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByType payload " + payload);
+        
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() >= 3));
+    }
+    
+            @Test
+    public void filterByMaxRating() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Schnitzel")
+                .add("preparationTime", 100)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very good.")
+                .add("rating", 4)
+                .build();
+        
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Auflauf")
+                .add("preparationTime", 40)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 2.7)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
+                .queryParam("maxRating", 3)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByType payload " + payload);
+        
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() <= 3));
+    }
+    
     @Test
     public void getAllIngredients() {
         Response response = this.provider.target()
