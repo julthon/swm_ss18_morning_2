@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <at.tugraz.recipro.Views.OurChipView
+            <at.tugraz.recipro.views.OurChipView
                 android:id="@+id/chip_tag_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.Views.IngredientSpinner
+            <at.tugraz.recipro.views.IngredientSpinner
                 android:id="@+id/isIngredientInclude"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.Views.IngredientSpinner
+            <at.tugraz.recipro.views.IngredientSpinner
                 android:id="@+id/isIngredientExclude"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

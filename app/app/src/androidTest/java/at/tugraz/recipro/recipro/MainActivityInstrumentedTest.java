@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
-public class SearchInstrumentedTest {
+public class MainActivityInstrumentedTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -100,7 +100,6 @@ public class SearchInstrumentedTest {
         onView(withId(R.id.etMinTime)).check(matches(isDisplayed()));
         onView(withId(R.id.etMaxTime)).check(matches(isDisplayed()));
     }
-
 
     @Test
     public void testRecipeTypeExists() {

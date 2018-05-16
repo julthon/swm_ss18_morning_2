@@ -3,19 +3,17 @@ package at.tugraz.recipro.recipro;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.plumillonforge.android.chipview.ChipView;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import at.tugraz.recipro.Views.OurChipView;
-import at.tugraz.recipro.Views.OurTagImplementation;
+import at.tugraz.recipro.views.OurChipView;
+import at.tugraz.recipro.views.OurTagImplementation;
 
 @RunWith(AndroidJUnit4.class)
-public class ChipViewTest {
+public class ChipViewInstrumentedTest {
     private OurChipView cv;
 
     @Rule

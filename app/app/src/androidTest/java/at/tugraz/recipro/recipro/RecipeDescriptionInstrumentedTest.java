@@ -26,7 +26,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class RecipeDescriptionInstrumentedTest {

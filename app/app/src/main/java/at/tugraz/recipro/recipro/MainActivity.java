@@ -14,20 +14,18 @@ import android.widget.*;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import at.tugraz.recipro.Views.OurChipView;
-import at.tugraz.recipro.Views.OurTagImplementation;
-import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
+import at.tugraz.recipro.views.OurChipView;
+import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.ws.WSConnection;
+import at.tugraz.recipro.ws.WSConstants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -124,13 +122,13 @@ public class MainActivity extends AppCompatActivity {
 
                 queryParams.put(getResources().getString(R.string.request_title), query);
                 if(!mintime.isEmpty())
-                    queryParams.put(getResources().getString(R.string.min_prep), mintime);
+                    queryParams.put(WSConstants.QUERY_MIN_PREP, mintime);
                 if(!maxtime.isEmpty())
-                    queryParams.put(getResources().getString(R.string.max_prep), maxtime);
+                    queryParams.put(WSConstants.QUERY_MAX_PREP, maxtime);
                 if(type != null && !type.isEmpty())
                     queryParams.put(getResources().getString(R.string.filter_types), type);
                 if(!rating.isEmpty())
-                    queryParams.put(getResources().getString(R.string.min_rating), rating);
+                    queryParams.put(WSConstants.QUERY_MIN_RATING, rating);
 
                 try {
                     return WSConnection.getInstance().requestRecipes(queryParams);

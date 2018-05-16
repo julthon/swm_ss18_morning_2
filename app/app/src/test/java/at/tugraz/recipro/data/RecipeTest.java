@@ -9,6 +9,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class RecipeTest {
+
     private Recipe recipe;
     private List<RecipeIngredient> recipeIngredients;
 

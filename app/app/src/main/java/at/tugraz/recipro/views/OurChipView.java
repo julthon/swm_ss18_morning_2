@@ -1,8 +1,6 @@
-package at.tugraz.recipro.Views;
+package at.tugraz.recipro.views;
 
 import android.content.Context;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.nfc.Tag;
 import android.util.AttributeSet;
 import android.widget.AdapterView;
 

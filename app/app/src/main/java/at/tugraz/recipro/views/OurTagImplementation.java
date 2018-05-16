@@ -1,6 +1,4 @@
-package at.tugraz.recipro.Views;
-
-import android.nfc.Tag;
+package at.tugraz.recipro.views;
 
 import com.plumillonforge.android.chipview.Chip;
 
