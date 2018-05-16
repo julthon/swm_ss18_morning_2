@@ -44,6 +44,8 @@ public class RecipesResource {
     public static final String FILTER_MIN_PREPARATION_TIME = "minpreptime";
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
+    public static final String FILTER_MIN_RATING = "minrating";
+    public static final String FILTER_MAX_RATING = "maxrating";
     
     @Inject
     RecipesManager recipesManager;
@@ -71,6 +73,8 @@ public class RecipesResource {
     public List<Recipe> filter(@DefaultValue("") @QueryParam(FILTER_TITLE) String title,
                                @DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
                                @DefaultValue("999999") @QueryParam(FILTER_MAX_PREPARATION_TIME) int maxpreptime,
+                               @DefaultValue("0.0") @QueryParam(FILTER_MIN_RATING) double minrating,
+                               @DefaultValue("5.0") @QueryParam(FILTER_MAX_RATING) double maxrating,
                                @QueryParam(FILTER_TYPES) List<String> types) {
         ArrayList<RecipeType> typeList = new ArrayList<>();
         if(types != null)
@@ -83,7 +87,9 @@ public class RecipesResource {
                 .filter((Recipe r) -> (
                         (title.isEmpty() || r.getTitle().toLowerCase().contains(title.toLowerCase())) && 
                         (r.getPreparationTime() > minpreptime && 
-                         r.getPreparationTime() < maxpreptime)) && 
+                         r.getPreparationTime() < maxpreptime) &&
+                        (r.getRating() > minrating && 
+                         r.getRating() < maxrating)) && 
                         (typeList.size() == 0 || r.getRecipeTypes()
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))

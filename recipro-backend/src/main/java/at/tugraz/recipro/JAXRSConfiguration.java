@@ -20,6 +20,12 @@ import javax.ws.rs.core.Application;
  * /recipes?title=kuchen&minpreptime=1&maxpreptime=999 (GET)
  *   returns: 200 and [{"preparationTime": 10, "recipeTypes": ["DESSERT"], "title": "Kuchen"}]
  *
+ * /recipes?maxrating=4 (GET)
+ *   returns: 200 and [{"description": "Schnell und einfach" ,"id": 3, "preparationTime": 235, "recipeTypes": ["MAIN_COURSE"], "title": "Gulasch", "rating": 3.7}]
+ *
+ * /recipes?minrating=2 (GET)
+ *   returns: 200 and [{"description": "Schnell und einfach" ,"id": 3, "preparationTime": 235, "recipeTypes": ["MAIN_COURSE"], "title": "Gulasch", "rating": 2.4}]
+ *
  * /recipes/delete
  * /recipes/update
  */
