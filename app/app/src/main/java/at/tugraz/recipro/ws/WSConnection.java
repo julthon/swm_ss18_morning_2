@@ -2,8 +2,6 @@ package at.tugraz.recipro.ws;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import org.springframework.core.io.Resource;
@@ -13,14 +11,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +27,6 @@ import java.util.Map;
 
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
-import at.tugraz.recipro.helper.ResourceAccessHelper;
-import at.tugraz.recipro.recipro.R;
 
 public class WSConnection {
 
@@ -54,13 +49,11 @@ public class WSConnection {
     private static final String LOG_TAG = WSConnection.class.getName();
 
     private ResponseEntity getRequest(String path, Map<String, String> queryParams, Class clazz) {
-        Uri.Builder uriBuilder = Uri.parse(backend_uri)
-                .buildUpon()
-                .appendEncodedPath(path);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path);
 
         if(queryParams != null)
             for (Map.Entry<String, String> entry : queryParams.entrySet())
-                uriBuilder.appendQueryParameter(entry.getKey(), entry.getValue());
+                uriBuilder.queryParam(entry.getKey(), entry.getValue());
 
         String uri = uriBuilder.build().toString();
         Log.d(LOG_TAG, "request_uri=" + uri);
@@ -88,13 +81,9 @@ public class WSConnection {
 
     public static boolean postImage(long recipeId, byte[] image, ImageType imageType) {
         String path = String.format(backend_path_image, recipeId);
-        String uri = Uri.parse(backend_uri)
-                .buildUpon()
-                .appendEncodedPath(path)
-                .build()
-                .toString();
+        String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
-        Log.d(LOG_TAG, "post_image_uri=" + uri);
+        //Log.d(LOG_TAG, "post_image_uri=" + uri);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(imageType == ImageType.JPEG ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG);
@@ -105,8 +94,8 @@ public class WSConnection {
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
 
-        Log.d(LOG_TAG, "status=" + response.getStatusCode());
-        Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(HTTP_LOCATION_HEADER));
+        //Log.d(LOG_TAG, "status=" + response.getStatusCode());
+        //Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(HTTP_LOCATION_HEADER));
 
         if (response.getStatusCode() == HttpStatus.CREATED)
             return true;
@@ -116,11 +105,8 @@ public class WSConnection {
 
     public static Bitmap getImage(long recipeId) {
         String path = String.format(backend_path_image, recipeId);
-        String uri = Uri.parse(backend_uri)
-                .buildUpon()
-                .appendEncodedPath(path)
-                .build()
-                .toString();
+
+        String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
         Log.d(LOG_TAG, "get_image_uri=" + uri);
 
