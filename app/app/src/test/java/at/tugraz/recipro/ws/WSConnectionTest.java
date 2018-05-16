@@ -65,14 +65,12 @@ public class WSConnectionTest {
 
     @Test
     public void testPostAndGetImageSuccessful() throws IOException {
-        byte[] image = IOUtils.toByteArray(mActivityRule.getActivity().getResources().openRawResource(R.drawable.taco));
+        byte[] image = IOUtils.toByteArray(this.getClass().getClassLoader().getResourceAsStream("taco.jpeg"));
         boolean result = WSConnection.postImage(1, image, ImageType.JPEG);
         assertTrue(result);
 
         Bitmap receivedImage = WSConnection.getImage(1);
-        byte[] originalImageBytes = IOUtils.toByteArray(mActivityRule.getActivity().getResources().openRawResource(R.drawable.taco));
-
-        Bitmap originalImage = BitmapFactory.decodeByteArray(originalImageBytes, 0, originalImageBytes.length);
+        Bitmap originalImage = BitmapFactory.decodeByteArray(image, 0, image.length);
 
         assertThat(receivedImage.getHeight(), is(originalImage.getHeight()));
         assertThat(receivedImage.getWidth(), is(originalImage.getWidth()));
