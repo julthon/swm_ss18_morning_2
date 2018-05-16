@@ -513,9 +513,4 @@ public class RecipesResourceIT {
         File payload = getImageResponse.readEntity(File.class); 
         assertThat(payload.length(), is(image.length()));
     }
-    
-    @Test
-    public void allergenesExist() {
-        
-    }
 }

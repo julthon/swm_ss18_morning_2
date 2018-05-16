@@ -3,8 +3,6 @@
     <string name="search_hint">Search for recipes</string>
     <string name="error_connect">Could not connect to server</string>
     <string name="request_title">title</string>
-    <string name="min_prep">minpreptime</string>
-    <string name="max_prep">maxpreptime</string>
     <string name="min_rating">minrating</string>
     <string name="with_ing">Include Ingredient</string>
     <string name="without_ing">Exclude Ingredient</string>

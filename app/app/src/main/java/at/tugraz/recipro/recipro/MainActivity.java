@@ -14,15 +14,12 @@ import android.widget.*;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import at.tugraz.recipro.Views.OurChipView;
-import at.tugraz.recipro.Views.OurTagImplementation;
-import at.tugraz.recipro.Views.OurChipViewAdapterImplementation;
+import at.tugraz.recipro.views.OurChipView;
+import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
