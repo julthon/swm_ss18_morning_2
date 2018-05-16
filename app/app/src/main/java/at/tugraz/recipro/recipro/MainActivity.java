@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 if(type != null && !type.isEmpty())
                     queryParams.put(getResources().getString(R.string.filter_types), type);
                 if(!rating.isEmpty())
-                    queryParams.put(getResources().getString(R.string.min_rating), rating);
+                    queryParams.put(WSConstants.QUERY_MIN_RATING, rating);
 
                 try {
                     return WSConnection.getInstance().requestRecipes(queryParams);

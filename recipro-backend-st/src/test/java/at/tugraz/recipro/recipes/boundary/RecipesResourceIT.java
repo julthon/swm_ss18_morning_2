@@ -405,7 +405,7 @@ public class RecipesResourceIT {
         assertThat(payload.size(), is(3));
     }
     
-        @Test
+    @Test
     public void storeAndGetJpegImage() throws URISyntaxException {
         
         URL url = getClass().getClassLoader().getResource("test_image1.jpeg");

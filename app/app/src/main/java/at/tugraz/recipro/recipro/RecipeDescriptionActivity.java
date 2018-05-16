@@ -63,7 +63,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
             @Override
             protected Bitmap doInBackground(Void... voids) {
                 try {
-                    return WSConnection.getImage(recipe.getId());
+                    return WSConnection.getInstance().getImage(recipe.getId());
                 } catch (RestClientException ex) {
                     return null;
                 }

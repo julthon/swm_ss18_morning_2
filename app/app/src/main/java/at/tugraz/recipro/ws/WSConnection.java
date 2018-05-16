@@ -34,18 +34,21 @@ public class WSConnection {
 
     private WSConnection() { }
 
+    public void init(String uri) {
+        this.backend_uri = uri;
+    }
+
     public static WSConnection getInstance() {
         if(instance == null)
             instance = new WSConnection();
         return instance;
     }
 
-    private static String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
-    private static String backend_path_recipes = "recipes";
-    private static String backend_path_image = "recipes/%d/image";
-    private static String backend_path_ingredients = "recipes/ingredients";
+    private String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
+    private String backend_path_recipes = "/recipes";
+    private String backend_path_image = "/recipes/%d/image";
+    private String backend_path_ingredients = "/recipes/ingredients";
 
-    private static final String HTTP_LOCATION_HEADER = "location";
     private static final String LOG_TAG = WSConnection.class.getName();
 
     private ResponseEntity getRequest(String path, Map<String, String> queryParams, Class clazz) {
@@ -79,11 +82,11 @@ public class WSConnection {
         return Arrays.asList(response.getBody());
     }
 
-    public static boolean postImage(long recipeId, byte[] image, ImageType imageType) {
+    public boolean postImage(long recipeId, byte[] image, ImageType imageType) {
         String path = String.format(backend_path_image, recipeId);
         String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
-        //Log.d(LOG_TAG, "post_image_uri=" + uri);
+        Log.d(LOG_TAG, "post_image_uri=" + uri);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(imageType == ImageType.JPEG ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG);
@@ -94,8 +97,8 @@ public class WSConnection {
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
 
-        //Log.d(LOG_TAG, "status=" + response.getStatusCode());
-        //Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(HTTP_LOCATION_HEADER));
+        Log.d(LOG_TAG, "status=" + response.getStatusCode());
+        Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
 
         if (response.getStatusCode() == HttpStatus.CREATED)
             return true;
@@ -103,7 +106,7 @@ public class WSConnection {
         return false;
     }
 
-    public static Bitmap getImage(long recipeId) {
+    public Bitmap getImage(long recipeId) {
         String path = String.format(backend_path_image, recipeId);
 
         String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();

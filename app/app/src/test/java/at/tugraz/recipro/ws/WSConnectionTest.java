@@ -4,22 +4,38 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLog;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import at.tugraz.recipro.TestUtils;
 import at.tugraz.recipro.data.Recipe;
-import at.tugraz.recipro.recipro.R;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class WSConnectionTest {
+
+    private WSConnection wsConnection;
+
+    @Before
+    public void setUp() {
+        ShadowLog.stream = System.out;
+        this.wsConnection = WSConnection.getInstance();
+        this.wsConnection.init("http://localhost:8080/recipro-backend/api");
+    }
 
     @Test
     public void preparationTime() {
@@ -29,7 +45,7 @@ public class WSConnectionTest {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(WSConstants.QUERY_MIN_PREP, Integer.toString(minpreptime));
         queryParams.put(WSConstants.QUERY_MAX_PREP, Integer.toString(maxpreptime));
-        List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+        List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getTime() > minpreptime);
@@ -43,7 +59,7 @@ public class WSConnectionTest {
 
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(WSConstants.QUERY_MIN_PREP, Integer.toString(minpreptime));
-        List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+        List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getTime() > minpreptime);
@@ -56,7 +72,7 @@ public class WSConnectionTest {
 
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put(WSConstants.QUERY_MAX_PREP, Integer.toString(maxpreptime));
-        List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+        List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getTime() < maxpreptime);
@@ -64,13 +80,13 @@ public class WSConnectionTest {
     }
 
     @Test
-    public void testPostAndGetImageSuccessful() throws IOException {
-        byte[] image = IOUtils.toByteArray(this.getClass().getClassLoader().getResourceAsStream("taco.jpeg"));
-        boolean result = WSConnection.postImage(1, image, ImageType.JPEG);
+    public void testPostAndGetImageSuccessful() throws IOException, URISyntaxException {
+        byte[] image = IOUtils.toByteArray(this.getClass().getClassLoader().getResource("taco.jpeg"));
+        boolean result = this.wsConnection.postImage(1, image, ImageType.JPEG);
         assertTrue(result);
 
-        Bitmap receivedImage = WSConnection.getImage(1);
-        Bitmap originalImage = BitmapFactory.decodeByteArray(image, 0, image.length);
+        Bitmap receivedImage = this.wsConnection.getImage(1);
+        Bitmap originalImage = BitmapFactory.decodeStream(this.getClass().getClassLoader().getResourceAsStream("taco.jpeg"));
 
         assertThat(receivedImage.getHeight(), is(originalImage.getHeight()));
         assertThat(receivedImage.getWidth(), is(originalImage.getWidth()));
@@ -85,7 +101,7 @@ public class WSConnectionTest {
     @Test
     public void testGetImageFailure() {
         int random = TestUtils.getRandomBetween(5000, 10000);
-        Bitmap receivedImage = WSConnection.getImage(random);
+        Bitmap receivedImage = this.wsConnection.getImage(random);
         assertNull(receivedImage);
     }
 
@@ -94,8 +110,8 @@ public class WSConnectionTest {
         double minrating = 2;
 
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_PREP, Double.toString(minrating));
-        List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+        queryParams.put(WSConstants.QUERY_MIN_RATING, Double.toString(minrating));
+        List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getRating() > minrating);
