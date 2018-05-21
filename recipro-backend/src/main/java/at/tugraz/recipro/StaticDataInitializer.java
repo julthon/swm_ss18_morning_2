@@ -27,7 +27,7 @@ public class StaticDataInitializer {
     private void initAllergens() {
         Allergen allergens[] = {new Allergen("P", "Peanuts"),
                                 new Allergen("N", "Nuts"),
-                                new Allergen("Mi", "Mulk"),
+                                new Allergen("Mi", "Milk"),
                                 new Allergen("So", "Soya"),
                                 new Allergen("Mu", "Mustard"),
                                 new Allergen("L", "Lupin"),

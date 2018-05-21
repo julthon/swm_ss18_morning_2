@@ -1,6 +1,8 @@
 package at.tugraz.recipro.recipes.boundary;
 
+import at.tugraz.recipro.recipes.control.AllergensManager;
 import at.tugraz.recipro.recipes.control.RecipesManager;
+import at.tugraz.recipro.recipes.entity.Allergen;
 import at.tugraz.recipro.recipes.entity.Ingredient;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
@@ -44,11 +46,15 @@ public class RecipesResource {
     public static final String FILTER_MIN_PREPARATION_TIME = "minpreptime";
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
+    public static final String FILTER_ALLERGENS = "allergens";
     public static final String FILTER_MIN_RATING = "minrating";
     public static final String FILTER_MAX_RATING = "maxrating";
     
     @Inject
     RecipesManager recipesManager;
+    
+    @Inject
+    AllergensManager allergensManager;
     
     @Context
     ServletContext servletContext;
@@ -75,12 +81,15 @@ public class RecipesResource {
                                @DefaultValue("999999") @QueryParam(FILTER_MAX_PREPARATION_TIME) int maxpreptime,
                                @DefaultValue("0.0") @QueryParam(FILTER_MIN_RATING) double minrating,
                                @DefaultValue("5.0") @QueryParam(FILTER_MAX_RATING) double maxrating,
-                               @QueryParam(FILTER_TYPES) List<String> types) {
+                               @QueryParam(FILTER_TYPES) List<String> types,
+                               @QueryParam(FILTER_ALLERGENS) List<String> allergensShortNames) {
         ArrayList<RecipeType> typeList = new ArrayList<>();
         if(types != null)
             typeList.addAll(types.stream()
                                  .map((String s) -> (RecipeType.fromString(s)))
                                  .collect(Collectors.toList()));
+        
+        List<Allergen> allergens = allergensManager.findAll().stream().filter(a -> allergensShortNames.contains(a.getShortName())).collect(Collectors.toList());
         return recipesManager
                 .findAll()
                 .stream()
@@ -92,7 +101,12 @@ public class RecipesResource {
                          r.getRating() <= maxrating)) && 
                         (typeList.size() == 0 || r.getRecipeTypes()
                                                   .stream()
-                                                  .allMatch((RecipeType t) -> typeList.contains(t))))
+                                                  .allMatch((RecipeType t) -> typeList.contains(t))) &&
+                        !(r.getIngredients()
+                                .stream()
+                                .anyMatch(i -> i.getIngredient().getAllergens()
+                                        .stream()
+                                        .anyMatch(a -> allergens.contains(a)))))
                 .collect(Collectors.toList());
     }
     
