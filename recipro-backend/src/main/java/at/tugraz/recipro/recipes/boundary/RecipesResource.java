@@ -88,8 +88,8 @@ public class RecipesResource {
                         (title.isEmpty() || r.getTitle().toLowerCase().contains(title.toLowerCase())) && 
                         (r.getPreparationTime() > minpreptime && 
                          r.getPreparationTime() < maxpreptime) &&
-                        (r.getRating() > minrating && 
-                         r.getRating() < maxrating)) && 
+                        (r.getRating() >= minrating && 
+                         r.getRating() <= maxrating)) && 
                         (typeList.size() == 0 || r.getRecipeTypes()
                                                   .stream()
                                                   .allMatch((RecipeType t) -> typeList.contains(t))))
