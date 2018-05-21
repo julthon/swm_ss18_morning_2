@@ -497,6 +497,7 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(201));
         
         String location = response.getHeaderString("Location");
+        System.out.println("filterByAllergens location " + location);
         int id = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
         
         response = this.provider.target()
@@ -513,14 +514,14 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void getAllIngredients() {
+    public void getAllTypes() {
         Response response = this.provider.target()
                 .path("types")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
         JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("getAllIngredients payload " + payload);
+        System.out.println("getAllTypes payload " + payload);
         assertThat(payload.size(), is(3));
     }
     
