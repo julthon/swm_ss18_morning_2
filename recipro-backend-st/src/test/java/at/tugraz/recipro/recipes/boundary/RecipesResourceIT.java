@@ -293,7 +293,7 @@ public class RecipesResourceIT {
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonArray("recipeTypes").contains(recipeTypesToCreate.get(0))));
     }
     
-        @Test
+    @Test
     public void filterByMinRating() {
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
@@ -330,6 +330,20 @@ public class RecipesResourceIT {
         
         assertThat(response.getStatus(), is(201));
         
+        recipeToCreate = recipeBuilder
+                .add("title", "Torte")
+                .add("preparationTime", 30)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 5.0)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));        
+        
         response = this.provider.target()
                 .queryParam("minrating", 3)
                 .request(MediaType.APPLICATION_JSON)
@@ -338,12 +352,13 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(200));
         
         JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("filterByType payload " + payload);
+        System.out.println("filterByMinRating payload " + payload);
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() >= 3));
+        assert(payload.stream().anyMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() == 5.0));
     }
     
-            @Test
+    @Test
     public void filterByMaxRating() {
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
@@ -380,6 +395,20 @@ public class RecipesResourceIT {
         
         assertThat(response.getStatus(), is(201));
         
+        recipeToCreate = recipeBuilder
+                .add("title", "Torte")
+                .add("preparationTime", 60)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Awesome.")
+                .add("rating", 0.0)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
         response = this.provider.target()
                 .queryParam("maxrating", 3)
                 .request(MediaType.APPLICATION_JSON)
@@ -388,9 +417,10 @@ public class RecipesResourceIT {
         assertThat(response.getStatus(), is(200));
         
         JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("filterByType payload " + payload);
+        System.out.println("filterByMaxRating payload " + payload);
         
         assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() <= 3));
+        assert(payload.stream().anyMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() == 0));
     }
     
     @Test
