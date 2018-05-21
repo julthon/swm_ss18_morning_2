@@ -431,7 +431,6 @@ public class RecipesResourceIT {
                 .get();
         
         JsonArray allergens = allergenResponse.readEntity(JsonArray.class);
-        JsonObject allergen = allergens.getJsonObject(0);
         
         String title = "Allergencake";
         String description = "Best allergens ever.";
@@ -447,7 +446,7 @@ public class RecipesResourceIT {
         JsonObjectBuilder ingredientBuilder = Json.createObjectBuilder();
         JsonObject milk = ingredientBuilder
                 .add("name", "Milk")
-                .add("allergen", allergen)
+                .add("allergens", allergens)
                 .build();
         
         JsonObject flour = ingredientBuilder
@@ -501,7 +500,7 @@ public class RecipesResourceIT {
         int id = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
         
         response = this.provider.target()
-                .queryParam("allergens", allergen.getString("shortName"))
+                .queryParam("allergens", allergens.getJsonObject(0).getString("shortName"))
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
