@@ -21,10 +21,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeDescriptionActivity"
+            android:name=".RecipeDescriptionFragment"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RecipesActivity"
+            android:name=".RecipesFragment"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".RecipeDescriptionActivity">
+    tools:context=".RecipeDescriptionFragment">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -88,7 +88,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rbDescRating" />
 
-        <at.tugraz.recipro.Views.NonScrollListView
+        <at.tugraz.recipro.views.NonScrollListView
             android:id="@+id/lvIngredients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

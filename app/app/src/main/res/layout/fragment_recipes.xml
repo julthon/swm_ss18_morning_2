@@ -5,14 +5,15 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context="at.tugraz.recipro.recipro.RecipesActivity">
+                                             tools:context="at.tugraz.recipro.recipro.RecipesFragment">
+
     <TableLayout
         android:id="@+id/tlFilters"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:stretchColumns="1"
+        android:stretchColumns="0"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,13 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <at.tugraz.recipro.Views.OurChipView
+            <at.tugraz.recipro.views.OurChipView
                 android:id="@+id/chip_tag_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
-                android:paddingTop="4dp"
                 android:paddingBottom="4dp"
+                android:paddingTop="4dp"
                 chip:chip_corner_radius="6dp"
                 chip:chip_line_spacing="4dp"
                 chip:chip_padding="10dp"
@@ -47,9 +48,9 @@
                 android:gravity="center_vertical"
                 android:text="@string/with_ing"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp"/>
+                tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.Views.IngredientSpinner
+            <at.tugraz.recipro.views.IngredientSpinner
                 android:id="@+id/isIngredientInclude"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -68,9 +69,9 @@
                 android:gravity="center_vertical"
                 android:text="@string/without_ing"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp"/>
+                tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.Views.IngredientSpinner
+            <at.tugraz.recipro.views.IngredientSpinner
                 android:id="@+id/isIngredientExclude"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -89,14 +90,14 @@
                 android:gravity="center_vertical"
                 android:text="min time"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp"/>
+                tools:layout_editor_absoluteY="37dp" />
 
             <EditText
                 android:id="@+id/etMinTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:inputType="number"/>
+                android:inputType="number" />
         </TableRow>
 
         <TableRow
@@ -110,15 +111,16 @@
                 android:gravity="center_vertical"
                 android:text="max time"
                 tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp"/>
+                tools:layout_editor_absoluteY="37dp" />
 
             <EditText
                 android:id="@+id/etMaxTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:inputType="number"/>
+                android:inputType="number" />
         </TableRow>
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -135,8 +137,37 @@
             <Spinner
                 android:id="@+id/spRecipeType"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvMinRating"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="min rating"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <RatingBar
+                android:id="@+id/rbMinRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="0.5"
+                chip:layout_constraintEnd_toEndOf="parent"
+                chip:layout_constraintTop_toBottomOf="parent" />
+
+        </TableRow>
+
     </TableLayout>
 
     <SearchView

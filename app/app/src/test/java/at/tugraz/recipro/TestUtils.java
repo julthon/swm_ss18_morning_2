@@ -1,4 +1,4 @@
-package at.tugraz.recipro.recipro;
+package at.tugraz.recipro;
 
 import java.util.Random;
 

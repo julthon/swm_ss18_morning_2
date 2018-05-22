@@ -3,19 +3,16 @@
     <string name="search_hint">Search for recipes</string>
     <string name="error_connect">Could not connect to server</string>
     <string name="request_title">title</string>
-    <string name="min_prep">minpreptime</string>
-    <string name="max_prep">maxpreptime</string>
     <string name="with_ing">Include Ingredient</string>
     <string name="without_ing">Exclude Ingredient</string>
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
-    <string name="filter_types">types</string>
     <string name="type_dessert">Dessert</string>
     <string name="type_snack">Snack</string>
     <string name="type_main">Main course</string>
-    <string name="nav_home">home</string>
-    <string name="nav_pantry">my pantry</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_pantry">My Pantry</string>
     <string name="minutes">min</string>
     <string-array name="recipe_types">
         <item></item>

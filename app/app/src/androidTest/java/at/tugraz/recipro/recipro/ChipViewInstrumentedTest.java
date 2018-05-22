@@ -9,15 +9,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import at.tugraz.recipro.Views.OurChipView;
-import at.tugraz.recipro.Views.OurTagImplementation;
+import at.tugraz.recipro.views.OurChipView;
+import at.tugraz.recipro.views.OurTagImplementation;
 
 @RunWith(AndroidJUnit4.class)
-public class ChipViewTest {
+public class ChipViewInstrumentedTest {
     private OurChipView cv;
 
     @Rule
-    public ActivityTestRule<RecipesActivity> mActivityRule = new ActivityTestRule<>(RecipesActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     @Before
     public void setUp() throws Exception {

@@ -29,11 +29,12 @@ public class RecipesResourceIT {
     @Rule
     public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
     
+    @Rule
+    public JAXRSClientProvider allergensProvider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/allergens");
     
     @Test
     public void createAndFindRecipeById(){
-        
-        
+          
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
         double rating = 3.7; 
@@ -294,18 +295,236 @@ public class RecipesResourceIT {
     }
     
     @Test
-    public void getAllIngredients() {
+    public void filterByMinRating() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Schnitzel")
+                .add("preparationTime", 100)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very good.")
+                .add("rating", 4)
+                .build();
+        
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Auflauf")
+                .add("preparationTime", 40)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 2.7)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Torte")
+                .add("preparationTime", 30)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 5.0)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));        
+        
+        response = this.provider.target()
+                .queryParam("minrating", 3)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByMinRating payload " + payload);
+        
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() >= 3));
+        assert(payload.stream().anyMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() == 5.0));
+    }
+    
+    @Test
+    public void filterByMaxRating() {
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("MAIN_COURSE")
+                .build();       
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", "Schnitzel")
+                .add("preparationTime", 100)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Very good.")
+                .add("rating", 4)
+                .build();
+        
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Auflauf")
+                .add("preparationTime", 40)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Nice.")
+                .add("rating", 2.7)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        recipeToCreate = recipeBuilder
+                .add("title", "Torte")
+                .add("preparationTime", 60)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", "Awesome.")
+                .add("rating", 0.0)
+                .build();
+        
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        response = this.provider.target()
+                .queryParam("maxrating", 3)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByMaxRating payload " + payload);
+        
+        assert(payload.stream().allMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() <= 3));
+        assert(payload.stream().anyMatch(x -> ((JsonObject) x).getJsonNumber("rating").doubleValue() == 0));
+    }
+    
+    @Test
+    public void filterByAllergens() {
+        Response allergenResponse = this.allergensProvider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        JsonArray allergens = allergenResponse.readEntity(JsonArray.class);
+        
+        String title = "Allergencake";
+        String description = "Best allergens ever.";
+        double rating = 4.7; 
+        int preparationTime = 120;
+        
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("DESSERT")
+                .add("SNACK")
+                .build();
+        
+        JsonObjectBuilder ingredientBuilder = Json.createObjectBuilder();
+        JsonObject milk = ingredientBuilder
+                .add("name", "Milk")
+                .add("allergens", allergens)
+                .build();
+        
+        JsonObject flour = ingredientBuilder
+                .add("name", "Flour")
+                .build();
+        
+        JsonObject eggs = ingredientBuilder
+                .add("name", "Eggs")
+                .build();
+        
+        JsonObject ingredientMilk = ingredientBuilder
+                .add("ingredient", milk)
+                .add("quantity", "200ml")
+                .build();
+        
+        JsonObject ingredientFlour = ingredientBuilder
+                .add("ingredient", flour)
+                .add("quantity", "500g")
+                .build();
+        
+        JsonObject ingredientEggs = ingredientBuilder
+                .add("ingredient", eggs)
+                .add("quantity", "4")
+                .build();
+        
+        JsonArrayBuilder ingredientsListBuilder = Json.createArrayBuilder();
+        JsonArray ingredients = ingredientsListBuilder
+                .add(ingredientMilk)
+                .add(ingredientFlour)
+                .add(ingredientEggs)
+                .build();
+        
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", title)
+                .add("preparationTime", preparationTime)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", description)
+                .add("ingredients", ingredients)
+                .add("rating", rating)
+                .build();
+        
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+        
+        assertThat(response.getStatus(), is(201));
+        
+        String location = response.getHeaderString("Location");
+        System.out.println("filterByAllergens location " + location);
+        int id = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
+        
+        response = this.provider.target()
+                .queryParam("allergens", allergens.getJsonObject(0).getString("shortName"))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        assertThat(response.getStatus(), is(200));
+        
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByAllergens payload " + payload);
+        
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id), is(false));
+    }
+    
+    @Test
+    public void getAllTypes() {
         Response response = this.provider.target()
                 .path("types")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
         JsonArray payload = response.readEntity(JsonArray.class);
-        System.out.println("getAllIngredients payload " + payload);
+        System.out.println("getAllTypes payload " + payload);
         assertThat(payload.size(), is(3));
     }
     
-        @Test
+    @Test
     public void storeAndGetJpegImage() throws URISyntaxException {
         
         URL url = getClass().getClassLoader().getResource("test_image1.jpeg");
@@ -412,10 +631,5 @@ public class RecipesResourceIT {
         assertThat(getImageResponse.getStatus(), is(200));
         File payload = getImageResponse.readEntity(File.class); 
         assertThat(payload.length(), is(image.length()));
-    }
-    
-    @Test
-    public void allergenesExist() {
-        
     }
 }
