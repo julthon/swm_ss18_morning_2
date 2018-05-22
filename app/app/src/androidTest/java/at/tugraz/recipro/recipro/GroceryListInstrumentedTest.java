@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,11 +65,5 @@ public class GroceryListInstrumentedTest {
     @Test
     public void checkIngredientExistIfNotExists() {
         Assert.assertFalse(helper.isPresent(new RecipeIngredient(new Ingredient(32794, "don't care"), "even here we only check the id", "blaaaaa")));
-    }
-
-    @AfterClass
-    public void tearDown() {
-        // clear db
-        helper.onDowngrade(helper.getWritableDatabase(), 0, 1);
     }
 }
