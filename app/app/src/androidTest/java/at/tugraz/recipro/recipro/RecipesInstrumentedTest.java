@@ -35,13 +35,10 @@ public class RecipesInstrumentedTest {
     @Before
     public void fillSearchResultList() {
         final MainActivity activity = mActivityRule.getActivity();
-        activity.runOnUiThread(new Runnable(){
-            @Override
-            public void run() {
-                RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
-                if (recipesFragment != null) {
-                    recipesFragment.fillWithTestData();
-                }
+        activity.runOnUiThread(() -> {
+            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            if (recipesFragment != null) {
+                recipesFragment.fillWithTestData();
             }
         });
         getInstrumentation().waitForIdleSync();

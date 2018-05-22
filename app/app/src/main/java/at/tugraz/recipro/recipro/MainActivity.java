@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId()) {
                     case R.id.navHome:
                         fragmentClass = RecipesFragment.class;
+                        break;
+                    case R.id.navGroceryList:
+                        fragmentClass = GroceryListFragment.class;
+                        break;
                     default:
                         fragmentClass = RecipesFragment.class;
                 }
@@ -84,5 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

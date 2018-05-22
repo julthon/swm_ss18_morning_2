@@ -43,7 +43,7 @@ public class IngredientSpinner extends AppCompatSpinner {
                 public void run() {
                     List<Ingredient> list = WSConnection.getInstance().requestIngredients();
                     ArrayList<Ingredient> list1 = new ArrayList<>();
-                    list1.add(new Ingredient(""));
+                    list1.add(new Ingredient(1, ""));
                     list1.addAll(list);
                     completeList = list1;
                     filteredList = completeList;

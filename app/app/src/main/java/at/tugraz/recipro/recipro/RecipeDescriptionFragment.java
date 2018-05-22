@@ -1,17 +1,18 @@
 package at.tugraz.recipro.recipro;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -21,6 +22,8 @@ import org.springframework.web.client.RestClientException;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.GroceryListHelper;
 import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipeDescriptionFragment extends Fragment {
@@ -31,6 +34,8 @@ public class RecipeDescriptionFragment extends Fragment {
     RatingBar rbDescRating;
     ListView lvIngredients;
     TextView tvDescription;
+
+    GroceryListHelper dbHelper;
 
     @Nullable
     @Override
@@ -44,6 +49,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_recipe_description, container, false);
 
+        dbHelper = new GroceryListHelper(this.getContext());
         tvDescTitle = view.findViewById(R.id.tvDescTitle);
         ivDescImage = view.findViewById(R.id.ivDescImage);
         tvDescTime = view.findViewById(R.id.tvDescTime);
@@ -90,7 +96,18 @@ public class RecipeDescriptionFragment extends Fragment {
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        addListeners();
 
         return view;
+    }
+
+    private void addListeners() {
+        lvIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
+                dbHelper.addIngredient(ingredient);
+            }
+        });
     }
 }
