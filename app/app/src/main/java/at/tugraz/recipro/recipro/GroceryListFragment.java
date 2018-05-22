@@ -16,7 +16,8 @@ import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.GroceryListHelper;
 
 public class GroceryListFragment extends Fragment {
-
+    public static final String FRAGMENT_TAG = "GroceryListFragment";
+    
     ListView lvGroceryListView = null;
     GroceryListHelper dbHelper;
 

@@ -50,10 +50,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     testImplementation group: 'org.robolectric', name: 'robolectric', version: '3.8'
-    testImplementation  group: 'com.android.support.test', name: 'runner', version: '1.0.2'
-    testImplementation  group: 'com.android.support.test', name: 'rules', version: '1.0.2'
+    testImplementation group: 'com.android.support.test', name: 'runner', version: '1.0.2'
+    testImplementation group: 'com.android.support.test', name: 'rules', version: '1.0.2'
 }

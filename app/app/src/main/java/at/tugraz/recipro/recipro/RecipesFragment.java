@@ -3,7 +3,6 @@ package at.tugraz.recipro.recipro;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,6 +39,7 @@ import at.tugraz.recipro.ws.WSConnection;
 import at.tugraz.recipro.ws.WSConstants;
 
 public class RecipesFragment extends Fragment {
+    public static final String FRAGMENT_TAG = "RecipesFragment";
 
     private ListView lvSearchResults;
     private EditText etMinTime;
@@ -48,6 +48,8 @@ public class RecipesFragment extends Fragment {
     private TableLayout tlFilters;
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
+
+    private String lastQuery = null;
 
     @Nullable
     @Override
@@ -93,8 +95,8 @@ public class RecipesFragment extends Fragment {
         });
 
         lvSearchResults = (ListView) view.findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<>();
-        final RecipesAdapter recipesAdapter = new RecipesAdapter(getContext(), recipies);
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        final RecipesAdapter recipesAdapter = new RecipesAdapter(getContext(), recipes);
         lvSearchResults.setAdapter(recipesAdapter);
 
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,6 +129,8 @@ public class RecipesFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     private void searchFor(final String query) {
+        lastQuery = query;
+
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
 
@@ -169,6 +173,15 @@ public class RecipesFragment extends Fragment {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (lastQuery != null) {
+            searchFor(lastQuery);
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
