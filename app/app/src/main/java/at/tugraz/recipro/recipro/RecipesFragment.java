@@ -3,7 +3,6 @@ package at.tugraz.recipro.recipro;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,6 +48,8 @@ public class RecipesFragment extends Fragment {
     private TableLayout tlFilters;
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
+
+    private String lastQuery = null;
 
     @Nullable
     @Override
@@ -128,6 +129,8 @@ public class RecipesFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     private void searchFor(final String query) {
+        lastQuery = query;
+
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
 
@@ -170,6 +173,15 @@ public class RecipesFragment extends Fragment {
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (lastQuery != null) {
+            searchFor(lastQuery);
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
