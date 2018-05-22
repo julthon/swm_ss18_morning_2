@@ -20,11 +20,11 @@ public class RecipeUtilsTest {
 
     @Test
     public void filterByIngredientsAllMatches() {
-        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
-        RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
-        RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
-        RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
-        RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), "120");
+        RecipeIngredient salt = new RecipeIngredient(new Ingredient(2, "salt"), "120");
+        RecipeIngredient sugar = new RecipeIngredient(new Ingredient(3, "sugar"), "120");
+        RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), "120");
+        RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), "120");
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cheese, cacao, sugar), "Good cake");
         Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
@@ -50,11 +50,11 @@ public class RecipeUtilsTest {
 
     @Test
     public void filterByIngredientsPartialMatches() {
-        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
-        RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
-        RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
-        RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
-        RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), "120");
+        RecipeIngredient salt = new RecipeIngredient(new Ingredient(2, "salt"), "120");
+        RecipeIngredient sugar = new RecipeIngredient(new Ingredient(3, "sugar"), "120");
+        RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), "120");
+        RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), "120");
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
         Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
@@ -78,11 +78,11 @@ public class RecipeUtilsTest {
 
     @Test
     public void filterByIngredientsNoMatches() {
-        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
-        RecipeIngredient salt = new RecipeIngredient(new Ingredient("salt"), "120");
-        RecipeIngredient sugar = new RecipeIngredient(new Ingredient("sugar"), "120");
-        RecipeIngredient cacao = new RecipeIngredient(new Ingredient("cacao"), "120");
-        RecipeIngredient cheese = new RecipeIngredient(new Ingredient("cheese"), "120");
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), "120");
+        RecipeIngredient salt = new RecipeIngredient(new Ingredient(2, "salt"), "120");
+        RecipeIngredient sugar = new RecipeIngredient(new Ingredient(3, "sugar"), "120");
+        RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), "120");
+        RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), "120");
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
         Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
@@ -99,8 +99,8 @@ public class RecipeUtilsTest {
 
     @Test
     public void filterByIngredientsDifferentReferences() {
-        RecipeIngredient flour = new RecipeIngredient(new Ingredient("flour"), "120");
-        RecipeIngredient flour2 = new RecipeIngredient(new Ingredient("flour"), "120");
+        RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), "120");
+        RecipeIngredient flour2 = new RecipeIngredient(new Ingredient(2, "flour"), "120");
 
         Recipe recipe = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour), "Good cake");
         List<Recipe> recipes = Arrays.asList(recipe);
@@ -110,6 +110,6 @@ public class RecipeUtilsTest {
 
         List<Recipe> filteredRecipes = RecipeUtils.filterRecipes(recipes, filterIngredients);
 
-        assertThat(filteredRecipes.size(), is(1));
+        assertThat(filteredRecipes.size(), is(0));
     }
 }

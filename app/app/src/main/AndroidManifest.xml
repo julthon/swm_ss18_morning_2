@@ -15,19 +15,22 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
                 <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".RecipeDescriptionActivity"
-            android:screenOrientation="portrait"
-        ></activity>
+            android:label="@string/recipe"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GroceryListActivity"
+            android:label="@string/grocery_list_title"
+            android:exported="true"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

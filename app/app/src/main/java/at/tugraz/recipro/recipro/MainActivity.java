@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             searchFor(query);
         }
 
-        lvSearchResults = (ListView) findViewById(android.R.id.list);
+        lvSearchResults = findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<>();
         final RecipesAdapter recipesAdapter = new RecipesAdapter(this, recipies);
         lvSearchResults.setAdapter(recipesAdapter);
@@ -95,14 +95,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
+        spRecipeType = findViewById(R.id.spRecipeType);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.recipe_types, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRecipeType.setAdapter(typeAdapter);
-        
-        // testing
-        final OurChipView chipView = (OurChipView) findViewById(R.id.chip_tag_view);
+
+        final OurChipView chipView = findViewById(R.id.chip_tag_view);
         chipView.setAdapter(new OurChipViewAdapterImplementation(this));
     }
 

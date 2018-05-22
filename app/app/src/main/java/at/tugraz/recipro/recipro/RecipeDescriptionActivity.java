@@ -1,20 +1,24 @@
 package at.tugraz.recipro.recipro;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.GroceryListHelper;
 import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipeDescriptionActivity extends AppCompatActivity {
@@ -25,6 +29,8 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
     RatingBar rbDescRating;
     ListView lvIngredients;
     TextView tvDescription;
+
+    GroceryListHelper dbHelper;
 
     @Override
     @SuppressLint("StaticFieldLeak")
@@ -39,6 +45,7 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
         lvIngredients = findViewById(R.id.lvIngredients);
         tvDescription = findViewById(R.id.tvDescription);
 
+        dbHelper = new GroceryListHelper(this.getApplicationContext());
 
         Bundle extras = getIntent().getExtras();
         final Recipe recipe;
@@ -78,5 +85,18 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        addListeners();
+    }
+
+    private void addListeners() {
+        lvIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
+                dbHelper.addIngredient(ingredient);
+                Intent intent = new Intent(RecipeDescriptionActivity.this, GroceryListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

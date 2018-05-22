@@ -114,7 +114,7 @@ public class WSConnectionTest {
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
-            assertTrue(recipe.getRating() > minrating);
+            assertTrue(recipe.getRating() >= minrating);
         }
     }
 }
