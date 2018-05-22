@@ -40,6 +40,7 @@ import at.tugraz.recipro.ws.WSConnection;
 import at.tugraz.recipro.ws.WSConstants;
 
 public class RecipesFragment extends Fragment {
+    public static final String FRAGMENT_TAG = "RecipesFragment";
 
     private ListView lvSearchResults;
     private EditText etMinTime;
@@ -93,8 +94,8 @@ public class RecipesFragment extends Fragment {
         });
 
         lvSearchResults = (ListView) view.findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<>();
-        final RecipesAdapter recipesAdapter = new RecipesAdapter(getContext(), recipies);
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        final RecipesAdapter recipesAdapter = new RecipesAdapter(getContext(), recipes);
         lvSearchResults.setAdapter(recipesAdapter);
 
         lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {

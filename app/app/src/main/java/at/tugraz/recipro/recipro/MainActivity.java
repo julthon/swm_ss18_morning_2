@@ -42,41 +42,48 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Log.i("RECIPES", "Open fragment: " + item.toString());
 
-                Fragment fragment = null;
-                Class fragmentClass;
-                switch(item.getItemId()) {
-                    case R.id.navHome:
-                        fragmentClass = RecipesFragment.class;
-                        break;
-                    case R.id.navGroceryList:
-                        fragmentClass = GroceryListFragment.class;
-                        break;
-                    default:
-                        fragmentClass = RecipesFragment.class;
-                }
-
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-                item.setChecked(true);
-                setTitle(item.getTitle());
+                Fragment fragment = null;
+                String tag = "";
+                if (item.getItemId() == R.id.navHome) {
+                    tag = RecipesFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
+
+                    if (fragment == null) {
+                        fragment = new RecipesFragment();
+                    }
+                } else if (item.getItemId() == R.id.navGroceryList) {
+                    tag = GroceryListFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
+
+                    if (fragment == null) {
+                        fragment = new GroceryListFragment();
+                    }
+                }
+
+                boolean ret = false;
+                if (fragment != null) {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.flContent, fragment, tag)
+                            .addToBackStack(null)
+                            .commit();
+
+                    item.setChecked(true);
+                    setTitle(item.getTitle());
+                    ret = true;
+                }
+
                 dlDrawer.closeDrawers();
 
-                return true;
+                return ret;
             }
         });
 
         flContent = findViewById(R.id.flContent);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.flContent, new RecipesFragment(), "RecipesFragment")
-                .addToBackStack(null)
+                .replace(R.id.flContent, new RecipesFragment(), RecipesFragment.FRAGMENT_TAG)
                 .commit();
     }
 
@@ -88,10 +95,5 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

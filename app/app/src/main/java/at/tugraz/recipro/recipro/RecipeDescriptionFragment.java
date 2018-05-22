@@ -27,6 +27,7 @@ import at.tugraz.recipro.helper.GroceryListHelper;
 import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipeDescriptionFragment extends Fragment {
+    public static final String FRAGMENT_TAG = "RecipeDescriptionFragment";
 
     TextView tvDescTitle;
     ImageView ivDescImage;
