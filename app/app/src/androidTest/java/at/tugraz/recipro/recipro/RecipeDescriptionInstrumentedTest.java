@@ -41,9 +41,9 @@ public class RecipeDescriptionInstrumentedTest {
     @Before
     public void setUp() throws Exception {
         ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Kalbschnitzel"), "4"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Salz"), "eine Prise"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient("Eier"), "3"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(1, "Kalbschnitzel"), "4"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), "eine Prise"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(3, "Eier"), "3"));
 
         String description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
                 "\n" +

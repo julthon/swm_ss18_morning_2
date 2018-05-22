@@ -2,7 +2,6 @@ package at.tugraz.recipro.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
-import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
-import at.tugraz.recipro.recipro.GroceryListActivity;
 
 public class GroceryListHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;

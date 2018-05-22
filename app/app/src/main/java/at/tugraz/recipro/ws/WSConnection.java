@@ -44,7 +44,7 @@ public class WSConnection {
         return instance;
     }
 
-    private String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
+    private String backend_uri = "http://192.168.42.244:8080/recipro-backend/api";
     private String backend_path_recipes = "/recipes";
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
