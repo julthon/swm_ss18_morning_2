@@ -1,12 +1,17 @@
 package at.tugraz.recipro.recipro;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,7 +26,7 @@ import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.GroceryListHelper;
 import at.tugraz.recipro.ws.WSConnection;
 
-public class RecipeDescriptionActivity extends AppCompatActivity {
+public class RecipeDescriptionFragment extends Fragment {
 
     TextView tvDescTitle;
     ImageView ivDescImage;
@@ -32,32 +37,38 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
 
     GroceryListHelper dbHelper;
 
+    @Nullable
     @Override
-    @SuppressLint("StaticFieldLeak")
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_description);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            view.clearFocus();
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
 
-        tvDescTitle = findViewById(R.id.tvDescTitle);
-        ivDescImage = findViewById(R.id.ivDescImage);
-        tvDescTime = findViewById(R.id.tvDescTime);
-        rbDescRating = findViewById(R.id.rbDescRating);
-        lvIngredients = findViewById(R.id.lvIngredients);
-        tvDescription = findViewById(R.id.tvDescription);
+        view = inflater.inflate(R.layout.fragment_recipe_description, container, false);
 
-        dbHelper = new GroceryListHelper(this.getApplicationContext());
+        dbHelper = new GroceryListHelper(this.getContext());
+        tvDescTitle = view.findViewById(R.id.tvDescTitle);
+        ivDescImage = view.findViewById(R.id.ivDescImage);
+        tvDescTime = view.findViewById(R.id.tvDescTime);
+        rbDescRating = view.findViewById(R.id.rbDescRating);
+        lvIngredients = view.findViewById(R.id.lvIngredients);
+        tvDescription = view.findViewById(R.id.tvDescription);
 
-        Bundle extras = getIntent().getExtras();
+        Bundle arguments = getArguments();
         final Recipe recipe;
-        if(extras != null) {
-            recipe = (Recipe) extras.get(getResources().getString(R.string.recipe));
+        if(arguments != null) {
+            recipe = (Recipe) arguments.get(getResources().getString(R.string.recipe));
         }
         else {
-            finish();
-            return;
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.popBackStackImmediate();
+            return view;
         }
 
-        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(this, recipe.getIngredients());
+        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), recipe.getIngredients());
         lvIngredients.setAdapter(ingredientsAdapter);
 
         tvDescTitle.setText(recipe.getTitle());
@@ -86,6 +97,8 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         addListeners();
+
+        return view;
     }
 
     private void addListeners() {
@@ -94,8 +107,6 @@ public class RecipeDescriptionActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
                 dbHelper.addIngredient(ingredient);
-                Intent intent = new Intent(RecipeDescriptionActivity.this, GroceryListActivity.class);
-                startActivity(intent);
             }
         });
     }

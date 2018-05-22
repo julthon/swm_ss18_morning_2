@@ -8,10 +8,11 @@
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
-    <string name="filter_types">types</string>
     <string name="type_dessert">Dessert</string>
     <string name="type_snack">Snack</string>
     <string name="type_main">Main course</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_pantry">My Pantry</string>
     <string name="minutes">min</string>
     <string name="grocery_list_title">Grocery List</string>
     <string-array name="recipe_types">
