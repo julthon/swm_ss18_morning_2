@@ -4,6 +4,7 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import org.junit.Before;
@@ -24,25 +25,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityInstrumentedTest {
-
+public class RecipesInstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-    @Test
-    public void searchBarAvailable() {
-        onView(withHint(R.string.search_hint)).perform(click());
-    }
-
-    @Test
-    public void searchSubmitSearch() {
-        onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
-
-        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
-    }
 
     @Before
     public void fillSearchResultList() {
@@ -50,10 +38,26 @@ public class MainActivityInstrumentedTest {
         activity.runOnUiThread(new Runnable(){
             @Override
             public void run() {
-                activity.fillWithTestData();
+                RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+                if (recipesFragment != null) {
+                    recipesFragment.fillWithTestData();
+                }
             }
         });
         getInstrumentation().waitForIdleSync();
+    }
+
+    @Test
+    public void searchBarAvailable() {
+        onView(withId(R.id.searchbar)).perform(click());
+    }
+
+    @Test
+    public void searchSubmitSearch() {
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -63,10 +67,8 @@ public class MainActivityInstrumentedTest {
 
     @Test
     public void testSearchResultListClickOnFirstItem() {
-        Intents.init();
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
-        intended(hasComponent(RecipeDescriptionActivity.class.getName()));
-        Intents.release();
+        onView(withId(R.id.tvDescTitle)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -113,8 +115,8 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.spRecipeType)).perform(click());
         onView(withText(R.string.type_dessert)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(pressKey(KeyEvent.KEYCODE_T), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(pressKey(KeyEvent.KEYCODE_T), pressKey(KeyEvent.KEYCODE_ENTER));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
 }
