@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 
@@ -49,6 +50,7 @@ public class WSConnection {
     private String backend_path_recipes = "/recipes";
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
+    private String backend_path_allergens = "/allergens";
 
     private static final String LOG_TAG = WSConnection.class.getName();
 
@@ -72,6 +74,12 @@ public class WSConnection {
 
     public List<Ingredient> requestIngredients() throws RestClientException {
         ResponseEntity<Ingredient[]> response = getRequest(backend_path_ingredients, null, Ingredient[].class);
+        Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
+        return Arrays.asList(response.getBody());
+    }
+
+    public List<Allergen> requestAllergens() throws RestClientException {
+        ResponseEntity<Allergen[]> response = getRequest(backend_path_allergens, null, Allergen[].class);
         Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
         return Arrays.asList(response.getBody());
     }

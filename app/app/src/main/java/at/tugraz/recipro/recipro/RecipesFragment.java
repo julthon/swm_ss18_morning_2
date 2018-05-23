@@ -23,21 +23,23 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.plumillonforge.android.chipview.Chip;
+
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.views.OurChipView;
 import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
+import at.tugraz.recipro.views.OurTagImplementation;
 import at.tugraz.recipro.ws.WSConnection;
 import at.tugraz.recipro.ws.WSConstants;
 
@@ -51,6 +53,7 @@ public class RecipesFragment extends Fragment {
     private TableLayout tlFilters;
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
+    private OurChipView ocvTagView;
 
     private String lastQuery = null;
 
@@ -64,6 +67,7 @@ public class RecipesFragment extends Fragment {
         etMinTime = view.findViewById(R.id.etMinTime);
         etMaxTime = view.findViewById(R.id.etMaxTime);
         rbMinRating = view.findViewById(R.id.rbMinRating);
+        ocvTagView = view.findViewById(R.id.ocvTagView);
 
         final SearchView searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -124,7 +128,7 @@ public class RecipesFragment extends Fragment {
         spRecipeType.setAdapter(typeAdapter);
 
         // testing
-        final OurChipView chipView = (OurChipView) view.findViewById(R.id.chip_tag_view);
+        final OurChipView chipView = (OurChipView) view.findViewById(R.id.ocvTagView);
         chipView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
 
         return view;
@@ -144,7 +148,10 @@ public class RecipesFragment extends Fragment {
                 String maxtime = etMaxTime.getText().toString();
                 String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
                 String rating = Float.toString(rbMinRating.getRating());
-                List<String> allergenes = new ArrayList<>();
+                List<String> allergenes = ocvTagView.getListOfType(OurTagImplementation.TagType.ALLERGEN_EXCLUDE)
+                        .stream()
+                        .map(x -> x.getText())
+                        .collect(Collectors.toList());
 
                 queryParams.put(getResources().getString(R.string.request_title), Arrays.asList(query));
                 if(!mintime.isEmpty())
