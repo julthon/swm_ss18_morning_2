@@ -23,9 +23,12 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,21 +139,24 @@ public class RecipesFragment extends Fragment {
         new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
             protected List<Recipe> doInBackground(Void... voids) {
-                Map<String, String> queryParams = new HashMap<>();
+                MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
                 String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
                 String rating = Float.toString(rbMinRating.getRating());
+                List<String> allergenes = new ArrayList<>();
 
-                queryParams.put(getResources().getString(R.string.request_title), query);
+                queryParams.put(getResources().getString(R.string.request_title), Arrays.asList(query));
                 if(!mintime.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MIN_PREP, mintime);
+                    queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
                 if(!maxtime.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MAX_PREP, maxtime);
+                    queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(maxtime));
                 if(type != null && !type.isEmpty())
-                    queryParams.put(WSConstants.QUERY_TYPES, type);
+                    queryParams.put(WSConstants.QUERY_TYPES, Arrays.asList(type));
                 if(!rating.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MIN_RATING, rating);
+                    queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
+                if(!allergenes.isEmpty())
+                    queryParams.put(WSConstants.QUERY_ALLERGENS, allergenes);
 
                 try {
                     return WSConnection.getInstance().requestRecipes(queryParams);

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -51,12 +52,11 @@ public class WSConnection {
 
     private static final String LOG_TAG = WSConnection.class.getName();
 
-    private ResponseEntity getRequest(String path, Map<String, String> queryParams, Class clazz) {
+    private ResponseEntity getRequest(String path, MultiValueMap<String, String> queryParams, Class clazz) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path);
 
         if(queryParams != null)
-            for (Map.Entry<String, String> entry : queryParams.entrySet())
-                uriBuilder.queryParam(entry.getKey(), entry.getValue());
+            uriBuilder.queryParams(queryParams);
 
         String uri = uriBuilder.build().toString();
         Log.d(LOG_TAG, "request_uri=" + uri);
@@ -76,7 +76,7 @@ public class WSConnection {
         return Arrays.asList(response.getBody());
     }
 
-    public List<Recipe> requestRecipes(Map<String, String> queryParams) throws RestClientException {
+    public List<Recipe> requestRecipes(MultiValueMap<String, String> queryParams) throws RestClientException {
         ResponseEntity<Recipe[]> response = getRequest(backend_path_recipes, queryParams, Recipe[].class);
         Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
         return Arrays.asList(response.getBody());

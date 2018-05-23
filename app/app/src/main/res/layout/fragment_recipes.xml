@@ -84,6 +84,27 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tvAllergenes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/with_ing"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <at.tugraz.recipro.views.IngredientSpinner
+                android:id="@+id/isAllergenes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:tooltipText="ALLERGEN"
+                chip:refChipView="@+id/chip_tag_view" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
                 android:id="@+id/tvMinTime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
