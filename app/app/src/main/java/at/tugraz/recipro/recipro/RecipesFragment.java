@@ -132,7 +132,6 @@ public class RecipesFragment extends Fragment {
         lastQuery = query;
 
         final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
-        adapter.clear();
 
         new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
@@ -170,6 +169,7 @@ public class RecipesFragment extends Fragment {
 
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
+                adapter.clear();
                 adapter.addAll(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
