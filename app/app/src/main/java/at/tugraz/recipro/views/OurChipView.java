@@ -1,23 +1,41 @@
-package at.tugraz.recipro.Views;
+package at.tugraz.recipro.views;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.util.AttributeSet;
+import android.widget.AdapterView;
 
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
 import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class OurChipView extends ChipView {
+
+    List<AdapterView.OnItemSelectedListener> eventListeners = new LinkedList<>();
+
+    @Override
+    public void add(Chip chip) {
+        if(!mAdapter.getChipList().contains(chip)) {
+            super.add(chip);
+            for (AdapterView.OnItemSelectedListener listener : eventListeners)
+                listener.onItemSelected(null, null, 0, 0);
+        }
+    }
+
+    public void addOnSomethingChangedListener(AdapterView.OnItemSelectedListener listener) {
+        eventListeners.add(listener);
+    }
 
     private void addChipClickListener() {
         super.setOnChipClickListener(new OnChipClickListener() {
             @Override
             public void onChipClick(Chip chip) {
                 OurChipView.super.remove(chip);
+                for(AdapterView.OnItemSelectedListener listener : eventListeners)
+                    listener.onItemSelected(null, null, 0, 0);
             }
         });
     }
@@ -37,12 +55,12 @@ public class OurChipView extends ChipView {
         addChipClickListener();
     }
 
-    public List<Integer> getListOfType(OurTagImplementation.TagType type) {
-        ArrayList<Integer> includedIngredients = new ArrayList<>();
+    public List<Chip> getListOfType(OurTagImplementation.TagType type) {
+        ArrayList<Chip> includedIngredients = new ArrayList<>();
         for(Chip chip : super.getChipList()) {
             OurTagImplementation c = (OurTagImplementation) chip;
             if(c.getTagType() == type || type == null)
-                includedIngredients.add(c.getId());
+                includedIngredients.add(c);
         }
         return includedIngredients;
     }

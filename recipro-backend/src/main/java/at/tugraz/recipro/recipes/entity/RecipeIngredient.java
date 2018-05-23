@@ -17,6 +17,7 @@ public class RecipeIngredient {
     
     @Id
     @GeneratedValue
+    @JsonbTransient
     private long id;
 
     public RecipeIngredient() {
@@ -44,11 +45,7 @@ public class RecipeIngredient {
         this.quantity = quantity;
     }
 
-    @JsonbTransient
     public long getId() {
         return id;
     }
-    
-    
-    
 }

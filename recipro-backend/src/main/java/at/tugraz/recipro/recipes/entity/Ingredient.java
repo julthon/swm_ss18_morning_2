@@ -25,7 +25,6 @@ public class Ingredient {
     
     @Id
     @GeneratedValue
-    @JsonbTransient
     private long id;
     
     private List<Allergen> allergens;

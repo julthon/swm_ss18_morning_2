@@ -1,9 +1,8 @@
-package at.tugraz.recipro.Views;
+package at.tugraz.recipro.views;
 
 import android.content.Context;
 import android.view.View;
 
-import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipViewAdapter;
 
 import at.tugraz.recipro.recipro.R;

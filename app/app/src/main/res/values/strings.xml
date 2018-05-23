@@ -3,17 +3,19 @@
     <string name="search_hint">Search for recipes</string>
     <string name="error_connect">Could not connect to server</string>
     <string name="request_title">title</string>
-    <string name="min_prep">minpreptime</string>
-    <string name="max_prep">maxpreptime</string>
+    <string name="with_ing">Include Ingredient</string>
+    <string name="without_ing">Exclude Ingredient</string>
     <string name="recipe">Recipe</string>
-    <string name="connect_url">https://aughrany.com/recipro-backend/api</string>
-    <string name="connect_path_recipes">/recipes</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
-    <string name="filter_types">types</string>
     <string name="type_dessert">Dessert</string>
     <string name="type_snack">Snack</string>
     <string name="type_main">Main course</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_pantry">My Pantry</string>
+    <string name="nav_grocery_list">Grocery List</string>
+    <string name="minutes">min</string>
+    <string name="grocery_list_title">Grocery List</string>
     <string-array name="recipe_types">
         <item></item>
         <item>@string/type_dessert</item>

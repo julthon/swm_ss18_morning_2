@@ -28,16 +28,17 @@
         android:id="@+id/etNumberOfPortions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:inputType="number"
         android:background="@drawable/border_for_et"
-        android:paddingTop="1dp"
+        android:inputType="number"
         android:paddingBottom="1dp"
-        android:paddingStart="5dp"
         android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:paddingTop="1dp"
+        android:text="0"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/spaceInPortions" />
+        app:layout_constraintStart_toEndOf="@id/spaceInPortions"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/groceryListButton"

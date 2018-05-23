@@ -23,7 +23,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("allergens")
 @Stateless
-@Api(value = "RecipesResource")
+@Api(value = "AllergensResource")
 public class AllergensResource {   
     @Inject
     AllergensManager allergensManager;

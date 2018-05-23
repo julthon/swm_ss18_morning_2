@@ -1,4 +1,4 @@
-package at.tugraz.recipro.Views;
+package at.tugraz.recipro.views;
 
 import com.plumillonforge.android.chipview.Chip;
 
@@ -29,5 +29,20 @@ public class OurTagImplementation implements Chip {
         return this.tagType;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof OurTagImplementation) {
+            OurTagImplementation objTag = (OurTagImplementation) obj;
+            return this.title.equals(objTag.getText()) && this.getTagType() == objTag.getTagType();
+        }
+        return false;
+    }
 
+    public static TagType getEnumFromString(String name) {
+        for(TagType tt : TagType.class.getEnumConstants()) {
+            if(tt.name().equals(name))
+                return tt;
+        }
+        return null;
+    }
 }
