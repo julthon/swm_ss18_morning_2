@@ -56,12 +56,12 @@ public class OurChipView extends ChipView {
     }
 
     public List<Chip> getListOfType(OurTagImplementation.TagType type) {
-        ArrayList<Chip> includedIngredients = new ArrayList<>();
-        for(Chip chip : super.getChipList()) {
+        ArrayList<Chip> tags = new ArrayList<>();
+        for (Chip chip : super.getChipList()) {
             OurTagImplementation c = (OurTagImplementation) chip;
-            if(c.getTagType() == type || type == null)
-                includedIngredients.add(c);
+            if (c.getTagType() == type || type == null)
+                tags.add(c);
         }
-        return includedIngredients;
+        return tags;
     }
 }

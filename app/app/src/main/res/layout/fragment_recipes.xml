@@ -24,7 +24,7 @@
             android:layout_height="match_parent">
 
             <at.tugraz.recipro.views.OurChipView
-                android:id="@+id/chip_tag_view"
+                android:id="@+id/ocvTagView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
@@ -55,7 +55,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:tooltipText="INGREDIENT_INCLUDE"
-                chip:refChipView="@+id/chip_tag_view" />
+                chip:refChipView="@+id/ocvTagView" />
         </TableRow>
 
         <TableRow
@@ -76,7 +76,28 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:tooltipText="INGREDIENT_EXCLUDE"
-                chip:refChipView="@+id/chip_tag_view" />
+                chip:refChipView="@+id/ocvTagView" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvAllergenes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/allergens"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <at.tugraz.recipro.views.AllergenSpinner
+                android:id="@+id/isAllergenes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:tooltipText="ALLERGEN_EXCLUDE"
+                chip:refChipView="@+id/ocvTagView" />
         </TableRow>
 
         <TableRow

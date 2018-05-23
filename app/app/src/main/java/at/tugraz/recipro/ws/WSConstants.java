@@ -8,6 +8,7 @@ public class WSConstants {
     public static final String QUERY_MAX_PREP = "maxpreptime";
     public static final String QUERY_MIN_RATING = "minrating";
     public static final String QUERY_TYPES = "types";
+    public static final String QUERY_ALLERGENS = "allergens";
 
     public static final String HTTP_LOCATION_HEADER = "location";
 }

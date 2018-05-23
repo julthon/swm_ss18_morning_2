@@ -5,6 +5,7 @@
     <string name="request_title">title</string>
     <string name="with_ing">Include Ingredient</string>
     <string name="without_ing">Exclude Ingredient</string>
+    <string name="allergens">Allergens</string>
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>

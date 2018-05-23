@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.flContent, new RecipesFragment(), RecipesFragment.FRAGMENT_TAG)
-                .commit();
+                .commitNow();
     }
 
     @Override
