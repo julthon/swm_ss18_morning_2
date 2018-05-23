@@ -114,7 +114,7 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.spRecipeType)).perform(click());
         onView(withText(R.string.type_dessert)).perform(click());
         onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(pressKey(KeyEvent.KEYCODE_T), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withHint(R.string.search_hint)).perform(pressKey(KeyEvent.KEYCODE_K), pressKey(KeyEvent.KEYCODE_ENTER));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
 }

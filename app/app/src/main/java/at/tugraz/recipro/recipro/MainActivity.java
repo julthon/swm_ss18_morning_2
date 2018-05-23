@@ -11,19 +11,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import com.plumillonforge.android.chipview.Chip;
+
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.views.OurChipView;
 import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
+import at.tugraz.recipro.views.OurTagImplementation;
 import at.tugraz.recipro.ws.WSConnection;
 import at.tugraz.recipro.ws.WSConstants;
 
@@ -36,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private TableLayout tlFilters;
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
-  
+    private List<Ingredient> ingredients = new ArrayList<>();
+    private AutoCompleteTextView atIngredientInclude;
+    private AutoCompleteTextView atIngredientExclude;
+    private OurChipView chipView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ResourceAccessHelper.setApp(this);
@@ -67,12 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ibFilters.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });
+        ibFilters.setOnClickListener(view -> tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             searchFor(query);
         }
 
-        lvSearchResults = (ListView) findViewById(android.R.id.list);
+        lvSearchResults = findViewById(android.R.id.list);
         ArrayList<Recipe> recipies = new ArrayList<>();
         final RecipesAdapter recipesAdapter = new RecipesAdapter(this, recipies);
         lvSearchResults.setAdapter(recipesAdapter);
@@ -95,15 +100,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
+        spRecipeType = findViewById(R.id.spRecipeType);
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.recipe_types, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRecipeType.setAdapter(typeAdapter);
         
         // testing
-        final OurChipView chipView = (OurChipView) findViewById(R.id.chip_tag_view);
+        chipView = findViewById(R.id.chip_tag_view);
         chipView.setAdapter(new OurChipViewAdapterImplementation(this));
+
+        initializeIngredients();
+        initializeIngredientsFilter();
+    }
+
+    private void initializeIngredientsFilter() {
+        atIngredientExclude = findViewById(R.id.atIngredientExclude);
+        atIngredientInclude = findViewById(R.id.atIngredientInclude);
+        atIngredientExclude.setThreshold(1);
+        atIngredientInclude.setThreshold(1);
+        ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_dropdown_item_1line, ingredients);
+        atIngredientExclude.setAdapter(adapter);
+        atIngredientInclude.setAdapter(adapter);
+
+        atIngredientExclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientExclude, OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
+        atIngredientInclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientInclude, OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+
+        chipView.addOnSomethingChangedListener(() -> {
+            List<Chip> ingredientChips = chipView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE);
+            ingredientChips.addAll(chipView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+            List<Ingredient> ingredientSuggestions = ingredients.stream().filter(i -> ingredientChips.stream().noneMatch(e -> e.getText().equals(i.getName()))).collect(Collectors.toList());
+            adapter.clear();
+            adapter.addAll(ingredientSuggestions);
+        });
+    }
+
+    private void handleIngredientSelected(int position, AutoCompleteTextView atIngredient, OurTagImplementation.TagType type) {
+        Ingredient ingredient = (Ingredient) atIngredient.getAdapter().getItem(position);
+        chipView.add(new OurTagImplementation(0, ingredient.getName(), type));
+        atIngredient.setText("");
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void initializeIngredients() {
+        new AsyncTask<Void, Void, List<Ingredient>>() {
+            @Override
+            protected List<Ingredient> doInBackground(Void... voids) {
+                return WSConnection.getInstance().requestIngredients();
+            }
+
+            @Override
+            protected void onPostExecute(List<Ingredient> ingredients) {
+                MainActivity.this.ingredients.clear();
+                MainActivity.this.ingredients.addAll(ingredients.stream().distinct().collect(Collectors.toList()));
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @SuppressLint("StaticFieldLeak")

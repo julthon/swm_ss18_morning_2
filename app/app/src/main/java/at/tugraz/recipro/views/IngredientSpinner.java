@@ -59,20 +59,14 @@ public class IngredientSpinner extends AppCompatSpinner {
                         if (custom_optional_chipview == null) {
                             custom_optional_chipview = ((AppCompatActivity) ResourceAccessHelper.getAppContext()).findViewById(chipviewId);
                             if (custom_optional_chipview != null) {
-                                custom_optional_chipview.addOnSomethingChangedListener(new OnItemSelectedListener() {
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) { }
-
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        filteredList = new ArrayList<>();
-                                        List<Chip> already_added_chips = custom_optional_chipview.getListOfType(tagType);
-                                        for(Ingredient ing : completeList) {
-                                            if(!already_added_chips.contains(new OurTagImplementation(0, ing.getName(), tagType)))
-                                                filteredList.add(ing);
-                                        }
-                                        fireListUpdate();
+                                custom_optional_chipview.addOnSomethingChangedListener(() -> {
+                                    filteredList = new ArrayList<>();
+                                    List<Chip> already_added_chips = custom_optional_chipview.getListOfType(tagType);
+                                    for(Ingredient ing : completeList) {
+                                        if(!already_added_chips.contains(new OurTagImplementation(0, ing.getName(), tagType)))
+                                            filteredList.add(ing);
                                     }
+                                    fireListUpdate();
                                 });
                             }
                         }
