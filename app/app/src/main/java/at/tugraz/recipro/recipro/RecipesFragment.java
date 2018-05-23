@@ -23,18 +23,23 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.plumillonforge.android.chipview.Chip;
+
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.views.OurChipView;
 import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
+import at.tugraz.recipro.views.OurTagImplementation;
 import at.tugraz.recipro.ws.WSConnection;
 import at.tugraz.recipro.ws.WSConstants;
 
@@ -48,6 +53,7 @@ public class RecipesFragment extends Fragment {
     private TableLayout tlFilters;
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
+    private OurChipView ocvTagView;
 
     private String lastQuery = null;
 
@@ -61,6 +67,7 @@ public class RecipesFragment extends Fragment {
         etMinTime = view.findViewById(R.id.etMinTime);
         etMaxTime = view.findViewById(R.id.etMaxTime);
         rbMinRating = view.findViewById(R.id.rbMinRating);
+        ocvTagView = view.findViewById(R.id.ocvTagView);
 
         final SearchView searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -121,7 +128,7 @@ public class RecipesFragment extends Fragment {
         spRecipeType.setAdapter(typeAdapter);
 
         // testing
-        final OurChipView chipView = (OurChipView) view.findViewById(R.id.chip_tag_view);
+        final OurChipView chipView = (OurChipView) view.findViewById(R.id.ocvTagView);
         chipView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
 
         return view;
@@ -134,21 +141,27 @@ public class RecipesFragment extends Fragment {
         new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
             protected List<Recipe> doInBackground(Void... voids) {
-                Map<String, String> queryParams = new HashMap<>();
+                MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
                 String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
                 String rating = Float.toString(rbMinRating.getRating());
+                List<String> allergenes = ocvTagView.getListOfType(OurTagImplementation.TagType.ALLERGEN_EXCLUDE)
+                        .stream()
+                        .map(x -> x.getText())
+                        .collect(Collectors.toList());
 
-                queryParams.put(getResources().getString(R.string.request_title), query);
+                queryParams.put(getResources().getString(R.string.request_title), Arrays.asList(query));
                 if(!mintime.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MIN_PREP, mintime);
+                    queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
                 if(!maxtime.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MAX_PREP, maxtime);
+                    queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(maxtime));
                 if(type != null && !type.isEmpty())
-                    queryParams.put(WSConstants.QUERY_TYPES, type);
+                    queryParams.put(WSConstants.QUERY_TYPES, Arrays.asList(type));
                 if(!rating.isEmpty())
-                    queryParams.put(WSConstants.QUERY_MIN_RATING, rating);
+                    queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
+                if(!allergenes.isEmpty())
+                    queryParams.put(WSConstants.QUERY_ALLERGENS, allergenes);
 
                 try {
                     return WSConnection.getInstance().requestRecipes(queryParams);

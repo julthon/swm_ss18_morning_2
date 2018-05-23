@@ -26,7 +26,7 @@ public class OurChipViewAdapterImplementation extends ChipViewAdapter {
                 return R.color.tag_ingredient_include;
             case INGREDIENT_EXCLUDE:
                 return R.color.tag_ingredient_exclude;
-            case ALLERGEN:
+            case ALLERGEN_EXCLUDE:
                 return R.color.tag_allergen_exclude;
             case RECIPE_TYPE:
                 return R.color.tag_recipe_type;

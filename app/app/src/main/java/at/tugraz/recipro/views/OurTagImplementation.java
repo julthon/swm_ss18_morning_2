@@ -4,7 +4,7 @@ import com.plumillonforge.android.chipview.Chip;
 
 public class OurTagImplementation implements Chip {
 
-    public enum TagType {INGREDIENT_INCLUDE, INGREDIENT_EXCLUDE, RECIPE_TYPE, ALLERGEN}
+    public enum TagType {INGREDIENT_INCLUDE, INGREDIENT_EXCLUDE, RECIPE_TYPE, ALLERGEN_EXCLUDE}
 
     private int id;
     private String title;
