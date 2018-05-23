@@ -15,14 +15,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -74,10 +77,17 @@ public class RecipeDescriptionInstrumentedTest {
         arguments.putSerializable("Recipe", recipe);
         fragmentDescription.setArguments(arguments);
 
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.flContent, fragmentDescription)
-                .addToBackStack(null)
-                .commit();
+        final MainActivity activity = mActivityRule.getActivity();
+        activity.runOnUiThread(() -> {
+            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            if (recipesFragment != null) {
+                recipesFragment.addRecipes(Arrays.asList(recipe));
+            }
+        });
+
+        getInstrumentation().waitForIdleSync();
+
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
     }
 
     @Test

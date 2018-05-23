@@ -138,8 +138,6 @@ public class RecipesFragment extends Fragment {
     private void searchFor(final String query) {
         lastQuery = query;
 
-        final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
-
         new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
             protected List<Recipe> doInBackground(Void... voids) {
@@ -182,8 +180,7 @@ public class RecipesFragment extends Fragment {
 
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
-                adapter.clear();
-                adapter.addAll(recipes);
+                addRecipes(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -195,6 +192,12 @@ public class RecipesFragment extends Fragment {
         if (lastQuery != null) {
             searchFor(lastQuery);
         }
+    }
+
+    public void addRecipes(List<Recipe> recipes) {
+        RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
+        adapter.clear();
+        adapter.addAll(recipes);
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
