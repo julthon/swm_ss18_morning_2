@@ -13,7 +13,8 @@ import javax.persistence.Id;
 public class RecipeIngredient {
     
     private Ingredient ingredient;
-    private String quantity;
+    private float quantity;
+    private Unit unit;
     
     @Id
     @GeneratedValue
@@ -23,10 +24,10 @@ public class RecipeIngredient {
     public RecipeIngredient() {
     }
 
-    
-    public RecipeIngredient(Ingredient ingredient, String quantity) {
+    public RecipeIngredient(Ingredient ingredient, float quantity, Unit unit) {
         this.ingredient = ingredient;
         this.quantity = quantity;
+        this.unit = unit;
     }
 
     public Ingredient getIngredient() {
@@ -37,13 +38,21 @@ public class RecipeIngredient {
         this.ingredient = ingredient;
     }
 
-    public String getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }    
 
     public long getId() {
         return id;
