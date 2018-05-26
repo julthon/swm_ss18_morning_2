@@ -50,12 +50,10 @@
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.views.IngredientSpinner
-                android:id="@+id/isIngredientInclude"
+            <AutoCompleteTextView
+                android:id="@+id/atIngredientInclude"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:tooltipText="INGREDIENT_INCLUDE"
-                chip:refChipView="@+id/ocvTagView" />
+                android:layout_height="wrap_content" />
         </TableRow>
 
         <TableRow
@@ -71,12 +69,10 @@
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.views.IngredientSpinner
-                android:id="@+id/isIngredientExclude"
+            <AutoCompleteTextView
+                android:id="@+id/atIngredientExclude"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:tooltipText="INGREDIENT_EXCLUDE"
-                chip:refChipView="@+id/ocvTagView" />
+                android:layout_height="wrap_content" />
         </TableRow>
 
         <TableRow
