@@ -11,6 +11,7 @@ import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.data.Unit;
 
 public class GroceryListHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
@@ -31,7 +32,7 @@ public class GroceryListHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " (" +
                    COLUMN_ID +       " INTEGER PRIMARY KEY, " +
                    COLUMN_NAME +     " TEXT,                " +
-                   COLUMN_QUANTITY + " TEXT,             " +
+                   COLUMN_QUANTITY + " FLOAT,             " +
                    COLUMN_UNIT +     " TEXT                 " +
                    ")");
     }
@@ -104,10 +105,10 @@ public class GroceryListHelper extends SQLiteOpenHelper {
         while(cur.moveToNext()) {
             int id = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ID));
             String name = cur.getString(cur.getColumnIndexOrThrow(COLUMN_NAME));
-            String quantity = cur.getString(cur.getColumnIndexOrThrow(COLUMN_QUANTITY));
+            float quantity = cur.getFloat(cur.getColumnIndexOrThrow(COLUMN_QUANTITY));
             String unit = cur.getString(cur.getColumnIndexOrThrow(COLUMN_UNIT));
 
-            ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, unit));
+            ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, Unit.valueOf(unit)));
         }
         return ingList;
     }
