@@ -151,7 +151,7 @@ public class RecipesFragment extends Fragment {
                         .map(x -> x.getText())
                         .collect(Collectors.toList());
 
-                queryParams.put(getResources().getString(R.string.request_title), Arrays.asList(query));
+                queryParams.put(WSConstants.QUERY_TITLE, Arrays.asList(query));
                 if(!mintime.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
                 if(!maxtime.isEmpty())
