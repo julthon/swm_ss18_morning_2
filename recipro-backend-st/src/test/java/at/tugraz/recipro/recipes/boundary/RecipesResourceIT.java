@@ -57,7 +57,7 @@ public class RecipesResourceIT {
         
         JsonObject ingredient_milk = recipeBuilder
                 .add("ingredient", milk)
-                .add("quantity", "200")
+                .add("quantity", "2000")
                 .add("unit", "MILLILITER")
                 .build();
         

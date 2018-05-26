@@ -5,20 +5,23 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Objects;
 
+import at.tugraz.recipro.recipro.R;
+
 public class RecipeIngredient implements Serializable {
     @SerializedName("ingredient")
     private Ingredient ingredient;
     @SerializedName("quantity")
-    private String quantity;
+    private float quantity;
     @SerializedName("unit")
-    private String unit;
+    private Unit unit;
 
-    public RecipeIngredient(Ingredient ingredient, String quantity) {
+    public RecipeIngredient(Ingredient ingredient, float quantity) {
         this.ingredient = ingredient;
         this.quantity = quantity;
+        this.unit = Unit.NONE;
     }
 
-    public RecipeIngredient(Ingredient ingredient, String quantity, String unit) {
+    public RecipeIngredient(Ingredient ingredient, float quantity, Unit unit) {
         this.ingredient = ingredient;
         this.quantity = quantity;
         this.unit = unit;
@@ -32,19 +35,19 @@ public class RecipeIngredient implements Serializable {
         this.ingredient = ingredient;
     }
 
-    public String getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
-    public String getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 

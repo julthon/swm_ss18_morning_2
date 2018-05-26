@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.data.Unit;
 import at.tugraz.recipro.helper.GroceryListHelper;
 
 public class GroceryListInstrumentedTest {
@@ -34,7 +35,7 @@ public class GroceryListInstrumentedTest {
             values.put(helper.COLUMN_ID, i);
             values.put(helper.COLUMN_NAME, "Ingredient" + i);
             values.put(helper.COLUMN_QUANTITY, i);
-            values.put(helper.COLUMN_UNIT, Character.toString((char) ('a' + i)));
+            values.put(helper.COLUMN_UNIT, Unit.NONE.toString());
             db.insert(helper.TABLE_NAME, null, values);
         }
     }
@@ -46,24 +47,24 @@ public class GroceryListInstrumentedTest {
 
     @Test
     public void insertIngredient() {
-        helper.addIngredient(new RecipeIngredient(new Ingredient(11, "inserted ing"), "11", "zzz"));
+        helper.addIngredient(new RecipeIngredient(new Ingredient(11, "inserted ing"), 11f, Unit.NONE));
         Assert.assertEquals(11, helper.getIngredients().size());
     }
 
     @Test
     public void removeIngredient() {
-        helper.removeIngredient(new RecipeIngredient(new Ingredient(9, "don't care"), "only id is important", "not even this one"));
-        helper.removeIngredient(new RecipeIngredient(new Ingredient(10, "don't care"), "only id is important", "not even this one"));
+        helper.removeIngredient(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.NONE));
+        helper.removeIngredient(new RecipeIngredient(new Ingredient(10, "don't care"), 1f, Unit.NONE));
         Assert.assertEquals(8, helper.getIngredients().size());
     }
 
     @Test
     public void checkIngredientExistIfExists() {
-        Assert.assertTrue(helper.isPresent(new RecipeIngredient(new Ingredient(9, "don't care"), "even here we only check the id", "blaaaaa")));
+        Assert.assertTrue(helper.isPresent(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.NONE)));
     }
 
     @Test
     public void checkIngredientExistIfNotExists() {
-        Assert.assertFalse(helper.isPresent(new RecipeIngredient(new Ingredient(32794, "don't care"), "even here we only check the id", "blaaaaa")));
+        Assert.assertFalse(helper.isPresent(new RecipeIngredient(new Ingredient(32794, "don't care"), 1f, Unit.NONE)));
     }
 }
