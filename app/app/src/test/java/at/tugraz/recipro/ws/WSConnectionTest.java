@@ -5,23 +5,26 @@ import android.graphics.BitmapFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowLog;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import at.tugraz.recipro.TestUtils;
+import at.tugraz.recipro.data.Allergen;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -42,9 +45,9 @@ public class WSConnectionTest {
         int minpreptime = 50;
         int maxpreptime = 200;
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_PREP, Integer.toString(minpreptime));
-        queryParams.put(WSConstants.QUERY_MAX_PREP, Integer.toString(maxpreptime));
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(Integer.toString(minpreptime)));
+        queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(Integer.toString(maxpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -57,8 +60,8 @@ public class WSConnectionTest {
     public void minPreparationTime() {
         int minpreptime = 50;
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_PREP, Integer.toString(minpreptime));
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(Integer.toString(minpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -70,8 +73,8 @@ public class WSConnectionTest {
     public void maxPreparationTime() {
         int maxpreptime = 200;
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(WSConstants.QUERY_MAX_PREP, Integer.toString(maxpreptime));
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(Integer.toString(maxpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -109,12 +112,35 @@ public class WSConnectionTest {
     public void minRating() {
         double minrating = 2;
 
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_RATING, Double.toString(minrating));
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(Double.toString(minrating)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
-            assertTrue(recipe.getRating() > minrating);
+            assertTrue(recipe.getRating() >= minrating);
+        }
+    }
+
+    @Test
+    public void getIngredients() {
+        List<Ingredient> ingredients = this.wsConnection.requestIngredients();
+
+        for (Ingredient ingredient : ingredients) {
+            assertNotNull(ingredient.getName());
+            assertThat(ingredient.getName().isEmpty(), is(false));
+        }
+    }
+
+    @Test
+    public void getAllergens() {
+        List<Allergen> allergens = this.wsConnection.requestAllergens();
+        assertThat(allergens.size(), is(14));
+
+        for (Allergen allergen : allergens) {
+            assertNotNull(allergen.getShortName());
+            assertThat(allergen.getShortName().isEmpty(), is(false));
+            assertNotNull(allergen.getName());
+            assertThat(allergen.getName().isEmpty(), is(false));
         }
     }
 }

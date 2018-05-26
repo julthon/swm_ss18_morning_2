@@ -25,8 +25,8 @@ public class RecipeTest {
     @Before
     public void setUp() throws Exception {
         this.recipeIngredients = new ArrayList<>();
-        this.recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
-        this.recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT2_NAME), INGREDIENT2_QUANTITY));
+        this.recipeIngredients.add(new RecipeIngredient(new Ingredient(1, INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
+        this.recipeIngredients.add(new RecipeIngredient(new Ingredient(2, INGREDIENT2_NAME), INGREDIENT2_QUANTITY));
 
         this.recipe = new Recipe(1, TITLE, TIME, RATING, this.recipeIngredients, DESC);
     }
@@ -70,7 +70,7 @@ public class RecipeTest {
         assertEquals(this.recipe.getDescription(), description);
 
         List<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        recipeIngredients.add(new RecipeIngredient(new Ingredient(INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(1, INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
         this.recipe.setIngredients(recipeIngredients);
         assertEquals(this.recipe.getIngredients().size(), recipeIngredients.size());
     }
@@ -85,7 +85,7 @@ public class RecipeTest {
         firstIngredient.getIngredient().setName(ingredientName);
         firstIngredient.setQuantity(quantity);
 
-        Ingredient secondIngredient = new Ingredient("Apples");
+        Ingredient secondIngredient = new Ingredient(1, "Apples");
         recipeIngredients.get(1).setIngredient(secondIngredient);
 
         List<RecipeIngredient> ingredients = this.recipe.getIngredients();

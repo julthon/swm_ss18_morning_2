@@ -17,7 +17,7 @@ public class ChipViewInstrumentedTest {
     private OurChipView cv;
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +25,7 @@ public class ChipViewInstrumentedTest {
         cv.add(new OurTagImplementation(1, "Test Tag", OurTagImplementation.TagType.RECIPE_TYPE));
         cv.add(new OurTagImplementation(2, "Test Tag", OurTagImplementation.TagType.INGREDIENT_INCLUDE));
         cv.add(new OurTagImplementation(3, "Test Tag", OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
-        cv.add(new OurTagImplementation(4, "Test Tag", OurTagImplementation.TagType.ALLERGEN));
+        cv.add(new OurTagImplementation(4, "Test Tag", OurTagImplementation.TagType.ALLERGEN_EXCLUDE));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class ChipViewInstrumentedTest {
         Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.RECIPE_TYPE).size(), 1);
         Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE).size(), 1);
         Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE).size(), 1);
-        Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.ALLERGEN).size(), 1);
+        Assert.assertEquals(cv.getListOfType(OurTagImplementation.TagType.ALLERGEN_EXCLUDE).size(), 1);
         Assert.assertEquals(cv.getListOfType(null).size(), 4);
     }
 }

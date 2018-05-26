@@ -1,246 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:chip="http://schemas.android.com/apk/res-auto"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             tools:context="at.tugraz.recipro.recipro.MainActivity">
-
-    <TableLayout
-        android:id="@+id/tlFilters"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:stretchColumns="0"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchbar">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <at.tugraz.recipro.views.OurChipView
-                android:id="@+id/chip_tag_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                chip:chip_corner_radius="6dp"
-                chip:chip_line_spacing="4dp"
-                chip:chip_padding="10dp"
-                chip:chip_side_padding="10dp"
-                chip:chip_spacing="4dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvIngredientInclude2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/with_ing"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <AutoCompleteTextView
-                android:id="@+id/atIngredientInclude"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvIngredientExclude2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/without_ing"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <AutoCompleteTextView
-                android:id="@+id/atIngredientExclude"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-        </TableRow>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dlDrawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
 
-        <!--<TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvIngredientInclude"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/with_ing"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tbToolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/flContent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <at.tugraz.recipro.views.IngredientSpinner
-                android:id="@+id/isIngredientInclude"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:tooltipText="INGREDIENT_INCLUDE"
-                chip:refChipView="@+id/chip_tag_view" />
-        </TableRow>
+        <FrameLayout
+            android:id="@+id/flContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tbToolbar" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </android.support.constraint.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tvIngredientExclude"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/without_ing"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
 
-            <at.tugraz.recipro.views.IngredientSpinner
-                android:id="@+id/isIngredientExclude"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:tooltipText="INGREDIENT_EXCLUDE"
-                chip:refChipView="@+id/chip_tag_view" />
-        </TableRow>-->
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvMinTime"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="min time"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <EditText
-                android:id="@+id/etMinTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:inputType="number" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvMaxTime"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="max time"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <EditText
-                android:id="@+id/etMaxTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:inputType="number" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvRecipeType"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="type of food"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <Spinner
-                android:id="@+id/spRecipeType"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvMinRating"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="min rating"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <RatingBar
-                android:id="@+id/rbMinRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:isIndicator="false"
-                android:numStars="5"
-                android:rating="0"
-                android:stepSize="0.5"
-                chip:layout_constraintEnd_toEndOf="parent"
-                chip:layout_constraintTop_toBottomOf="parent" />
-
-        </TableRow>
-
-    </TableLayout>
-
-    <SearchView
-        android:id="@+id/searchbar"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tlFilters"
-        app:layout_constraintEnd_toStartOf="@+id/ibFilters"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tlFilters" />
-
-    <ImageButton
-        android:id="@+id/ibFilters"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nvNavigation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tlFilters"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/nav_header"/>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.DrawerLayout>

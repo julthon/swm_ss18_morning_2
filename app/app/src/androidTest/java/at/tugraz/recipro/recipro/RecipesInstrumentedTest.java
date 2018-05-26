@@ -1,9 +1,5 @@
 package at.tugraz.recipro.recipro;
 
-import android.os.Build;
-import android.os.IBinder;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.Root;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.RootMatchers;
@@ -39,40 +35,40 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityInstrumentedTest {
-
+public class RecipesInstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-    @Test
-    public void searchBarAvailable() {
-        onView(withHint(R.string.search_hint)).perform(click());
-    }
-
-    @Test
-    public void searchSubmitSearch() {
-        onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
-
-        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
-    }
 
     @Before
     public void fillSearchResultList() {
         final MainActivity activity = mActivityRule.getActivity();
-        activity.runOnUiThread(new Runnable(){
-            @Override
-            public void run() {
-                activity.fillWithTestData();
+        activity.runOnUiThread(() -> {
+            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            if (recipesFragment != null) {
+                recipesFragment.fillWithTestData();
             }
         });
         getInstrumentation().waitForIdleSync();
+    }
+
+    @Test
+    public void searchBarAvailable() {
+        onView(withId(R.id.searchbar)).perform(click());
+    }
+
+    @Test
+    public void searchSubmitSearch() {
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -82,10 +78,8 @@ public class MainActivityInstrumentedTest {
 
     @Test
     public void testSearchResultListClickOnFirstItem() {
-        Intents.init();
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
-        intended(hasComponent(RecipeDescriptionActivity.class.getName()));
-        Intents.release();
+        onView(withId(R.id.tvDescTitle)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -132,8 +126,8 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.spRecipeType)).perform(click());
         onView(withText(R.string.type_dessert)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(click());
-        onView(withHint(R.string.search_hint)).perform(pressKey(KeyEvent.KEYCODE_K), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(pressKey(KeyEvent.KEYCODE_T), pressKey(KeyEvent.KEYCODE_ENTER));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(isDisplayed()));
     }
 
@@ -155,11 +149,13 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
-    public void testSpecificIngredientCreatesTag() {
+    public void testSpecificIngredientHandlesTag() {
         onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).perform(click());
-        onView(withId(R.id.chip_tag_view)).check(matches(ViewMatchers.hasDescendant(withText("Flour")))).check(matches(isDisplayed()));
+        onView(withText("Flour")).perform(click());
+        onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
+        onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).check(matches(isDisplayed()));
     }
 
 }
