@@ -1,6 +1,7 @@
 package at.tugraz.recipro.views;
 
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.util.AttributeSet;
 import android.widget.AdapterView;
 
@@ -14,18 +15,18 @@ import java.util.List;
 
 public class OurChipView extends ChipView {
 
-    List<AdapterView.OnItemSelectedListener> eventListeners = new LinkedList<>();
+    List<OnSomethingChangedListener> eventListeners = new LinkedList<>();
 
     @Override
     public void add(Chip chip) {
         if(!mAdapter.getChipList().contains(chip)) {
             super.add(chip);
-            for (AdapterView.OnItemSelectedListener listener : eventListeners)
-                listener.onItemSelected(null, null, 0, 0);
+            for (OnSomethingChangedListener listener : eventListeners)
+                listener.onSomethingChanged();
         }
     }
 
-    public void addOnSomethingChangedListener(AdapterView.OnItemSelectedListener listener) {
+    public void addOnSomethingChangedListener(OnSomethingChangedListener listener) {
         eventListeners.add(listener);
     }
 
@@ -34,8 +35,8 @@ public class OurChipView extends ChipView {
             @Override
             public void onChipClick(Chip chip) {
                 OurChipView.super.remove(chip);
-                for(AdapterView.OnItemSelectedListener listener : eventListeners)
-                    listener.onItemSelected(null, null, 0, 0);
+                for (OnSomethingChangedListener listener : eventListeners)
+                    listener.onSomethingChanged();
             }
         });
     }
@@ -63,5 +64,9 @@ public class OurChipView extends ChipView {
                 tags.add(c);
         }
         return tags;
+    }
+
+    public interface OnSomethingChangedListener{
+        void onSomethingChanged();
     }
 }
