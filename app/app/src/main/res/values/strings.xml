@@ -17,6 +17,7 @@
     <string name="nav_grocery_list">Grocery List</string>
     <string name="minutes">min</string>
     <string name="grocery_list_title">Grocery List</string>
+    <string name="grocery_list_remove_message">Removed %1$s from your grocery list</string>
     <string-array name="recipe_types">
         <item></item>
         <item>@string/type_dessert</item>

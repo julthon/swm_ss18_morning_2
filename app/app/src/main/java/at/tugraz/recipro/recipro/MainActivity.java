@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-            actionBar.setIcon(R.mipmap.ic_launcher);
+            actionBar.setDisplayUseLogoEnabled(false);
         }
 
         NavigationView navigationView = findViewById(R.id.nvNavigation);
