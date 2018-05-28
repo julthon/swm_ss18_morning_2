@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +12,17 @@ import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 
-public class GroceryListHelper extends AbstractListHelper {
+public class MyPantryListHelper extends AbstractListHelper {
 
-    public final String table_name = "grocery";
-    public static final String db_name = "recipro.grocerylist";
+    public final String table_name = "mypantry";
+    public static final String db_name = "recipro.mypantry";
 
     protected final String[] columns = {"id", "name", "quantity", "unit"};
     protected final String[] columns_type = {"INTEGER PRIMARY KEY", "TEXT", "FLOAT", "TEXT"};
 
-    public GroceryListHelper(Context context) {
+    public MyPantryListHelper(Context context) {
         super(context, db_name);
+        addIngredient(new RecipeIngredient(new Ingredient(1, "Banane"), 12));
     }
 
     protected String[] getColumnNames(){
@@ -38,7 +37,7 @@ public class GroceryListHelper extends AbstractListHelper {
         return table_name;
     }
 
-    public boolean addIngredient(RecipeIngredient ingredient) {
+    public void addIngredient(RecipeIngredient ingredient) {
         // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.query(table_name,
@@ -50,13 +49,11 @@ public class GroceryListHelper extends AbstractListHelper {
                 null);
         if(cur.moveToNext()) {
             // found element
-            float oldValue = cur.getFloat(cur.getColumnIndexOrThrow(columns[0]));
+            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(columns[0]));
 
             ContentValues cv = new ContentValues();
             cv.put(columns[2], ingredient.getQuantity() + oldValue);
-            //Log.i(this.getClass().getName(), "old value: " + oldValue + "new value: " + cv.get(columns[2]));
-            db.update(table_name, cv, columns[0] + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
-            return false;
+            db.update(table_name, cv, columns[0] + "=?", null);
         } else {
             // nothing found, insert new element
             db.execSQL("INSERT INTO " + table_name + " VALUES(" +
@@ -64,7 +61,6 @@ public class GroceryListHelper extends AbstractListHelper {
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
                     ingredient.getUnit() + "');");
-            return true;
         }
     }
 

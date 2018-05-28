@@ -60,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
                 if (fragment == null) {
                     fragment = new GroceryListFragment();
                 }
+            } else if (item.getItemId() == R.id.navMyPantry) {
+                tag = MyPantryFragment.FRAGMENT_TAG;
+                fragment = fragmentManager.findFragmentByTag(MyPantryFragment.FRAGMENT_TAG);
+
+                if (fragment == null) {
+                    fragment = new MyPantryFragment();
+                }
             }
 
             boolean ret = false;
