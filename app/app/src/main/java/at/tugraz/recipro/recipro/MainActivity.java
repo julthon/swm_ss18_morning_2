@@ -1,6 +1,5 @@
 package at.tugraz.recipro.recipro;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-            actionBar.setIcon(R.mipmap.ic_launcher);
+            actionBar.setDisplayUseLogoEnabled(false);
         }
 
         NavigationView navigationView = findViewById(R.id.nvNavigation);
