@@ -6,22 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MyPantryFragment">
 
-    <AutoCompleteTextView
-        android:id="@+id/atIngredientInclude"
+    <at.tugraz.recipro.views.AutoCompleteIngredientTextView
+        android:id="@+id/acIngredients"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/lvMyPantry"
+        app:layout_constraintEnd_toStartOf="@+id/lvMyPantry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/lvMyPantry"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/atIngredientInclude"
-        app:layout_constraintEnd_toEndOf="@id/atIngredientInclude"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/acIngredients" />
 
 </android.support.constraint.ConstraintLayout>

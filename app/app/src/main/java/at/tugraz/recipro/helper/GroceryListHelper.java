@@ -42,7 +42,7 @@ public class GroceryListHelper extends AbstractListHelper {
         // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.query(table_name,
-                new String[]{columns[0]},
+                new String[]{columns[0], columns[2]},
                 columns[0] + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())},
                 null,
@@ -50,7 +50,7 @@ public class GroceryListHelper extends AbstractListHelper {
                 null);
         if(cur.moveToNext()) {
             // found element
-            float oldValue = cur.getFloat(cur.getColumnIndexOrThrow(columns[0]));
+            float oldValue = cur.getFloat(cur.getColumnIndexOrThrow(columns[2]));
 
             ContentValues cv = new ContentValues();
             cv.put(columns[2], ingredient.getQuantity() + oldValue);
