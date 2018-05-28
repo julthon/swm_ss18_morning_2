@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -24,6 +25,7 @@ import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.plumillonforge.android.chipview.Chip;
+import com.plumillonforge.android.chipview.ChipView;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,9 +34,11 @@ import org.springframework.web.client.RestClientException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.views.OurChipView;
@@ -54,8 +58,11 @@ public class RecipesFragment extends Fragment {
     private ImageButton ibFilters;
     private RatingBar rbMinRating;
     private OurChipView ocvTagView;
+    private AutoCompleteTextView atIngredientExclude;
+    private AutoCompleteTextView atIngredientInclude;
 
     private String lastQuery = null;
+    private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     @Nullable
     @Override
@@ -68,6 +75,8 @@ public class RecipesFragment extends Fragment {
         etMaxTime = view.findViewById(R.id.etMaxTime);
         rbMinRating = view.findViewById(R.id.rbMinRating);
         ocvTagView = view.findViewById(R.id.ocvTagView);
+        atIngredientExclude = view.findViewById(R.id.atIngredientExclude);
+        atIngredientInclude = view.findViewById(R.id.atIngredientInclude);
 
         final SearchView searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -131,7 +140,50 @@ public class RecipesFragment extends Fragment {
         final OurChipView chipView = (OurChipView) view.findViewById(R.id.ocvTagView);
         chipView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
 
+        initializeIngredients();
+        initializeIngredientsFilter();
         return view;
+    }
+
+    private void initializeIngredientsFilter() {
+        atIngredientExclude.setThreshold(1);
+        atIngredientInclude.setThreshold(1);
+        ArrayAdapter<Ingredient> adapter = new ArrayAdapter<Ingredient>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, ingredients);
+        atIngredientExclude.setAdapter(adapter);
+        atIngredientInclude.setAdapter(adapter);
+
+        atIngredientExclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientExclude, OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
+        atIngredientInclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientInclude, OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+
+        ocvTagView.addOnSomethingChangedListener(() -> {
+            List<Chip> ingredientChips = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE);
+            ingredientChips.addAll(ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+            List<Ingredient> ingredientSuggestions = ingredients.stream().filter(i -> ingredientChips.stream().noneMatch(e -> e.getText().equals(i.getName()))).collect(Collectors.toList());
+            adapter.clear();
+            adapter.addAll(ingredientSuggestions);
+        });
+    }
+
+    private void handleIngredientSelected(int position, AutoCompleteTextView atIngredient, OurTagImplementation.TagType type) {
+        Ingredient ingredient = (Ingredient) atIngredient.getAdapter().getItem(position);
+        ocvTagView.add(new OurTagImplementation(0, ingredient.getName(), type));
+        atIngredient.setText("");
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void initializeIngredients() {
+        new AsyncTask<Void, Void, List<Ingredient>>() {
+            @Override
+            protected List<Ingredient> doInBackground(Void... voids) {
+                return WSConnection.getInstance().requestIngredients();
+            }
+
+            @Override
+            protected void onPostExecute(List<Ingredient> ingredients) {
+                RecipesFragment.this.ingredients.clear();
+                RecipesFragment.this.ingredients.addAll(ingredients.stream().distinct().collect(Collectors.toList()));
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -151,7 +203,7 @@ public class RecipesFragment extends Fragment {
                         .map(x -> x.getText())
                         .collect(Collectors.toList());
 
-                queryParams.put(getResources().getString(R.string.request_title), Arrays.asList(query));
+                queryParams.put(WSConstants.QUERY_TITLE, Arrays.asList(query));
                 if(!mintime.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
                 if(!maxtime.isEmpty())
