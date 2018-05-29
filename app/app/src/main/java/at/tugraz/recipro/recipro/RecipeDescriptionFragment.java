@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -35,6 +36,7 @@ public class RecipeDescriptionFragment extends Fragment {
     RatingBar rbDescRating;
     ListView lvIngredients;
     TextView tvDescription;
+    EditText etPortions;
 
     GroceryListHelper dbHelper;
 
@@ -57,6 +59,7 @@ public class RecipeDescriptionFragment extends Fragment {
         rbDescRating = view.findViewById(R.id.rbDescRating);
         lvIngredients = view.findViewById(R.id.lvIngredients);
         tvDescription = view.findViewById(R.id.tvDescription);
+        etPortions = view.findViewById(R.id.etNumberOfPortions);
 
         Bundle arguments = getArguments();
         final Recipe recipe;
@@ -76,6 +79,7 @@ public class RecipeDescriptionFragment extends Fragment {
         tvDescTime.setText(String.valueOf(recipe.getTime()) + getResources().getString(R.string.minutes));
         rbDescRating.setRating(((float) recipe.getRating()));
         tvDescription.setText(recipe.getDescription());
+        etPortions.setText(Integer.toString(recipe.getServings()));
 
 
         new AsyncTask<Void, Void, Bitmap>() {
