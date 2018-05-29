@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="ExtraText">
+
+
+        <ImageView
+            android:id="@+id/ivGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_group_black_24dp" />
+
+    <Space
+        android:id="@+id/spaceInPortions"
+        android:layout_width="8dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toEndOf="@id/ivGroup"
+        app:layout_constraintTop_toBottomOf="parent"/>
+
+    <EditText
+        android:id="@+id/etNumberOfPortions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_for_et"
+        android:inputType="number"
+        android:paddingBottom="1dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:paddingTop="1dp"
+        android:text="0"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/spaceInPortions"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/groceryListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_add_shopping_cart_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>
