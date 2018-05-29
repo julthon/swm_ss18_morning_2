@@ -1,6 +1,5 @@
 package at.tugraz.recipro.recipro;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,58 +32,58 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolBar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setDisplayUseLogoEnabled(false);
+        }
 
         NavigationView navigationView = findViewById(R.id.nvNavigation);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.i("RECIPES", "Open fragment: " + item.toString());
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Log.i("RECIPES", "Open fragment: " + item.toString());
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-                Fragment fragment = null;
-                String tag = "";
-                if (item.getItemId() == R.id.navHome) {
-                    tag = RecipesFragment.FRAGMENT_TAG;
-                    fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
+            Fragment fragment = null;
+            String tag = "";
+            if (item.getItemId() == R.id.navHome) {
+                tag = RecipesFragment.FRAGMENT_TAG;
+                fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
 
-                    if (fragment == null) {
-                        fragment = new RecipesFragment();
-                    }
-                } else if (item.getItemId() == R.id.navGroceryList) {
-                    tag = GroceryListFragment.FRAGMENT_TAG;
-                    fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
-
-                    if (fragment == null) {
-                        fragment = new GroceryListFragment();
-                    }
+                if (fragment == null) {
+                    fragment = new RecipesFragment();
                 }
+            } else if (item.getItemId() == R.id.navGroceryList) {
+                tag = GroceryListFragment.FRAGMENT_TAG;
+                fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
 
-                boolean ret = false;
-                if (fragment != null) {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.flContent, fragment, tag)
-                            .addToBackStack(null)
-                            .commit();
-
-                    item.setChecked(true);
-                    setTitle(item.getTitle());
-                    ret = true;
+                if (fragment == null) {
+                    fragment = new GroceryListFragment();
                 }
-
-                dlDrawer.closeDrawers();
-
-                return ret;
             }
+
+            boolean ret = false;
+            if (fragment != null) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flContent, fragment, tag)
+                        .addToBackStack(null)
+                        .commit();
+
+                item.setChecked(true);
+                setTitle(item.getTitle());
+                ret = true;
+            }
+
+            dlDrawer.closeDrawers();
+
+            return ret;
         });
 
         flContent = findViewById(R.id.flContent);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.flContent, new RecipesFragment(), RecipesFragment.FRAGMENT_TAG)
-                .commit();
+                .commitNow();
     }
 
     @Override

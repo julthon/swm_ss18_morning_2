@@ -10,7 +10,7 @@
         <attr name="chip_background_selected" format="reference" />
         <attr name="chip_background_res" format="reference" />
     </declare-styleable>
-    <declare-styleable name="IngredientSpinner">
+    <declare-styleable name="AbstractSpinner">
         <attr name="refChipView" format="reference" />
         <attr name="spinnerChipType" format="string" />
     </declare-styleable>

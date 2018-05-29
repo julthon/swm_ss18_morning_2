@@ -8,8 +8,8 @@
 
     <ListView
         android:id="@+id/lvGroceryList"
-        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"

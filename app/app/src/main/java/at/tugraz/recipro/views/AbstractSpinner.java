@@ -15,18 +15,16 @@ import com.plumillonforge.android.chipview.Chip;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.recipro.R;
-import at.tugraz.recipro.ws.WSConnection;
 
-public class IngredientSpinner extends AppCompatSpinner {
+public abstract class AbstractSpinner<T> extends AppCompatSpinner {
     private int chipviewId = -1;
     private OurChipView custom_optional_chipview = null;
-    private OurTagImplementation.TagType tagType = null;
-    private List<Ingredient> completeList = new ArrayList<>();
-    private List<Ingredient> filteredList = new ArrayList<>();
-    private ArrayAdapter<Ingredient> adapter = null;
+    protected OurTagImplementation.TagType tagType = null;
+    private List<T> completeList = new ArrayList<>();
+    private List<T> filteredList = new ArrayList<>();
+    private ArrayAdapter<T> adapter = null;
 
     private void fireListUpdate() {
         if(adapter != null) {
@@ -35,50 +33,41 @@ public class IngredientSpinner extends AppCompatSpinner {
         }
     }
 
+    protected abstract List<T> getValueList();
+
+    protected abstract OurTagImplementation getTagImplementation(T value);
+
     private void setupArrayAdapter() {
         if (adapter == null) {
-            adapter = new ArrayAdapter<Ingredient>(super.getContext(), R.layout.spinner_item, R.id.spinnerItem, new ArrayList<>());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    List<Ingredient> list = WSConnection.getInstance().requestIngredients();
-                    ArrayList<Ingredient> list1 = new ArrayList<>();
-                    list1.add(new Ingredient(1, ""));
-                    list1.addAll(list);
-                    completeList = list1;
-                    filteredList = completeList;
-                    fireListUpdate();
-                }
+            adapter = new ArrayAdapter<T>(super.getContext(), R.layout.spinner_item, R.id.spinnerItem, new ArrayList<>());
+            new Thread(() -> {
+                completeList = getValueList();
+                filteredList = completeList;
+                fireListUpdate();
             }).start();
             this.setAdapter(adapter);
 
-            setOnItemSelectedListener(new OnItemSelectedListener() {
+            setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if(position != 0) {
                         if (custom_optional_chipview == null) {
                             custom_optional_chipview = ((AppCompatActivity) ResourceAccessHelper.getAppContext()).findViewById(chipviewId);
                             if (custom_optional_chipview != null) {
-                                custom_optional_chipview.addOnSomethingChangedListener(new OnItemSelectedListener() {
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) { }
-
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                custom_optional_chipview.addOnSomethingChangedListener(() -> {
                                         filteredList = new ArrayList<>();
                                         List<Chip> already_added_chips = custom_optional_chipview.getListOfType(tagType);
-                                        for(Ingredient ing : completeList) {
-                                            if(!already_added_chips.contains(new OurTagImplementation(0, ing.getName(), tagType)))
-                                                filteredList.add(ing);
+                                        for(T value : completeList) {
+                                            if(!already_added_chips.contains(getTagImplementation(value)))
+                                                filteredList.add(value);
                                         }
                                         fireListUpdate();
-                                    }
-                                });
+                                    });
                             }
                         }
                         if (custom_optional_chipview != null)
-                            custom_optional_chipview.add(new OurTagImplementation(0, adapter.getItem(position).getName(), tagType));
-                        IngredientSpinner.this.setSelection(0);
+                            custom_optional_chipview.add(getTagImplementation(adapter.getItem(position)));
+                        AbstractSpinner.this.setSelection(0);
                     }
                 }
 
@@ -91,47 +80,47 @@ public class IngredientSpinner extends AppCompatSpinner {
     }
 
     private void setupChipview(Context context, AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IngredientSpinner, defStyleAttr, 0);
-        chipviewId = a.getResourceId(R.styleable.IngredientSpinner_refChipView, -1);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbstractSpinner, defStyleAttr, 0);
+        chipviewId = a.getResourceId(R.styleable.AbstractSpinner_refChipView, -1);
         tagType = OurTagImplementation.getEnumFromString(this.getTooltipText().toString());
         a.recycle();
     }
 
-    public IngredientSpinner(Context context) {
+    public AbstractSpinner(Context context) {
         super(context);
         setupArrayAdapter();
     }
 
-    public IngredientSpinner(Context context, int mode) {
+    public AbstractSpinner(Context context, int mode) {
         super(context, mode);
         setupArrayAdapter();
     }
 
-    public IngredientSpinner(Context context, AttributeSet attrs) {
+    public AbstractSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupChipview(context, attrs, 0);
         setupArrayAdapter();
     }
 
-    public IngredientSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setupChipview(context, attrs, defStyleAttr);
         setupArrayAdapter();
     }
 
-    public IngredientSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode) {
+    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode) {
         super(context, attrs, defStyleAttr, mode);
         setupChipview(context, attrs, defStyleAttr);
         setupArrayAdapter();
     }
 
-    public IngredientSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode, Resources.Theme popupTheme) {
+    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode, Resources.Theme popupTheme) {
         super(context, attrs, defStyleAttr, mode, popupTheme);
         setupChipview(context, attrs, defStyleAttr);
         setupArrayAdapter();
     }
 
-    public Ingredient getValue() {
+    public T getValue() {
         if (getSelectedItemPosition() == 0)
             return null;
         return adapter.getItem(getSelectedItemPosition() + 1);

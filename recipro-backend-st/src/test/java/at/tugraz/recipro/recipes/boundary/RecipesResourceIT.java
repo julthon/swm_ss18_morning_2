@@ -58,14 +58,14 @@ public class RecipesResourceIT {
         
         JsonObject ingredient_milk = recipeBuilder
                 .add("ingredient", milk)
-                .add("quantity", "200ml")
-                .add("allergens", Json.createArrayBuilder().build())
+                .add("quantity", "2000")
+                .add("unit", "MILLILITER")
                 .build();
         
         JsonObject ingredient_flour = recipeBuilder
                 .add("ingredient", flour)
-                .add("quantity", "500g")
-                .add("allergens", Json.createArrayBuilder().build())
+                .add("quantity", "500")
+                .add("unit", "GRAM")
                 .build();
         
         JsonArrayBuilder ingredientsListBuilder = Json.createArrayBuilder();
@@ -465,17 +465,20 @@ public class RecipesResourceIT {
         
         JsonObject ingredientMilk = ingredientBuilder
                 .add("ingredient", milk)
-                .add("quantity", "200ml")
+                .add("quantity", "200")
+                .add("unit", "MILLILITER")                
                 .build();
         
         JsonObject ingredientFlour = ingredientBuilder
                 .add("ingredient", flour)
-                .add("quantity", "500g")
+                .add("quantity", "500")
+                .add("unit", "GRAM")
                 .build();
         
         JsonObject ingredientEggs = ingredientBuilder
                 .add("ingredient", eggs)
                 .add("quantity", "4")
+                .add("unit", "NONE")
                 .build();
         
         JsonArrayBuilder ingredientsListBuilder = Json.createArrayBuilder();

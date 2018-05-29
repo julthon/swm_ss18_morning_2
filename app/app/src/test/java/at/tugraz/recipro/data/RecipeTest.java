@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecipeTest {
 
@@ -16,9 +18,9 @@ public class RecipeTest {
     private final String TITLE = "TestRecipe";
     private final String DESC = "Do something";
     private final String INGREDIENT1_NAME = "Potatoes";
-    private final String INGREDIENT1_QUANTITY = "2";
+    private final float INGREDIENT1_QUANTITY = 2f;
     private final String INGREDIENT2_NAME = "Eggs";
-    private final String INGREDIENT2_QUANTITY = "3";
+    private final float INGREDIENT2_QUANTITY = 3f;
     private final int TIME = 50;
     private final double RATING = 4.5;
 
@@ -46,9 +48,9 @@ public class RecipeTest {
 
         assertEquals(ingredients.size(), 2);
         assertEquals(ingredients.get(0).getIngredient().getName(), INGREDIENT1_NAME);
-        assertEquals(ingredients.get(0).getQuantity(), INGREDIENT1_QUANTITY);
+        assertThat(ingredients.get(0).getQuantity(), is(INGREDIENT1_QUANTITY));
         assertEquals(ingredients.get(1).getIngredient().getName(), INGREDIENT2_NAME);
-        assertEquals(ingredients.get(1).getQuantity(), INGREDIENT2_QUANTITY);
+        assertThat(ingredients.get(1).getQuantity(), is(INGREDIENT2_QUANTITY));
     }
 
     @Test
@@ -82,7 +84,8 @@ public class RecipeTest {
     @Test
     public void testIngredientSetters() {
         String ingredientName = "Rice";
-        String quantity = "1 cup";
+        float quantity = 200f;
+        String unit = "GRAM";
 
         List<RecipeIngredient> recipeIngredients = this.recipe.getIngredients();
         RecipeIngredient firstIngredient = recipeIngredients.get(0);
@@ -95,8 +98,8 @@ public class RecipeTest {
         List<RecipeIngredient> ingredients = this.recipe.getIngredients();
         assertEquals(ingredients.size(), 2);
         assertEquals(ingredients.get(0).getIngredient().getName(), ingredientName);
-        assertEquals(ingredients.get(0).getQuantity(), quantity);
+        assertThat(ingredients.get(0).getQuantity(), is(quantity));
         assertEquals(ingredients.get(1).getIngredient().getName(), secondIngredient.getName());
-        assertEquals(ingredients.get(1).getQuantity(), INGREDIENT2_QUANTITY);
+        assertThat(ingredients.get(1).getQuantity(), is(INGREDIENT2_QUANTITY));
     }
 }
