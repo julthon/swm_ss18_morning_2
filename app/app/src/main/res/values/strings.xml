@@ -21,6 +21,7 @@
     <string name="unit_kilogram">kg</string>
     <string name="unit_milliliter">ml</string>
     <string name="unit_liter">l</string>
+    <string name="only_favorites">only favorites</string>
     <string-array name="recipe_types">
         <item></item>
         <item>@string/type_dessert</item>

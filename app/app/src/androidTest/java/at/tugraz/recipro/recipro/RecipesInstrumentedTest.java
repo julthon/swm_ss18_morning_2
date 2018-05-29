@@ -1,44 +1,34 @@
 package at.tugraz.recipro.recipro;
 
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.RootMatchers;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import at.tugraz.recipro.data.Ingredient;
+import at.tugraz.recipro.helper.FavoritesHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.core.IsNot.not;
-import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -72,18 +62,18 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void testSearchResultListExist() {
+    public void searchResultListExist() {
         onView(withId(android.R.id.list)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testSearchResultListClickOnFirstItem() {
+    public void searchResultListClickOnFirstItem() {
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
         onView(withId(R.id.tvDescTitle)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testSearchResultListEntries() {
+    public void searchResultListEntries() {
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.ivThumbnail)).check(matches(isDisplayed()));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(withText("Recipe #1")));
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTime)).check(matches(withText("20min")));
@@ -106,8 +96,9 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void testPreparationTimeExists() {
+    public void preparationTimeExists() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.tvMinTime)).check(matches(isDisplayed()));
         onView(withId(R.id.tvMaxTime)).check(matches(isDisplayed()));
         onView(withId(R.id.etMinTime)).check(matches(isDisplayed()));
@@ -115,8 +106,9 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void testRecipeTypeExists() {
+    public void recipeTypeExists() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.tvRecipeType)).check(matches(isDisplayed()));
         onView(withId(R.id.spRecipeType)).check(matches(isDisplayed()));
     }
@@ -124,6 +116,7 @@ public class RecipesInstrumentedTest {
     @Test
     public void testRecipeTypeReturnsSomething() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.spRecipeType)).perform(click());
         onView(withText(R.string.type_dessert)).perform(click());
         onView(withId(R.id.searchbar)).perform(click());
@@ -133,15 +126,17 @@ public class RecipesInstrumentedTest {
 
 
     @Test
-    public void testSpecificIngredientExists() {
+    public void specificIngredientExists() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.atIngredientExclude)).check(matches(isDisplayed()));
         onView(withId(R.id.atIngredientInclude)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testSpecificIngredientSuggests() {
+    public void specificIngredientSuggests() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).check(matches(isDisplayed()));
         onView(withId(R.id.atIngredientInclude)).perform(ViewActions.typeText("Flo"));
@@ -149,8 +144,9 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void testSpecificIngredientHandlesTag() {
+    public void specificIngredientHandlesTag() {
         onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).perform(click());
         onView(withText("Flour")).perform(click());
@@ -158,4 +154,42 @@ public class RecipesInstrumentedTest {
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void favoritesCheckboxExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
+        onView(withId(R.id.tvFilterFavorites)).check(matches(isDisplayed()));
+        onView(withId(R.id.cbFavorites)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterFavoritesEmpty() {
+        FavoritesHelper favoritesHelper = new FavoritesHelper(mActivityRule.getActivity());
+        favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
+        onView(withId(R.id.cbFavorites)).perform(click());
+        onView(withId(R.id.cbFavorites)).check(matches(isChecked()));
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(android.R.id.list)).check(matches(not(hasDescendant(withId(R.id.tvTitle)))));
+    }
+
+    @Test
+    public void filterFavorites() {
+        FavoritesHelper favoritesHelper = new FavoritesHelper(mActivityRule.getActivity());
+        favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+        favoritesHelper.addFavorite(1);
+
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
+        onView(withId(R.id.cbFavorites)).perform(click());
+        onView(withId(R.id.cbFavorites)).check(matches(isChecked()));
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(android.R.id.list)).check(matches(hasDescendant(withId(R.id.tvTitle))));
+
+        favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+    }
 }

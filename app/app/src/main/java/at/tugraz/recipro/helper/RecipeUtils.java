@@ -1,5 +1,7 @@
 package at.tugraz.recipro.helper;
 
+import android.content.Context;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.stream.Collectors;
 
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.ws.WSConnection;
 
 public abstract class RecipeUtils {
     public static List<Recipe> filterRecipes(List<Recipe> recipes, List<RecipeIngredient> ingredients) {
@@ -23,5 +26,11 @@ public abstract class RecipeUtils {
                 .collect(Collectors.toList());
 
         return sortedRecipes;
+    }
+
+    public static List<Recipe> filterByFavorites(List<Recipe> recipes, List<Long> favorites) {
+        return recipes.stream()
+                .filter(r -> favorites.contains(r.getId()))
+                .collect(Collectors.toList());
     }
 }

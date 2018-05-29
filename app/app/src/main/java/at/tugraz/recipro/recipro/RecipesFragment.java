@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -41,6 +42,8 @@ import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.helper.FavoritesHelper;
+import at.tugraz.recipro.helper.RecipeUtils;
 import at.tugraz.recipro.views.OurChipView;
 import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
 import at.tugraz.recipro.views.OurTagImplementation;
@@ -60,6 +63,7 @@ public class RecipesFragment extends Fragment {
     private OurChipView ocvTagView;
     private AutoCompleteTextView atIngredientExclude;
     private AutoCompleteTextView atIngredientInclude;
+    private CheckBox cbFavorites;
 
     private String lastQuery = null;
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
@@ -77,6 +81,7 @@ public class RecipesFragment extends Fragment {
         ocvTagView = view.findViewById(R.id.ocvTagView);
         atIngredientExclude = view.findViewById(R.id.atIngredientExclude);
         atIngredientInclude = view.findViewById(R.id.atIngredientInclude);
+        cbFavorites = view.findViewById(R.id.cbFavorites);
 
         final SearchView searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -216,7 +221,13 @@ public class RecipesFragment extends Fragment {
                     queryParams.put(WSConstants.QUERY_ALLERGENS, allergenes);
 
                 try {
-                    return WSConnection.getInstance().requestRecipes(queryParams);
+                    List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
+
+                    if (cbFavorites.isChecked())
+                        recipes = RecipeUtils.filterByFavorites(recipes, new FavoritesHelper(getActivity()).getFavorites());
+
+                    return recipes;
+
                 } catch (RestClientException ex) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

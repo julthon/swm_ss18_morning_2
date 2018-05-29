@@ -185,6 +185,24 @@
 
         </TableRow>
 
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tvFilterFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/only_favorites"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <CheckBox
+                android:id="@+id/cbFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
     </TableLayout>
 
     <SearchView
