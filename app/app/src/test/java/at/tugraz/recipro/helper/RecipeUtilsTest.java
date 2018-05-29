@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.junit.Assert.assertEquals;
 
 public class RecipeUtilsTest {
 
@@ -110,6 +111,37 @@ public class RecipeUtilsTest {
         filterIngredients.add(flour2);
 
         List<Recipe> filteredRecipes = RecipeUtils.filterRecipes(recipes, filterIngredients);
+
+        assertThat(filteredRecipes.size(), is(0));
+    }
+
+    @Test
+    public void filterByFavorites() {
+        List<Long> favorites = Arrays.asList(2L, 3L);
+
+        List<Recipe> recipes = Arrays.asList(
+                new Recipe(1, "Title1", 30, 3.5, new ArrayList<>(), ""),
+                new Recipe(2, "Title2", 50, 4.5, new ArrayList<>(), ""),
+                new Recipe(3, "Title3", 10, 5.0, new ArrayList<>(), ""));
+
+        List<Recipe> filteredRecipes = RecipeUtils.filterByFavorites(recipes, favorites);
+
+        assertThat(filteredRecipes.size(), is(favorites.size()));
+        for (Recipe recipe : filteredRecipes) {
+            assertThat(favorites, hasItem(recipe.getId()));
+        }
+    }
+
+    @Test
+    public void filterByFavoritesEmpty() {
+        List<Long> favorites = Arrays.asList();
+
+        List<Recipe> recipes = Arrays.asList(
+                new Recipe(1, "Title1", 30, 3.5, new ArrayList<>(), ""),
+                new Recipe(2, "Title2", 50, 4.5, new ArrayList<>(), ""),
+                new Recipe(3, "Title3", 10, 5.0, new ArrayList<>(), ""));
+
+        List<Recipe> filteredRecipes = RecipeUtils.filterByFavorites(recipes, favorites);
 
         assertThat(filteredRecipes.size(), is(0));
     }

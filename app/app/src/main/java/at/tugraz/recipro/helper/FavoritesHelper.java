@@ -10,34 +10,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
-    public static final String DB_NAME = "recipro.db";
+public class FavoritesHelper extends DatabaseHelper {
     public static final String TABLE_NAME = "favorites";
-
     public static final String COLUMN_RECIPE = "recipe_id";
 
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
+                                               COLUMN_RECIPE +   " INTEGER PRIMARY KEY" +
+                                              ")";
+
     public FavoritesHelper(Context context) {
-        super(context, DB_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        Log.i("FAVORITES", "CREATE");
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " (" +
-                COLUMN_RECIPE +   " INTEGER PRIMARY KEY " +
-                ")");
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE " + TABLE_NAME);
-        onCreate(db);
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+        super(context);
     }
 
     public void addFavorite(long recipeId) {

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,7 @@ import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 
-public class GroceryListHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
-    public static final String DB_NAME = "recipro.db";
+public class GroceryListHelper extends DatabaseHelper {
     public static final String TABLE_NAME = "grocery";
 
     public static final String COLUMN_ID = "id";
@@ -23,29 +20,15 @@ public class GroceryListHelper extends SQLiteOpenHelper {
     public static final String COLUMN_QUANTITY = "quantity";
     public static final String COLUMN_UNIT = "unit";
 
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
+                                              COLUMN_ID +       " INTEGER PRIMARY KEY, " +
+                                              COLUMN_NAME +     " TEXT,                " +
+                                              COLUMN_QUANTITY + " FLOAT,               " +
+                                              COLUMN_UNIT +     " TEXT                 " +
+                                              ")";
+
     public GroceryListHelper(Context context) {
-        super(context, DB_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " (" +
-                   COLUMN_ID +       " INTEGER PRIMARY KEY, " +
-                   COLUMN_NAME +     " TEXT,                " +
-                   COLUMN_QUANTITY + " FLOAT,             " +
-                   COLUMN_UNIT +     " TEXT                 " +
-                   ")");
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + TABLE_NAME);
-        onCreate(db);
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+        super(context);
     }
 
     public void addIngredient(RecipeIngredient ingredient) {
