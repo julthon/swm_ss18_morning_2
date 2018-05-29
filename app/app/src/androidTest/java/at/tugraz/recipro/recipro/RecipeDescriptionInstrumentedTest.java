@@ -101,6 +101,8 @@ public class RecipeDescriptionInstrumentedTest {
         onView(withId(R.id.rbDescRating)).check(matches(isDisplayed()));
         onView(withId(R.id.lvIngredients)).check(matches(isDisplayed()));
         onView(withId(R.id.tvDescription)).check(matches(isDisplayed()));
+        onView(withId(R.id.ivGroup)).check(matches(isDisplayed()));
+        onView(withId(R.id.etNumberOfPortions)).check(matches(isDisplayed()));
     }
 
     @Test

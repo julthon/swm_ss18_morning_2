@@ -11,7 +11,6 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
             android:id="@+id/tvDescTitle"
             android:layout_width="match_parent"
@@ -23,6 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <ImageView
             android:id="@+id/ivDescImage"
@@ -50,6 +50,18 @@
             app:layout_constraintTop_toBottomOf="@+id/ivDescImage"
             app:srcCompat="@drawable/ic_watch_later_black_24dp" />
 
+        <include
+            android:id="@+id/includeServings"
+            layout="@layout/item_servings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDescTime" />
+
         <TextView
             android:id="@+id/tvDescTime"
             android:layout_width="wrap_content"
@@ -74,7 +86,6 @@
             android:stepSize="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivDescImage" />
-
         <TextView
             android:id="@+id/tvIngredients"
             android:layout_width="0dp"
@@ -86,7 +97,7 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rbDescRating" />
+            app:layout_constraintTop_toBottomOf="@+id/includeServings" />
 
         <at.tugraz.recipro.views.NonScrollListView
             android:id="@+id/lvIngredients"

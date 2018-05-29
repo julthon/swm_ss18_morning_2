@@ -28,17 +28,18 @@ public class RecipesResourceIT {
     
     @Rule
     public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
+
     
     @Rule
     public JAXRSClientProvider allergensProvider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/allergens");
     
     @Test
     public void createAndFindRecipeById(){
-          
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
         double rating = 3.7; 
         int preparationTime = 120;
+        int servings = 4;
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
         JsonArray recipeTypesToCreate = recipeTypeBuilder
@@ -81,6 +82,7 @@ public class RecipesResourceIT {
                 .add("description", description)
                 .add("ingredients", ingredients)
                 .add("rating", rating)
+                .add("servings", servings)
                 .build();
         
         Response response = this.provider.target()
@@ -110,7 +112,9 @@ public class RecipesResourceIT {
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
-        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));       
+        assertThat(payload.getJsonArray("ingredients").size(), is(2));
+        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
+        assertThat(payload.getInt("servings"), is(servings));
     }
     
     @Test
