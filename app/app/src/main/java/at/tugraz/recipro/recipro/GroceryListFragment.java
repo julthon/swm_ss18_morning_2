@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.RecipeIngredient;
@@ -37,7 +38,9 @@ public class GroceryListFragment extends Fragment {
         lvGroceryListView = view.findViewById(R.id.lvGroceryList);
         fireDbChangedEvent(lvGroceryListView);
         lvGroceryListView.setOnItemClickListener((parent, view1, position, id) -> {
-            dbHelper.removeIngredient((RecipeIngredient) lvGroceryListView.getAdapter().getItem(position));
+            RecipeIngredient ing = (RecipeIngredient) lvGroceryListView.getAdapter().getItem(position);
+            dbHelper.removeIngredient(ing);
+            Toast.makeText(this.getActivity(), String.format(getResources().getString(R.string.grocery_list_remove_message), ing.getIngredient().getName()), Toast.LENGTH_SHORT).show();
             fireDbChangedEvent(lvGroceryListView);
         });
         return view;

@@ -3,7 +3,6 @@ package at.tugraz.recipro.recipes.control;
 import at.tugraz.recipro.recipes.entity.Ingredient;
 import at.tugraz.recipro.recipes.entity.Recipe;
 import at.tugraz.recipro.recipes.entity.RecipeType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
