@@ -23,6 +23,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -119,6 +120,14 @@ public class RecipesInstrumentedTest {
         onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.tvRecipeType)).check(matches(isDisplayed()));
         onView(withId(R.id.spRecipeType)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFavoritesCheckbarExists() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
+        onView(withId(R.id.tvFilterFavorites)).check(matches(isDisplayed()));
+        onView(withId(R.id.cbFavorites)).check(matches(isDisplayed()));
     }
 
     @Test
