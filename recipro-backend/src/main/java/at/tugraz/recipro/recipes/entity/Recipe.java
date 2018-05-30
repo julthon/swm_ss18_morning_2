@@ -35,11 +35,13 @@ public class Recipe {
     public static final String FIND_BY_TITLE = PREFIX + "findByTitle";
 
     public Recipe() {
+        this.servings = 1;
     }
 
     public Recipe(String title, int preparationTime) {
         this.title = title;
         this.preparationTime = preparationTime;
+        this.servings = 1;
     } 
 
     public long getId() {

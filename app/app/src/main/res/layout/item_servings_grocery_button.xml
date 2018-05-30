@@ -7,16 +7,16 @@
     tools:ignore="ExtraText">
 
 
-        <ImageView
-            android:id="@+id/ivGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_group_black_24dp" />
+    <ImageView
+        android:id="@+id/ivGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_group_black_24dp" />
 
     <Space
         android:id="@+id/spaceInPortions"

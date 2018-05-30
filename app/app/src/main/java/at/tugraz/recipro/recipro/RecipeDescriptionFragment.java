@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.springframework.web.client.RestClientException;
+
+import java.util.List;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Recipe;
@@ -44,6 +48,8 @@ public class RecipeDescriptionFragment extends Fragment {
     GroceryListHelper dbHelper;
     FavoritesHelper fHelper;
 
+    int currentServings;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -56,23 +62,23 @@ public class RecipeDescriptionFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_recipe_description, container, false);
 
-        dbHelper = new GroceryListHelper(this.getContext());
-        fHelper = new FavoritesHelper(this.getContext());
-        tvDescTitle = view.findViewById(R.id.tvDescTitle);
-        ivDescImage = view.findViewById(R.id.ivDescImage);
-        tvDescTime = view.findViewById(R.id.tvDescTime);
-        rbDescRating = view.findViewById(R.id.rbDescRating);
-        lvIngredients = view.findViewById(R.id.lvIngredients);
-        tvDescription = view.findViewById(R.id.tvDescription);
-        etPortions = view.findViewById(R.id.etNumberOfPortions);
-        ibFavourites = view.findViewById(R.id.ibFavourite);
+        this.dbHelper = new GroceryListHelper(this.getContext());
+        this.fHelper = new FavoritesHelper(this.getContext());
+        this.tvDescTitle = view.findViewById(R.id.tvDescTitle);
+        this.ivDescImage = view.findViewById(R.id.ivDescImage);
+        this.tvDescTime = view.findViewById(R.id.tvDescTime);
+        this.rbDescRating = view.findViewById(R.id.rbDescRating);
+        this.lvIngredients = view.findViewById(R.id.lvIngredients);
+        this.tvDescription = view.findViewById(R.id.tvDescription);
+        this.etPortions = view.findViewById(R.id.etNumberOfPortions);
+        this.ibFavourites = view.findViewById(R.id.ibFavourite);
 
         if (fHelper.exists(this.getId())){
-            ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
-            ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
+            this.ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
+            this.ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
         } else {
-            ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
-            ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
+            this.ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+            this.ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
         }
 
         Bundle arguments = getArguments();
@@ -84,16 +90,55 @@ public class RecipeDescriptionFragment extends Fragment {
             return view;
         }
 
+        this.currentServings = this.recipe.getServings();
+
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), this.recipe.getIngredients());
-        lvIngredients.setAdapter(ingredientsAdapter);
+        this.lvIngredients.setAdapter(ingredientsAdapter);
 
-        tvDescTitle.setText(this.recipe.getTitle());
-        tvDescTime.setText(String.valueOf(this.recipe.getTime()) + getResources().getString(R.string.minutes));
-        rbDescRating.setRating(((float) this.recipe.getRating()));
-        tvDescription.setText(this.recipe.getDescription());
-        etPortions.setText(Integer.toString(this.recipe.getServings()));
+        this.tvDescTitle.setText(this.recipe.getTitle());
+        this.tvDescTime.setText(String.valueOf(this.recipe.getTime()) + getResources().getString(R.string.minutes));
+        this.rbDescRating.setRating(((float) this.recipe.getRating()));
+        this.tvDescription.setText(this.recipe.getDescription());
+        this.etPortions.setText(Integer.toString(this.currentServings));
 
-        final Recipe recipe = this.recipe;
+
+        etPortions.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView tvPortions, int i, KeyEvent keyEvent) {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    view.clearFocus();
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                if (tvPortions.getText().toString().isEmpty()) {
+                    tvPortions.setText(Integer.toString(currentServings));
+                    return true;
+                }
+
+                int servings = Integer.parseInt(tvPortions.getText().toString());
+
+                if (servings == 0 || servings > 1000) {
+                    tvPortions.setText(Integer.toString(currentServings));
+                    return true;
+                }
+
+                float factor = (float)servings / (float)currentServings;
+
+                List<RecipeIngredient> ingredients = recipe.getIngredients();
+                for (RecipeIngredient ingredient : ingredients) {
+                    ingredient.setQuantity(ingredient.getQuantity() * factor);
+                }
+
+                IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), ingredients);
+                lvIngredients.setAdapter(ingredientsAdapter);
+
+                currentServings = servings;
+
+                return true;
+            }
+        });
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
@@ -114,7 +159,7 @@ public class RecipeDescriptionFragment extends Fragment {
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        addListeners();
+        this.addListeners();
 
         return view;
     }
