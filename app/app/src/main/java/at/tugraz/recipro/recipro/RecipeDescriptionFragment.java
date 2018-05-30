@@ -140,6 +140,14 @@ public class RecipeDescriptionFragment extends Fragment {
             }
         });
 
+        if (fHelper.exists(recipe.getId())){
+            ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
+            ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
+        } else {
+            ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+            ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
+        }
+
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... voids) {
