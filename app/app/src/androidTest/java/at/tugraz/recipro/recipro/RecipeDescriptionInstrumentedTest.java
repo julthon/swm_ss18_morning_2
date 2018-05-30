@@ -21,6 +21,7 @@ import java.util.List;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
+import at.tugraz.recipro.data.Unit;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
@@ -44,9 +45,12 @@ public class RecipeDescriptionInstrumentedTest {
     @Before
     public void setUp() throws Exception {
         ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        recipeIngredients.add(new RecipeIngredient(new Ingredient(1, "Kalbschnitzel"), "4"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), "eine Prise"));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient(3, "Eier"), "3"));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(1, "Kalbschnitzel"), 4f));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), 1000f, Unit.GRAM));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Bier"), 2000f, Unit.MILLILITER));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Zucker"), 200f, Unit.GRAM));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Milch"), 500f, Unit.MILLILITER));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(3, "Eier"), 3f));
 
         String description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
                 "\n" +
@@ -108,7 +112,22 @@ public class RecipeDescriptionInstrumentedTest {
         List<RecipeIngredient> ingredients = recipe.getIngredients();
         for (int position = 0; position < ingredients.size(); position++) {
             RecipeIngredient ingredient = ingredients.get(position);
-            onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvQuantity)).check(matches(withText(ingredient.getQuantity())));
+            if (ingredient.getQuantity() >= 1000f)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvQuantity)).check(matches(withText(String.valueOf(ingredient.getQuantity() / 1000f))));
+            else
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvQuantity)).check(matches(withText(String.valueOf(ingredient.getQuantity()))));
+
+            if (ingredient.getUnit() == Unit.NONE)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvUnit)).check(matches(withText("")));
+            else if (ingredient.getUnit() == Unit.GRAM && ingredient.getQuantity() < 1000f)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvUnit)).check(matches(withText("g")));
+            else if (ingredient.getUnit() == Unit.GRAM && ingredient.getQuantity() >= 1000f)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvUnit)).check(matches(withText("kg")));
+            else if (ingredient.getUnit() == Unit.MILLILITER && ingredient.getQuantity() < 1000f)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvUnit)).check(matches(withText("ml")));
+            else if (ingredient.getUnit() == Unit.MILLILITER && ingredient.getQuantity() >= 1000f)
+                onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvUnit)).check(matches(withText("l")));
+
             onData(anything()).inAdapterView(withId(R.id.lvIngredients)).atPosition(position).onChildView(withId(R.id.tvIngredient)).check(matches(withText(ingredient.getIngredient().getName())));
         }
     }

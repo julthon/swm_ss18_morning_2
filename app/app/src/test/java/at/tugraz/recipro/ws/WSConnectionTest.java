@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -16,15 +15,16 @@ import org.springframework.util.MultiValueMap;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import at.tugraz.recipro.TestUtils;
+import at.tugraz.recipro.data.Allergen;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -118,6 +118,29 @@ public class WSConnectionTest {
 
         for (Recipe recipe : recipes) {
             assertTrue(recipe.getRating() >= minrating);
+        }
+    }
+
+    @Test
+    public void getIngredients() {
+        List<Ingredient> ingredients = this.wsConnection.requestIngredients();
+
+        for (Ingredient ingredient : ingredients) {
+            assertNotNull(ingredient.getName());
+            assertThat(ingredient.getName().isEmpty(), is(false));
+        }
+    }
+
+    @Test
+    public void getAllergens() {
+        List<Allergen> allergens = this.wsConnection.requestAllergens();
+        assertThat(allergens.size(), is(14));
+
+        for (Allergen allergen : allergens) {
+            assertNotNull(allergen.getShortName());
+            assertThat(allergen.getShortName().isEmpty(), is(false));
+            assertNotNull(allergen.getName());
+            assertThat(allergen.getName().isEmpty(), is(false));
         }
     }
 }

@@ -54,12 +54,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
                         if (custom_optional_chipview == null) {
                             custom_optional_chipview = ((AppCompatActivity) ResourceAccessHelper.getAppContext()).findViewById(chipviewId);
                             if (custom_optional_chipview != null) {
-                                custom_optional_chipview.addOnSomethingChangedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) { }
-
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                custom_optional_chipview.addOnSomethingChangedListener(() -> {
                                         filteredList = new ArrayList<>();
                                         List<Chip> already_added_chips = custom_optional_chipview.getListOfType(tagType);
                                         for(T value : completeList) {
@@ -67,8 +62,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
                                                 filteredList.add(value);
                                         }
                                         fireListUpdate();
-                                    }
-                                });
+                                    });
                             }
                         }
                         if (custom_optional_chipview != null)
