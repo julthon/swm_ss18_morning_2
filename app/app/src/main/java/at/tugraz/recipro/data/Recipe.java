@@ -29,7 +29,7 @@ public class Recipe implements Serializable {
     @SerializedName("ingredients")
     private List<RecipeIngredient> ingredients;
 
-    public Recipe(long id, String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
+    public Recipe(long id, String title, int time, int servings, double rating, List<RecipeIngredient> ingredients, String description) {
         this.id = id;
         this.title = title;
         this.time = time;
