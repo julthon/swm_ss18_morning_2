@@ -4,11 +4,7 @@ import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -438,7 +434,14 @@ public class RecipesResourceIT {
                 .get();
         
         JsonArray allergens = allergenResponse.readEntity(JsonArray.class);
-        
+        JsonObject allergen = allergens.getJsonObject(0);
+        JsonArrayBuilder allergensBuilder = Json.createArrayBuilder();
+        for (int i = 1; i < allergens.size(); i++) {
+            allergensBuilder.add(allergens.get(i));
+        }
+        allergens = allergensBuilder.build();
+
+
         String title = "Allergencake";
         String description = "Best allergens ever.";
         double rating = 4.7; 
@@ -520,12 +523,24 @@ public class RecipesResourceIT {
         System.out.println("filterByAllergens payload " + payload);
         
         assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id), is(false));
+
+        response = this.provider.target()
+                .queryParam("allergens", allergen.getString("shortName"))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+
+        payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByAllergens payload " + payload);
+
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id), is(true));
     }
 
     @Test
     public void filterBySpecificIngredients() {
-        String title1 = "Ingredientcake1";
-        String title2 = "Ingredientcake2";
+        String title1 = "IngredientcakeMilk";
+        String title2 = "IngredientcakeFlour";
         String description = "Best ingredients ever.";
         double rating = 4.7;
         int preparationTime = 120;
