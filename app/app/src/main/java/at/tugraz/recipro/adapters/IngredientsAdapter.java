@@ -15,6 +15,7 @@ import java.util.List;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.recipro.R;
 
 public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
@@ -54,22 +55,22 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
         return rowView;
     }
 
-    protected String getConvertedUnitHumanreadable(Unit unit, float quantity) {
+    public static String getConvertedUnitHumanreadable(Unit unit, float quantity) {
         switch (unit) {
             case NONE:
                 return "";
             case GRAM:
-                if (quantity >= 1000f) return this.getContext().getResources().getString(R.string.unit_kilogram);
-                else return this.getContext().getResources().getString(R.string.unit_gram);
+                if (quantity >= 1000f) return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_kilogram);
+                else return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_gram);
             case MILLILITER:
-                if (quantity >= 1000f) return this.getContext().getResources().getString(R.string.unit_liter);
-                else return this.getContext().getResources().getString(R.string.unit_milliliter);
+                if (quantity >= 1000f) return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_liter);
+                else return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_milliliter);
             default:
                 return "";
         }
     }
 
-    protected float getConvertedQuantity(float quantity) {
+    public static float getConvertedQuantity(float quantity) {
         if (quantity >= 1000f)
             return quantity / 1000f;
         else

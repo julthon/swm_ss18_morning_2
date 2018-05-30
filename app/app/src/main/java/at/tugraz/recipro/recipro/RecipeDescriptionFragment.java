@@ -108,9 +108,10 @@ public class RecipeDescriptionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
-                //if(!dbHelper.addIngredient(ingredient))
                 dbHelper.addIngredient(ingredient);
-                Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message), ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message),
+                        IngredientsAdapter.getConvertedQuantity(ingredient.getQuantity()) + "" + IngredientsAdapter.getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity())
+                        + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
             }
         });
     }
