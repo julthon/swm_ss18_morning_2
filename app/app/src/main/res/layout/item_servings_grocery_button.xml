@@ -19,14 +19,14 @@
         app:srcCompat="@drawable/ic_group_black_24dp" />
 
     <Space
-        android:id="@+id/spaceInPortions"
+        android:id="@+id/sServings"
         android:layout_width="8dp"
         android:layout_height="24dp"
         app:layout_constraintStart_toEndOf="@id/ivGroup"
         app:layout_constraintTop_toBottomOf="parent"/>
 
     <EditText
-        android:id="@+id/etNumberOfPortions"
+        android:id="@+id/etServings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/border_for_et"
@@ -38,12 +38,12 @@
         android:text="0"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/spaceInPortions"
+        app:layout_constraintStart_toEndOf="@id/sServings"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageButton
-        android:id="@+id/groceryListButton"
+        android:id="@+id/ibGroceryList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_add_shopping_cart_black_24dp"

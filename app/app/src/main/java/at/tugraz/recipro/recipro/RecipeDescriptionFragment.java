@@ -41,9 +41,9 @@ public class RecipeDescriptionFragment extends Fragment {
     RatingBar rbDescRating;
     ListView lvIngredients;
     TextView tvDescription;
-    EditText etPortions;
+    EditText etServings;
     ImageButton ibFavourites;
-    Recipe  recipe;
+    Recipe recipe;
 
     GroceryListHelper dbHelper;
     FavoritesHelper fHelper;
@@ -70,7 +70,7 @@ public class RecipeDescriptionFragment extends Fragment {
         this.rbDescRating = view.findViewById(R.id.rbDescRating);
         this.lvIngredients = view.findViewById(R.id.lvIngredients);
         this.tvDescription = view.findViewById(R.id.tvDescription);
-        this.etPortions = view.findViewById(R.id.etNumberOfPortions);
+        this.etServings = view.findViewById(R.id.etServings);
         this.ibFavourites = view.findViewById(R.id.ibFavourite);
 
         if (fHelper.exists(this.getId())){
@@ -99,12 +99,12 @@ public class RecipeDescriptionFragment extends Fragment {
         this.tvDescTime.setText(String.valueOf(this.recipe.getTime()) + getResources().getString(R.string.minutes));
         this.rbDescRating.setRating(((float) this.recipe.getRating()));
         this.tvDescription.setText(this.recipe.getDescription());
-        this.etPortions.setText(Integer.toString(this.currentServings));
+        this.etServings.setText(Integer.toString(this.currentServings));
 
 
-        etPortions.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etServings.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView tvPortions, int i, KeyEvent keyEvent) {
+            public boolean onEditorAction(TextView tvServings, int i, KeyEvent keyEvent) {
                 View view = getActivity().getCurrentFocus();
                 if (view != null) {
                     view.clearFocus();
@@ -112,15 +112,15 @@ public class RecipeDescriptionFragment extends Fragment {
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                if (tvPortions.getText().toString().isEmpty()) {
-                    tvPortions.setText(Integer.toString(currentServings));
+                if (tvServings.getText().toString().isEmpty()) {
+                    tvServings.setText(Integer.toString(currentServings));
                     return true;
                 }
 
-                int servings = Integer.parseInt(tvPortions.getText().toString());
+                int servings = Integer.parseInt(tvServings.getText().toString());
 
-                if (servings == 0 || servings > 1000) {
-                    tvPortions.setText(Integer.toString(currentServings));
+                if (servings <= 0 || servings > 1000) {
+                    tvServings.setText(Integer.toString(currentServings));
                     return true;
                 }
 

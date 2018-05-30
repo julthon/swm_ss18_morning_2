@@ -268,9 +268,9 @@ public class RecipesFragment extends Fragment {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
         ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        adapter.add(new Recipe(1, "Recipe #1", 20, 5.0, recipeIngredients, ""));
-        adapter.add(new Recipe(2, "Recipe #2", 40, 4.0, recipeIngredients, ""));
-        adapter.add(new Recipe(3, "Recipe #3", 10, 1.0, recipeIngredients, ""));
-        adapter.add(new Recipe(4, "Recipe #4", 30, 3.0, recipeIngredients, ""));
+        adapter.add(new Recipe(1, "Recipe #1", 20, 4, 5.0, recipeIngredients, ""));
+        adapter.add(new Recipe(2, "Recipe #2", 40, 4, 4.0, recipeIngredients, ""));
+        adapter.add(new Recipe(3, "Recipe #3", 10, 4, 1.0, recipeIngredients, ""));
+        adapter.add(new Recipe(4, "Recipe #4", 30, 4, 3.0, recipeIngredients, ""));
     }
 }
