@@ -2,10 +2,7 @@ package at.tugraz.recipro.recipes.boundary;
 
 import at.tugraz.recipro.recipes.control.AllergensManager;
 import at.tugraz.recipro.recipes.control.RecipesManager;
-import at.tugraz.recipro.recipes.entity.Allergen;
-import at.tugraz.recipro.recipes.entity.Ingredient;
-import at.tugraz.recipro.recipes.entity.Recipe;
-import at.tugraz.recipro.recipes.entity.RecipeType;
+import at.tugraz.recipro.recipes.entity.*;
 import io.swagger.annotations.Api;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +44,8 @@ public class RecipesResource {
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
     public static final String FILTER_ALLERGENS = "allergens";
+    public static final String FILTER_INGREDIENTS_EXCLUDE = "ingredientsExclude";
+    public static final String FILTER_INGREDIENTS_INCLUDE = "ingredientsInclude";
     public static final String FILTER_MIN_RATING = "minrating";
     public static final String FILTER_MAX_RATING = "maxrating";
     
@@ -82,31 +81,40 @@ public class RecipesResource {
                                @DefaultValue("0.0") @QueryParam(FILTER_MIN_RATING) double minrating,
                                @DefaultValue("5.0") @QueryParam(FILTER_MAX_RATING) double maxrating,
                                @QueryParam(FILTER_TYPES) List<String> types,
-                               @QueryParam(FILTER_ALLERGENS) List<String> allergensShortNames) {
+                               @QueryParam(FILTER_ALLERGENS) List<String> allergensShortNames,
+                               @QueryParam(FILTER_INGREDIENTS_INCLUDE) List<String> ingredientsNameInclude,
+                               @QueryParam(FILTER_INGREDIENTS_EXCLUDE) List<String> ingredientsNameExclude) {
         ArrayList<RecipeType> typeList = new ArrayList<>();
         if(types != null)
             typeList.addAll(types.stream()
                                  .map((String s) -> (RecipeType.fromString(s)))
                                  .collect(Collectors.toList()));
-        
-        List<Allergen> allergens = allergensManager.findAll().stream().filter(a -> allergensShortNames.contains(a.getShortName())).collect(Collectors.toList());
+        ArrayList<Allergen> allergens = new ArrayList<>();
+        if(allergensShortNames != null)
+            allergens.addAll(allergensManager.findAll().stream().filter(a -> allergensShortNames.contains(a.getShortName())).collect(Collectors.toList()));
+        ArrayList<Ingredient> ingredientsInclude = new ArrayList<>();
+        if(ingredientsNameExclude != null)
+            ingredientsInclude.addAll(getAllIngredients().stream().filter(i -> ingredientsNameExclude.contains(i.getName())).collect(Collectors.toList()));
+        ArrayList<Ingredient> ingredientsExclude = new ArrayList<>();
+        if(ingredientsInclude != null)
+            ingredientsExclude.addAll(getAllIngredients().stream().filter(i -> ingredientsNameInclude.contains(i.getName())).collect(Collectors.toList()));
+
         return recipesManager
                 .findAll()
                 .stream()
-                .filter((Recipe r) -> (
-                        (title.isEmpty() || r.getTitle().toLowerCase().contains(title.toLowerCase())) && 
-                        (r.getPreparationTime() > minpreptime && 
-                         r.getPreparationTime() < maxpreptime) &&
-                        (r.getRating() >= minrating && 
-                         r.getRating() <= maxrating)) && 
-                        (typeList.size() == 0 || r.getRecipeTypes()
-                                                  .stream()
-                                                  .allMatch((RecipeType t) -> typeList.contains(t))) &&
-                        !(r.getIngredients()
-                                .stream()
-                                .anyMatch(i -> i.getIngredient().getAllergens()
-                                        .stream()
-                                        .anyMatch(a -> allergens.contains(a)))))
+                .filter(recipe -> title.isEmpty() || recipe.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .filter(recipe -> recipe.getPreparationTime() > minpreptime)
+                .filter(recipe -> recipe.getPreparationTime() < maxpreptime)
+                .filter(recipe -> recipe.getRating() >= minrating)
+                .filter(recipe -> recipe.getRating() <= maxrating)
+                .filter(recipe -> typeList.size() == 0 || typeList.containsAll(recipe.getRecipeTypes()))
+                .filter(recipe -> recipe.getIngredients().stream()
+                                .noneMatch(i -> i.getIngredient().getAllergens()
+                                        .stream().anyMatch(allergens::contains)))
+                .filter(recipe -> ingredientsInclude.stream().allMatch(ii -> recipe.getIngredients().stream()
+                        .map(RecipeIngredient::getIngredient).anyMatch(i -> i.equals(ii))))
+                .filter(recipe -> ingredientsExclude.stream().noneMatch(ie -> recipe.getIngredients().stream()
+                        .map(RecipeIngredient::getIngredient).anyMatch(i -> i.equals(ie))))
                 .collect(Collectors.toList());
     }
     
