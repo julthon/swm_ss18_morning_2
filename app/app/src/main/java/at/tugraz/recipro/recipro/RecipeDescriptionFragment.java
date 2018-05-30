@@ -67,14 +67,6 @@ public class RecipeDescriptionFragment extends Fragment {
         etPortions = view.findViewById(R.id.etNumberOfPortions);
         ibFavourites = view.findViewById(R.id.ibFavourite);
 
-        if (fHelper.exists(this.getId())){
-            ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
-            ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
-        } else {
-            ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
-            ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
-        }
-
         Bundle arguments = getArguments();
         if (arguments != null) {
             this.recipe = (Recipe) arguments.get(getResources().getString(R.string.recipe));
@@ -94,6 +86,14 @@ public class RecipeDescriptionFragment extends Fragment {
         etPortions.setText(Integer.toString(this.recipe.getServings()));
 
         final Recipe recipe = this.recipe;
+
+        if (fHelper.exists(recipe.getId())){
+            ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
+            ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
+        } else {
+            ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+            ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
+        }
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
