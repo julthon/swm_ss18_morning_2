@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
@@ -165,17 +165,16 @@ public class RecipeDescriptionFragment extends Fragment {
     }
 
     private void addListeners() {
-        lvIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
-                dbHelper.addIngredient(ingredient);
-            }
+        lvIngredients.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            RecipeIngredient ingredient = (RecipeIngredient) lvIngredients.getAdapter().getItem(position);
+            dbHelper.addIngredient(ingredient);
+
+            Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message),
+                    IngredientsAdapter.getConvertedQuantityHumanreadable(ingredient.getQuantity()) + "" + IngredientsAdapter.getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity())
+                    + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
         });
-        final Recipe recipe = this.recipe;
-        ibFavourites.setOnClickListener(new ImageButton.OnClickListener(){
-            @Override
-            public void onClick(View view) {
+
+        ibFavourites.setOnClickListener((View view) -> {
                 if (fHelper.exists(recipe.getId())){
                     fHelper.removeFavorite(recipe.getId());
                     ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
@@ -186,7 +185,6 @@ public class RecipeDescriptionFragment extends Fragment {
                     ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
                     ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
                 }
-            }
         });
 
     }
