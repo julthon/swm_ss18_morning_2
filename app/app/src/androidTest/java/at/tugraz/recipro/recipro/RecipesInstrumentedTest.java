@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -21,15 +22,18 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RecipesInstrumentedTest {
@@ -191,5 +195,19 @@ public class RecipesInstrumentedTest {
         onView(withId(android.R.id.list)).check(matches(hasDescendant(withId(R.id.tvTitle))));
 
         favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+    }
+
+    @Test
+    public void favouriteStarToggle() {
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
+        onView(withId(R.id.ibFavourite)).perform(click());
+        Espresso.pressBack();
+        onView(withTagValue(equalTo(R.drawable.ic_star_yellow_24dp))).check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
+        onView(withId(R.id.ibFavourite)).perform(click());
+        Espresso.pressBack();
+        onView(withTagValue(equalTo(R.drawable.ic_star_yellow_24dp))).check(doesNotExist());
     }
 }
