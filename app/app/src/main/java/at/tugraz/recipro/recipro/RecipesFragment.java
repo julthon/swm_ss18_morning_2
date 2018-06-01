@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
+import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -160,6 +161,11 @@ public class RecipesFragment extends Fragment {
 
         atIngredientExclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientExclude, OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
         atIngredientInclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientInclude, OurTagImplementation.TagType.INGREDIENT_INCLUDE));
+
+        ocvTagView.setOnChipClickListener(chip -> {
+            ocvTagView.remove(chip);
+            ocvTagView.notifyOnSomethingChangedListeners();
+        });
 
         ocvTagView.addOnSomethingChangedListener(() -> {
             List<OurTagImplementation<Ingredient>> ingredientChips = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE);
