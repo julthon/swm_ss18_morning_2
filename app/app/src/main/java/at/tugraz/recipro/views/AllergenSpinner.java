@@ -40,7 +40,7 @@ public class AllergenSpinner extends AbstractSpinner<Allergen> {
     protected List<Allergen> getValueList() {
         List<Allergen> list = WSConnection.getInstance().requestAllergens();
         ArrayList<Allergen> list1 = new ArrayList<>();
-        list1.add(new Allergen("", ""));
+        list1.add(new Allergen("", "", ""));
         list1.addAll(list);
         return list1;
     }

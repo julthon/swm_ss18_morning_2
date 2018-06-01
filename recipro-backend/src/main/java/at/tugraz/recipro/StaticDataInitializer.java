@@ -79,7 +79,7 @@ public class StaticDataInitializer {
                                 new Allergen("C", "Celery" , "This includes celery stalks, leaves, seeds and root" +
                                         "called celeriac. You can find celery in celery salt, " +
                                         "salads, some meat products, soups and stock cubes."),
-                                new Allergen("Su", "Sulphur dioxide", "This is an ingredient often used in dried fruit such as\n" +
+                                new Allergen("Su", "Sulphur dioxide", "This is an ingredient often used in dried fruit such as " +
                                         "raisins, dried apricots and prunes. You might also " +
                                         "find it in meat products, soft drinks, vegetables as " +
                                         "well as in wine and beer. If you have asthma, you " +

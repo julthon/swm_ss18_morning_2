@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +24,18 @@ import android.widget.Toast;
 
 import org.springframework.web.client.RestClientException;
 
+import java.util.HashSet;
 import java.util.List;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
+import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.FavoritesHelper;
 import at.tugraz.recipro.helper.GroceryListHelper;
+import at.tugraz.recipro.views.OurChipView;
+import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
+import at.tugraz.recipro.views.OurTagImplementation;
 import at.tugraz.recipro.ws.WSConnection;
 
 public class RecipeDescriptionFragment extends Fragment {
@@ -43,6 +49,8 @@ public class RecipeDescriptionFragment extends Fragment {
     TextView tvDescription;
     EditText etServings;
     ImageButton ibFavourites;
+    OurChipView ocvAllergens;
+
     Recipe recipe;
 
     GroceryListHelper dbHelper;
@@ -72,6 +80,7 @@ public class RecipeDescriptionFragment extends Fragment {
         this.tvDescription = view.findViewById(R.id.tvDescription);
         this.etServings = view.findViewById(R.id.etServings);
         this.ibFavourites = view.findViewById(R.id.ibFavourite);
+        this.ocvAllergens = view.findViewById(R.id.ocvAllergens);
 
         if (fHelper.exists(this.getId())){
             this.ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
@@ -148,6 +157,28 @@ public class RecipeDescriptionFragment extends Fragment {
             ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
         }
 
+
+        this.ocvAllergens.setAdapter(new OurChipViewAdapterImplementation(getContext()));
+        this.ocvAllergens.setOnChipClickListener(chip -> {
+            Allergen allergen = ((OurTagImplementation<Allergen>) chip).getValue();
+
+            showPopup(String.format("%s (%s)", allergen.getName(),
+                    allergen.getShortName()),
+                    allergen.getDescription());
+        });
+
+        HashSet<Allergen> allergens = new HashSet<>();
+        this.recipe.getIngredients()
+                .stream()
+                .map(x -> x.getIngredient())
+                .map(x -> x.getAllergens())
+                .forEach(x -> allergens.addAll(x));
+
+        allergens.forEach(allergen -> ocvAllergens.add(new OurTagImplementation(allergen, allergen.getName(), OurTagImplementation.TagType.ALLERGEN_EXCLUDE)));
+        if (this.ocvAllergens.getAdapter().count() == 0) {
+            this.ocvAllergens.setVisibility(View.GONE);
+        }
+
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... voids) {
@@ -194,7 +225,14 @@ public class RecipeDescriptionFragment extends Fragment {
                     ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
                 }
         });
+    }
 
+    private void showPopup(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        builder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(true)
+                .show();
     }
 }
 
