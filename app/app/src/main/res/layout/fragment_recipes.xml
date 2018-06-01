@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_span="2"
                 android:paddingBottom="4dp"
-                android:paddingTop="4dp"
+                android:paddingTop="8dp"
                 chip:chip_corner_radius="6dp"
                 chip:chip_line_spacing="4dp"
                 chip:chip_padding="10dp"
@@ -80,6 +80,48 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tvMinTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/min_time"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <EditText
+                android:id="@+id/etMinTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvMaxTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/max_time"
+                tools:layout_editor_absoluteX="107dp"
+                tools:layout_editor_absoluteY="37dp" />
+
+            <EditText
+                android:id="@+id/etMaxTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
                 android:id="@+id/tvAllergenes"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -101,53 +143,11 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tvMinTime"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="min time"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <EditText
-                android:id="@+id/etMinTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:inputType="number" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvMaxTime"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="max time"
-                tools:layout_editor_absoluteX="107dp"
-                tools:layout_editor_absoluteY="37dp" />
-
-            <EditText
-                android:id="@+id/etMaxTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="10"
-                android:inputType="number" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
                 android:id="@+id/tvRecipeType"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="type of food"
+                android:text="@string/type_of_food"
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
@@ -166,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="min rating"
+                android:text="@string/min_rating"
                 tools:layout_editor_absoluteX="107dp"
                 tools:layout_editor_absoluteY="37dp" />
 
