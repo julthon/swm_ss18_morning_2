@@ -56,7 +56,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
                             if (custom_optional_chipview != null) {
                                 custom_optional_chipview.addOnSomethingChangedListener(() -> {
                                         filteredList = new ArrayList<>();
-                                        List<Chip> already_added_chips = custom_optional_chipview.getListOfType(tagType);
+                                        List<OurTagImplementation<T>> already_added_chips = custom_optional_chipview.getListOfType(tagType);
                                         for(T value : completeList) {
                                             if(!already_added_chips.contains(getTagImplementation(value)))
                                                 filteredList.add(value);

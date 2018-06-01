@@ -47,6 +47,6 @@ public class AllergenSpinner extends AbstractSpinner<Allergen> {
 
     @Override
     protected OurTagImplementation getTagImplementation(Allergen value) {
-        return new OurTagImplementation(0, value.getShortName(), tagType);
+        return new OurTagImplementation(value, value.getName(), tagType);
     }
 }

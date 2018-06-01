@@ -2,38 +2,38 @@ package at.tugraz.recipro.views;
 
 import com.plumillonforge.android.chipview.Chip;
 
-public class OurTagImplementation implements Chip {
+public class OurTagImplementation<T> implements Chip {
 
     public enum TagType {INGREDIENT_INCLUDE, INGREDIENT_EXCLUDE, RECIPE_TYPE, ALLERGEN_EXCLUDE}
 
-    private int id;
-    private String title;
+    private T value;
+    private String text;
     private TagType tagType;
 
-    public OurTagImplementation(int id, String title, TagType tagType) {
-        this.id = id;
-        this.title = title;
+    public OurTagImplementation(T value, String text, TagType tagType) {
+        this.value = value;
+        this.text = text;
         this.tagType = tagType;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override
     public String getText() {
-        return title;
+        return text;
     }
 
     public TagType getTagType() {
         return this.tagType;
     }
 
+    public T getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof OurTagImplementation) {
             OurTagImplementation objTag = (OurTagImplementation) obj;
-            return this.title.equals(objTag.getText()) && this.getTagType() == objTag.getTagType();
+            return this.text.equals(objTag.getText()) && this.getTagType() == objTag.getTagType();
         }
         return false;
     }
