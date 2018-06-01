@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
+import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,6 +40,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import at.tugraz.recipro.adapters.RecipesAdapter;
+import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
@@ -160,8 +162,13 @@ public class RecipesFragment extends Fragment {
         atIngredientExclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientExclude, OurTagImplementation.TagType.INGREDIENT_EXCLUDE));
         atIngredientInclude.setOnItemClickListener((parent, view, position, id) -> handleIngredientSelected(position, atIngredientInclude, OurTagImplementation.TagType.INGREDIENT_INCLUDE));
 
+        ocvTagView.setOnChipClickListener(chip -> {
+            ocvTagView.remove(chip);
+            ocvTagView.notifyOnSomethingChangedListeners();
+        });
+
         ocvTagView.addOnSomethingChangedListener(() -> {
-            List<Chip> ingredientChips = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE);
+            List<OurTagImplementation<Ingredient>> ingredientChips = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE);
             ingredientChips.addAll(ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE));
             List<Ingredient> ingredientSuggestions = ingredients.stream().filter(i -> ingredientChips.stream().noneMatch(e -> e.getText().equals(i.getName()))).collect(Collectors.toList());
             adapter.clear();
@@ -171,7 +178,7 @@ public class RecipesFragment extends Fragment {
 
     private void handleIngredientSelected(int position, AutoCompleteTextView atIngredient, OurTagImplementation.TagType type) {
         Ingredient ingredient = (Ingredient) atIngredient.getAdapter().getItem(position);
-        ocvTagView.add(new OurTagImplementation(0, ingredient.getName(), type));
+        ocvTagView.add(new OurTagImplementation(ingredient, ingredient.getName(), type));
         atIngredient.setText("");
     }
 
@@ -203,9 +210,10 @@ public class RecipesFragment extends Fragment {
                 String maxtime = etMaxTime.getText().toString();
                 String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
                 String rating = Float.toString(rbMinRating.getRating());
-                List<String> allergenes = ocvTagView.getListOfType(OurTagImplementation.TagType.ALLERGEN_EXCLUDE)
+                List<OurTagImplementation<Allergen>> allergensTags = ocvTagView.getListOfType(OurTagImplementation.TagType.ALLERGEN_EXCLUDE);
+                List<String> allergens = allergensTags
                         .stream()
-                        .map(x -> x.getText())
+                        .map(x -> x.getValue().getShortName())
                         .collect(Collectors.toList());
 
                 queryParams.put(WSConstants.QUERY_TITLE, Arrays.asList(query));
@@ -217,14 +225,16 @@ public class RecipesFragment extends Fragment {
                     queryParams.put(WSConstants.QUERY_TYPES, Arrays.asList(type));
                 if(!rating.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
-                if(!allergenes.isEmpty())
-                    queryParams.put(WSConstants.QUERY_ALLERGENS, allergenes);
+                if(!allergens.isEmpty())
+                    queryParams.put(WSConstants.QUERY_ALLERGENS, allergens);
 
                 try {
                     List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
 
                     if (cbFavorites.isChecked())
                         recipes = RecipeUtils.filterByFavorites(recipes, new FavoritesHelper(getActivity()).getFavorites());
+
+
 
                     return recipes;
 

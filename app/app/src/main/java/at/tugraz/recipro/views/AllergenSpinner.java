@@ -40,13 +40,13 @@ public class AllergenSpinner extends AbstractSpinner<Allergen> {
     protected List<Allergen> getValueList() {
         List<Allergen> list = WSConnection.getInstance().requestAllergens();
         ArrayList<Allergen> list1 = new ArrayList<>();
-        list1.add(new Allergen("", ""));
+        list1.add(new Allergen("", "", ""));
         list1.addAll(list);
         return list1;
     }
 
     @Override
     protected OurTagImplementation getTagImplementation(Allergen value) {
-        return new OurTagImplementation(0, value.getShortName(), tagType);
+        return new OurTagImplementation(value, value.getName(), tagType);
     }
 }

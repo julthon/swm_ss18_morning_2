@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:chip="http://schemas.android.com/apk/res-auto"
     tools:context=".RecipeDescriptionFragment">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,6 +34,23 @@
             android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"/>
 
+        <at.tugraz.recipro.views.OurChipView
+            android:id="@+id/ocvAllergens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:paddingTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescTitle"
+            chip:chip_corner_radius="6dp"
+            chip:chip_line_spacing="4dp"
+            chip:chip_padding="10dp"
+            chip:chip_side_padding="10dp"
+            chip:chip_spacing="4dp" />
+
         <ImageView
             android:id="@+id/ivDescImage"
             android:layout_width="300dp"
@@ -44,7 +62,7 @@
             android:adjustViewBounds="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDescTitle"
+            app:layout_constraintTop_toBottomOf="@+id/ocvAllergens"
             app:srcCompat="@android:drawable/ic_input_get" />
 
         <ImageView
