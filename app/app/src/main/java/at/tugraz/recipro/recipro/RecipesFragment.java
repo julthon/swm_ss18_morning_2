@@ -106,6 +106,8 @@ public class RecipesFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                if(!s.isEmpty())
+                    searchFor(s);
                 return true;
             }
         });

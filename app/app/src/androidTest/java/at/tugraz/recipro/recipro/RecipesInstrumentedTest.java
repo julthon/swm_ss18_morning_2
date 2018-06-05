@@ -31,6 +31,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.IsNot.not;
@@ -210,4 +212,13 @@ public class RecipesInstrumentedTest {
         Espresso.pressBack();
         onView(withTagValue(equalTo(R.drawable.ic_star_yellow_24dp))).check(doesNotExist());
     }
+
+    @Test
+    public void testSearchEvent(){
+        onView(withId(R.id.searchbar)).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("ku"));
+
+        onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(withText(containsString("ku"))));
+    }
+
 }
