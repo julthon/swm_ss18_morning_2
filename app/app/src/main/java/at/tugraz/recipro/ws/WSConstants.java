@@ -12,4 +12,8 @@ public class WSConstants {
     public static final String QUERY_ALLERGENS = "allergens";
 
     public static final String HTTP_LOCATION_HEADER = "location";
+
+    public static boolean getFalse() {
+        return false;
+    }
 }

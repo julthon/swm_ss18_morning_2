@@ -142,7 +142,6 @@ public class WSConnection {
                 return null;
             }
             throw ex;
-
         } catch (IOException ex) {
             Log.d(LOG_TAG, "could not decode image");
             return null;

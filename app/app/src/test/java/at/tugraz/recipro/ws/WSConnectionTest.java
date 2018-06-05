@@ -24,6 +24,7 @@ import at.tugraz.recipro.data.Recipe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -142,5 +143,10 @@ public class WSConnectionTest {
             assertNotNull(allergen.getName());
             assertThat(allergen.getName().isEmpty(), is(false));
         }
+    }
+
+    @Test
+    public void dummyConstantTest() {
+        assertFalse(WSConstants.getFalse());
     }
 }
