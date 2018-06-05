@@ -22,6 +22,7 @@ public class RecipeTest {
     private final String INGREDIENT2_NAME = "Eggs";
     private final float INGREDIENT2_QUANTITY = 3f;
     private final int TIME = 50;
+    private final int SERVINGS = 4;
     private final double RATING = 4.5;
 
     @Before
@@ -30,7 +31,7 @@ public class RecipeTest {
         this.recipeIngredients.add(new RecipeIngredient(new Ingredient(1, INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
         this.recipeIngredients.add(new RecipeIngredient(new Ingredient(2, INGREDIENT2_NAME), INGREDIENT2_QUANTITY));
 
-        this.recipe = new Recipe(1, TITLE, TIME, RATING, this.recipeIngredients, DESC);
+        this.recipe = new Recipe(1, TITLE, TIME, SERVINGS, RATING, this.recipeIngredients, DESC);
     }
 
     @Test
@@ -40,6 +41,7 @@ public class RecipeTest {
         assertEquals(this.recipe.getRating(), RATING, 0.05);
         assertEquals(this.recipe.getIngredients().size(), this.recipeIngredients.size());
         assertEquals(this.recipe.getDescription(), DESC);
+        assertEquals(this.recipe.getServings(), SERVINGS);
     }
 
     @Test
@@ -75,6 +77,10 @@ public class RecipeTest {
         recipeIngredients.add(new RecipeIngredient(new Ingredient(1, INGREDIENT1_NAME), INGREDIENT1_QUANTITY));
         this.recipe.setIngredients(recipeIngredients);
         assertEquals(this.recipe.getIngredients().size(), recipeIngredients.size());
+
+        int servings = 1;
+        this.recipe.setServings(servings);
+        assertEquals(this.recipe.getServings(), servings);
     }
 
     @Test

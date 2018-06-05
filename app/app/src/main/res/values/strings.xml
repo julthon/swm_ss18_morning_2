@@ -4,7 +4,12 @@
     <string name="error_connect">Could not connect to server</string>
     <string name="with_ing">Include Ingredient</string>
     <string name="without_ing">Exclude Ingredient</string>
-    <string name="allergens">Allergens</string>
+    <string name="min_time">Min Time</string>
+    <string name="max_time">Max Time</string>
+    <string name="allergens">Exclude Allergens</string>
+    <string name="type_of_food">Category</string>
+    <string name="min_rating">Min Rating</string>
+    <string name="only_favorites">Only Favorites</string>
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>

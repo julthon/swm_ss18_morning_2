@@ -28,17 +28,20 @@ public class Recipe {
     private String description;
     private List<RecipeIngredient> ingredients;
     private double rating;
+    private int servings;
     
     static final String PREFIX = "recipes.entity.Recipe.";
     public static final String FIND_ALL = PREFIX + "findAll";
     public static final String FIND_BY_TITLE = PREFIX + "findByTitle";
 
     public Recipe() {
+        this.servings = 1;
     }
 
     public Recipe(String title, int preparationTime) {
         this.title = title;
         this.preparationTime = preparationTime;
+        this.servings = 1;
     } 
 
     public long getId() {
@@ -92,6 +95,13 @@ public class Recipe {
     public void setRating(double rating) {
         this.rating = rating;
     }
-    
+
+    public int getServings() {
+        return servings;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
    
 }

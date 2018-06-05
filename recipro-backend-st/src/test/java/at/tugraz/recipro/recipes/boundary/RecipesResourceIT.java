@@ -4,11 +4,7 @@ import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,17 +24,19 @@ public class RecipesResourceIT {
     
     @Rule
     public JAXRSClientProvider provider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/recipes");
+
     
     @Rule
     public JAXRSClientProvider allergensProvider = JAXRSClientProvider.buildWithURI("http://localhost:8080/recipro-backend/api/allergens");
-    
+
+
     @Test
     public void createAndFindRecipeById(){
-          
         String title = "Bananenkuchen";
         String description = "Best recipe ever.";
         double rating = 3.7; 
         int preparationTime = 120;
+        int servings = 4;
         
         JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
         JsonArray recipeTypesToCreate = recipeTypeBuilder
@@ -81,6 +79,7 @@ public class RecipesResourceIT {
                 .add("description", description)
                 .add("ingredients", ingredients)
                 .add("rating", rating)
+                .add("servings", servings)
                 .build();
         
         Response response = this.provider.target()
@@ -110,7 +109,9 @@ public class RecipesResourceIT {
         assertThat(payload.getString("description"), is(description));
         assertThat(payload.getJsonArray("recipeTypes").size(), is(2));
         assertThat(payload.getJsonArray("recipeTypes"), is(recipeTypesToCreate));
-        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));       
+        assertThat(payload.getJsonArray("ingredients").size(), is(2));
+        assertThat(payload.getJsonNumber("rating").doubleValue(), is(rating));
+        assertThat(payload.getInt("servings"), is(servings));
     }
     
     @Test
@@ -433,7 +434,14 @@ public class RecipesResourceIT {
                 .get();
         
         JsonArray allergens = allergenResponse.readEntity(JsonArray.class);
-        
+        JsonObject allergen = allergens.getJsonObject(0);
+        JsonArrayBuilder allergensBuilder = Json.createArrayBuilder();
+        for (int i = 1; i < allergens.size(); i++) {
+            allergensBuilder.add(allergens.get(i));
+        }
+        allergens = allergensBuilder.build();
+
+
         String title = "Allergencake";
         String description = "Best allergens ever.";
         double rating = 4.7; 
@@ -515,8 +523,142 @@ public class RecipesResourceIT {
         System.out.println("filterByAllergens payload " + payload);
         
         assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id), is(false));
+
+        response = this.provider.target()
+                .queryParam("allergens", allergen.getString("shortName"))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+
+        payload = response.readEntity(JsonArray.class);
+        System.out.println("filterByAllergens payload " + payload);
+
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id), is(true));
     }
-    
+
+    @Test
+    public void filterBySpecificIngredients() {
+        String title1 = "IngredientcakeMilk";
+        String title2 = "IngredientcakeFlour";
+        String description = "Best ingredients ever.";
+        double rating = 4.7;
+        int preparationTime = 120;
+
+        JsonArrayBuilder recipeTypeBuilder = Json.createArrayBuilder();
+        JsonArray recipeTypesToCreate = recipeTypeBuilder
+                .add("DESSERT")
+                .add("SNACK")
+                .build();
+
+        JsonObjectBuilder ingredientBuilder = Json.createObjectBuilder();
+        JsonObject milk = ingredientBuilder
+                .add("name", "Milk")
+                .build();
+
+        JsonObject flour = ingredientBuilder
+                .add("name", "Flour")
+                .build();
+
+        JsonObject eggs = ingredientBuilder
+                .add("name", "Eggs")
+                .build();
+
+        JsonObject ingredientMilk = ingredientBuilder
+                .add("ingredient", milk)
+                .add("quantity", "200")
+                .add("unit", "MILLILITER")
+                .build();
+
+        JsonObject ingredientFlour = ingredientBuilder
+                .add("ingredient", flour)
+                .add("quantity", "500")
+                .add("unit", "GRAM")
+                .build();
+
+        JsonObject ingredientEggs = ingredientBuilder
+                .add("ingredient", eggs)
+                .add("quantity", "4")
+                .add("unit", "NONE")
+                .build();
+
+        JsonArrayBuilder ingredientsListBuilder = Json.createArrayBuilder();
+        JsonArray ingredientsJson1 = ingredientsListBuilder
+                .add(ingredientMilk)
+                .add(ingredientFlour)
+                .build();
+
+        JsonArray ingredientsJson2 = ingredientsListBuilder
+                .add(ingredientEggs)
+                .add(ingredientFlour)
+                .build();
+
+        JsonObjectBuilder recipeBuilder = Json.createObjectBuilder();
+        JsonObject recipeToCreate = recipeBuilder
+                .add("title", title1)
+                .add("preparationTime", preparationTime)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", description)
+                .add("ingredients", ingredientsJson1)
+                .add("rating", rating)
+                .build();
+
+        Response response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+
+        assertThat(response.getStatus(), is(201));
+
+        String location = response.getHeaderString("Location");
+        System.out.println("filterBySpecificIngredients location " + location);
+        int id1 = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
+
+        recipeToCreate = recipeBuilder
+                .add("title", title2)
+                .add("preparationTime", preparationTime)
+                .add("recipeTypes", recipeTypesToCreate)
+                .add("description", description)
+                .add("ingredients", ingredientsJson2)
+                .add("rating", rating)
+                .build();
+
+        response = this.provider.target()
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(recipeToCreate));
+
+        assertThat(response.getStatus(), is(201));
+
+        location = response.getHeaderString("Location");
+        System.out.println("filterBySpecificIngredients location " + location);
+        int id2 = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
+
+        response = this.provider.target()
+                .queryParam("ingredientsexclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+
+        JsonArray payload = response.readEntity(JsonArray.class);
+        System.out.println("filterBySpecificIngredients payload " + payload);
+
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id1), is(false));
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id2), is(true));
+
+        response = this.provider.target()
+                .queryParam("ingredientsinclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+
+        payload = response.readEntity(JsonArray.class);
+        System.out.println("filterBySpecificIngredients payload " + payload);
+
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id1), is(true));
+        assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id2), is(false));
+    }
+
     @Test
     public void getAllTypes() {
         Response response = this.provider.target()

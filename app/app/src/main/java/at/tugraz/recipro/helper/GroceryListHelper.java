@@ -13,6 +13,7 @@ import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 
 public class GroceryListHelper extends AbstractListHelper {
+    public static final String TABLE_NAME = "grocery";
 
     public final String table_name = "grocery";
     public static final String db_name = "recipro.grocerylist";
@@ -34,6 +35,10 @@ public class GroceryListHelper extends AbstractListHelper {
 
     protected String getTableName(){
         return table_name;
+    }
+
+    public GroceryListHelper(Context context) {
+        super(context);
     }
 
     public boolean addIngredient(RecipeIngredient ingredient) {

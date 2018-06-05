@@ -6,13 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
@@ -48,7 +45,7 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
         }
 
         RecipeIngredient ingredient = getItem(position);
-        viewHolder.tvQuantity.setText(String.valueOf(getConvertedQuantity(ingredient.getQuantity())));
+        viewHolder.tvQuantity.setText(getConvertedQuantityHumanreadable(ingredient.getQuantity()));
         viewHolder.tvUnit.setText(getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity()));
         viewHolder.tvIngredient.setText(ingredient.getIngredient().getName());
 
@@ -75,6 +72,20 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
             return quantity / 1000f;
         else
             return quantity;
+    }
+  
+    public static String getConvertedQuantityHumanreadable(float quantity) {
+        float convertedQuantity = quantity;
+
+        if (quantity >= 1000f) {
+            convertedQuantity = quantity / 1000f;
+        }
+
+        if (convertedQuantity == (long) convertedQuantity) {
+            return String.format("%d", (long) convertedQuantity);
+        } else {
+            return String.format("%s", convertedQuantity);
+        }
     }
 }
 
