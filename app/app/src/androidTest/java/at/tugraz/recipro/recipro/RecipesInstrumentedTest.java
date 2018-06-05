@@ -5,13 +5,20 @@ import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.KeyEvent;
+import android.widget.ListView;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.function.Predicate;
+
+import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Ingredient;
+import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.FavoritesHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -20,7 +27,6 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
@@ -28,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 
@@ -152,6 +159,34 @@ public class RecipesInstrumentedTest {
         onView(withText("Flour")).perform(click());
         onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterInclude() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.atIngredientInclude)).perform(ViewActions.typeText("Eg"));
+        onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Eggs"))).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeText("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(android.R.id.list)).check(matches(not(hasDescendant(withText("Bananenkuchen")))));
+        onView(withId(android.R.id.list)).check(matches(not(hasDescendant(withText("Allergencake")))));
+    }
+
+    @Test
+    public void filterExcludeNoResults() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Flo"));
+        onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeText("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(android.R.id.list)).check(matches(not(hasDescendant(withText("Bananenkuchen")))));
+    }
+
+    @Test
+    public void filterExcludeResults() {
+        onView(withId(R.id.ibFilters)).perform(click());
+        onView(withId(R.id.atIngredientExclude)).perform(ViewActions.typeText("Eg"));
+        onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Eggs"))).perform(click());
+        onView(withId(R.id.searchbar)).perform(ViewActions.typeText("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(android.R.id.list)).check(matches(hasDescendant(withText("Bananenkuchen"))));
     }
 
     @Test

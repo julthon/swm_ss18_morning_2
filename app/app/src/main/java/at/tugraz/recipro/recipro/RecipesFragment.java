@@ -222,9 +222,9 @@ public class RecipesFragment extends Fragment {
                     queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
                 if(!allergenes.isEmpty())
                     queryParams.put(WSConstants.QUERY_ALLERGENS, allergenes);
-                if(!allergenes.isEmpty())
+                if(!ingredientsExclude.isEmpty())
                     queryParams.put(WSConstants.QUERY_INGREDIENT_EXCLUDE, ingredientsExclude);
-                if(!allergenes.isEmpty())
+                if(!ingredientsInclude.isEmpty())
                     queryParams.put(WSConstants.QUERY_INGREDIENT_INCLUDE, ingredientsInclude);
 
                 try {

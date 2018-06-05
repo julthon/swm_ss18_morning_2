@@ -43,8 +43,8 @@ public class RecipesResource {
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
     public static final String FILTER_ALLERGENS = "allergens";
-    public static final String FILTER_INGREDIENTS_EXCLUDE = "ingredientsExclude";
-    public static final String FILTER_INGREDIENTS_INCLUDE = "ingredientsInclude";
+    public static final String FILTER_INGREDIENTS_EXCLUDE = "ingredientsexclude";
+    public static final String FILTER_INGREDIENTS_INCLUDE = "ingredientsinclude";
     public static final String FILTER_MIN_RATING = "minrating";
     public static final String FILTER_MAX_RATING = "maxrating";
     

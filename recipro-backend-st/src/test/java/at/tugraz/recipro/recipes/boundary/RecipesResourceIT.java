@@ -633,7 +633,7 @@ public class RecipesResourceIT {
         int id2 = Integer.parseInt(location.substring(location.lastIndexOf('/') + 1));
 
         response = this.provider.target()
-                .queryParam("ingredientsExclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
+                .queryParam("ingredientsexclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -646,7 +646,7 @@ public class RecipesResourceIT {
         assertThat(payload.stream().anyMatch(x -> ((JsonObject)x).getInt("id") == id2), is(true));
 
         response = this.provider.target()
-                .queryParam("ingredientsInclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
+                .queryParam("ingredientsinclude", ingredientsJson1.getJsonObject(0).getJsonObject("ingredient").getString("name"))
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
