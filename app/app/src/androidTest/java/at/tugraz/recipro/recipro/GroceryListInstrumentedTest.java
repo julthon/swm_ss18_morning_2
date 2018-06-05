@@ -6,10 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -30,7 +27,7 @@ public class GroceryListInstrumentedTest {
         // clear db
         helper.onDowngrade(helper.getWritableDatabase(), 0, 1);
         SQLiteDatabase db = helper.getWritableDatabase();
-        for(int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             ContentValues values = new ContentValues();
             values.put(helper.columns[0], i);
             values.put(helper.columns[1], "Ingredient" + i);

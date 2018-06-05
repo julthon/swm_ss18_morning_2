@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import com.plumillonforge.android.chipview.Chip;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
     private ArrayAdapter<T> adapter = null;
 
     private void fireListUpdate() {
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.clear();
             adapter.addAll(filteredList);
         }
@@ -50,19 +48,19 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
             setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(position != 0) {
+                    if (position != 0) {
                         if (custom_optional_chipview == null) {
                             custom_optional_chipview = ((AppCompatActivity) ResourceAccessHelper.getAppContext()).findViewById(chipviewId);
                             if (custom_optional_chipview != null) {
                                 custom_optional_chipview.addOnSomethingChangedListener(() -> {
-                                        filteredList = new ArrayList<>();
-                                        List<OurTagImplementation<T>> already_added_chips = custom_optional_chipview.getListOfType(tagType);
-                                        for(T value : completeList) {
-                                            if(!already_added_chips.contains(getTagImplementation(value)))
-                                                filteredList.add(value);
-                                        }
-                                        fireListUpdate();
-                                    });
+                                    filteredList = new ArrayList<>();
+                                    List<OurTagImplementation<T>> already_added_chips = custom_optional_chipview.getListOfType(tagType);
+                                    for (T value : completeList) {
+                                        if (!already_added_chips.contains(getTagImplementation(value)))
+                                            filteredList.add(value);
+                                    }
+                                    fireListUpdate();
+                                });
                             }
                         }
                         if (custom_optional_chipview != null)

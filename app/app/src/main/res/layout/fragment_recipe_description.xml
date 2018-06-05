@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/scrollView"
+<ScrollView android:id="@+id/scrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,6 +11,7 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/tvDescTitle"
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="4dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp" />
 
         <at.tugraz.recipro.views.OurChipView
             android:id="@+id/ocvAllergens"
@@ -113,6 +113,7 @@
             android:stepSize="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivDescImage" />
+
         <TextView
             android:id="@+id/tvIngredients"
             android:layout_width="0dp"

@@ -31,7 +31,7 @@ public class OurTagImplementation<T> implements Chip {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof OurTagImplementation) {
+        if (obj instanceof OurTagImplementation) {
             OurTagImplementation objTag = (OurTagImplementation) obj;
             return this.text.equals(objTag.getText()) && this.getTagType() == objTag.getTagType();
         }
@@ -39,8 +39,8 @@ public class OurTagImplementation<T> implements Chip {
     }
 
     public static TagType getEnumFromString(String name) {
-        for(TagType tt : TagType.class.getEnumConstants()) {
-            if(tt.name().equals(name))
+        for (TagType tt : TagType.class.getEnumConstants()) {
+            if (tt.name().equals(name))
                 return tt;
         }
         return null;

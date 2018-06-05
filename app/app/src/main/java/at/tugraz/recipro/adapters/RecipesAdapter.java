@@ -32,7 +32,7 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
     }
 
     public RecipesAdapter(@NonNull Context context, List<Recipe> recipes) {
-        super(context, 0 , recipes);
+        super(context, 0, recipes);
     }
 
     @Override
@@ -61,12 +61,10 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         viewHolder.tvTitle.setText(recipe.getTitle());
         viewHolder.tvTime.setText(String.valueOf(recipe.getTime()) + this.getContext().getResources().getString(R.string.minutes));
         viewHolder.rbRating.setRating((float) recipe.getRating());
-        if (viewHolder.fHelper.exists(recipe.getId())){
+        if (viewHolder.fHelper.exists(recipe.getId())) {
             viewHolder.ivFavourite.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
             viewHolder.ivFavourite.setTag(R.drawable.ic_star_yellow_24dp);
         }
-
-
 
 
         new AsyncTask<Void, Void, Bitmap>() {
