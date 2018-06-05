@@ -216,6 +216,9 @@ public class RecipesFragment extends Fragment {
                         .map(x -> x.getValue().getShortName())
                         .collect(Collectors.toList());
 
+                List<String> ingredientsExclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE).stream().map(x -> x.getText()).collect(Collectors.toList());
+                List<String> ingredientsInclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE).stream().map(x -> x.getText()).collect(Collectors.toList());
+
                 queryParams.put(WSConstants.QUERY_TITLE, Arrays.asList(query));
                 if(!mintime.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
@@ -227,6 +230,10 @@ public class RecipesFragment extends Fragment {
                     queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
                 if(!allergens.isEmpty())
                     queryParams.put(WSConstants.QUERY_ALLERGENS, allergens);
+                if(!ingredientsExclude.isEmpty())
+                    queryParams.put(WSConstants.QUERY_INGREDIENT_EXCLUDE, ingredientsExclude);
+                if(!ingredientsInclude.isEmpty())
+                    queryParams.put(WSConstants.QUERY_INGREDIENT_INCLUDE, ingredientsInclude);
 
                 try {
                     List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
