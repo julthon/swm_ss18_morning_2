@@ -40,13 +40,13 @@ public class GroceryListInstrumentedTest {
         // clear db
         helper.onDowngrade(helper.getWritableDatabase(), 0, 1);
         SQLiteDatabase db = helper.getWritableDatabase();
-        for(int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             ContentValues values = new ContentValues();
-            values.put(GroceryListHelper.COLUMN_ID, i);
-            values.put(GroceryListHelper.COLUMN_NAME, "Ingredient" + i);
-            values.put(GroceryListHelper.COLUMN_QUANTITY, i);
-            values.put(GroceryListHelper.COLUMN_UNIT, Unit.NONE.toString());
-            db.insert(GroceryListHelper.TABLE_NAME, null, values);
+            values.put(helper.columns[0], i);
+            values.put(helper.columns[1], "Ingredient" + i);
+            values.put(helper.columns[2], i);
+            values.put(helper.columns[3], Unit.GRAM.name());
+            db.insert(helper.table_name, null, values);
             ingredientNames.add("Ingredient" + i);
         }
         onView(withId(R.id.dlDrawer)).perform(DrawerActions.open());
@@ -60,25 +60,25 @@ public class GroceryListInstrumentedTest {
 
     @Test
     public void insertIngredient() {
-        helper.addIngredient(new RecipeIngredient(new Ingredient(11, "inserted ing"), 11f, Unit.NONE));
+        helper.addIngredient(new RecipeIngredient(new Ingredient(11, "inserted ing"), 11f, Unit.GRAM));
         Assert.assertEquals(11, helper.getIngredients().size());
     }
 
     @Test
     public void removeIngredient() {
-        helper.removeIngredient(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.NONE));
-        helper.removeIngredient(new RecipeIngredient(new Ingredient(10, "don't care"), 1f, Unit.NONE));
+        helper.removeIngredient(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.GRAM));
+        helper.removeIngredient(new RecipeIngredient(new Ingredient(10, "don't care"), 1f, Unit.GRAM));
         Assert.assertEquals(8, helper.getIngredients().size());
     }
 
     @Test
     public void checkIngredientExistIfExists() {
-        Assert.assertTrue(helper.isPresent(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.NONE)));
+        Assert.assertTrue(helper.isPresent(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.GRAM)));
     }
 
     @Test
     public void checkIngredientExistIfNotExists() {
-        Assert.assertFalse(helper.isPresent(new RecipeIngredient(new Ingredient(32794, "don't care"), 1f, Unit.NONE)));
+        Assert.assertFalse(helper.isPresent(new RecipeIngredient(new Ingredient(32794, "don't care"), 1f, Unit.GRAM)));
     }
 
 

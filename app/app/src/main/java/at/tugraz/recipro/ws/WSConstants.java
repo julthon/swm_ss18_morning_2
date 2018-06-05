@@ -2,7 +2,8 @@ package at.tugraz.recipro.ws;
 
 public class WSConstants {
 
-    private WSConstants() {}
+    private WSConstants() {
+    }
 
     public static final String QUERY_TITLE = "title";
     public static final String QUERY_MIN_PREP = "minpreptime";
@@ -14,4 +15,8 @@ public class WSConstants {
     public static final String QUERY_INGREDIENT_EXCLUDE = "ingredientsexclude";
 
     public static final String HTTP_LOCATION_HEADER = "location";
+
+    public static boolean getFalse() {
+        return false;
+    }
 }

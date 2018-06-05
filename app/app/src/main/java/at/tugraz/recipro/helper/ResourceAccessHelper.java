@@ -2,8 +2,6 @@ package at.tugraz.recipro.helper;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 public class ResourceAccessHelper {
     private static Context appContext;

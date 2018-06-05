@@ -23,7 +23,7 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
     }
 
     public IngredientsAdapter(@NonNull Context context, List<RecipeIngredient> recipes) {
-        super(context, 0 , recipes);
+        super(context, 0, recipes);
     }
 
     @Override
@@ -57,14 +57,25 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
             case NONE:
                 return "";
             case GRAM:
-                if (quantity >= 1000f) return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_kilogram);
-                else return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_gram);
+                if (quantity >= 1000f)
+                    return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_kilogram);
+                else
+                    return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_gram);
             case MILLILITER:
-                if (quantity >= 1000f) return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_liter);
-                else return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_milliliter);
+                if (quantity >= 1000f)
+                    return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_liter);
+                else
+                    return ResourceAccessHelper.getAppContext().getResources().getString(R.string.unit_milliliter);
             default:
                 return "";
         }
+    }
+
+    public static float getConvertedQuantity(float quantity) {
+        if (quantity >= 1000f)
+            return quantity / 1000f;
+        else
+            return quantity;
     }
 
     public static String getConvertedQuantityHumanreadable(float quantity) {

@@ -86,7 +86,7 @@ public class RecipeDescriptionFragment extends Fragment {
         this.ocvAllergens = view.findViewById(R.id.ocvAllergens);
         this.ibGrocery = view.findViewById(R.id.ibGroceryList);
 
-        if (fHelper.exists(this.getId())){
+        if (fHelper.exists(this.getId())) {
             this.ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
             this.ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
         } else {
@@ -121,7 +121,7 @@ public class RecipeDescriptionFragment extends Fragment {
                 View view = getActivity().getCurrentFocus();
                 if (view != null) {
                     view.clearFocus();
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
@@ -137,7 +137,7 @@ public class RecipeDescriptionFragment extends Fragment {
                     return true;
                 }
 
-                float factor = (float)servings / (float)currentServings;
+                float factor = (float) servings / (float) currentServings;
 
                 List<RecipeIngredient> ingredients = recipe.getIngredients();
                 for (RecipeIngredient ingredient : ingredients) {
@@ -153,7 +153,7 @@ public class RecipeDescriptionFragment extends Fragment {
             }
         });
 
-        if (fHelper.exists(recipe.getId())){
+        if (fHelper.exists(recipe.getId())) {
             ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
             ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
         } else {
@@ -214,20 +214,19 @@ public class RecipeDescriptionFragment extends Fragment {
 
             Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message),
                     IngredientsAdapter.getConvertedQuantityHumanreadable(ingredient.getQuantity()) + "" + IngredientsAdapter.getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity())
-                    + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
+                            + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
         });
 
         ibFavourites.setOnClickListener((View view) -> {
-                if (fHelper.exists(recipe.getId())){
-                    fHelper.removeFavorite(recipe.getId());
-                    ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
-                    ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
-                }
-                else {
-                    fHelper.addFavorite(recipe.getId());
-                    ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
-                    ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
-                }
+            if (fHelper.exists(recipe.getId())) {
+                fHelper.removeFavorite(recipe.getId());
+                ibFavourites.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+                ibFavourites.setTag(R.drawable.ic_star_border_black_24dp);
+            } else {
+                fHelper.addFavorite(recipe.getId());
+                ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
+                ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
+            }
         });
         ibGrocery.setOnClickListener((View view) -> {
             recipe.getIngredients().forEach(i -> dbHelper.addIngredient(i));

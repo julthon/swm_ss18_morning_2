@@ -38,7 +38,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class RecipeDescriptionInstrumentedTest {
@@ -92,7 +91,7 @@ public class RecipeDescriptionInstrumentedTest {
 
         final MainActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(() -> {
-            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            RecipesFragment recipesFragment = (RecipesFragment) activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
             if (recipesFragment != null) {
                 recipesFragment.setSearchResults(Collections.singletonList(this.recipe));
             }

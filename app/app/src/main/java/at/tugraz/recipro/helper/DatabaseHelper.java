@@ -3,7 +3,6 @@ package at.tugraz.recipro.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public abstract class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
@@ -16,7 +15,6 @@ public abstract class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(FavoritesHelper.CREATE_TABLE);
-        db.execSQL(GroceryListHelper.CREATE_TABLE);
     }
 
     @Override

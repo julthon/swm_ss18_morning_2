@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class RecipeTest {
 
@@ -103,5 +103,21 @@ public class RecipeTest {
         assertThat(ingredients.get(0).getQuantity(), is(quantity));
         assertEquals(ingredients.get(1).getIngredient().getName(), secondIngredient.getName());
         assertThat(ingredients.get(1).getQuantity(), is(INGREDIENT2_QUANTITY));
+    }
+
+    @Test
+    public void testRecipeConstructor() {
+        Recipe blank = new Recipe();
+
+        assertEquals(0, blank.getIngredients().size());
+    }
+
+    @Test
+    public void testRecipeId() {
+        Recipe blank = new Recipe();
+
+        blank.setId(1337);
+
+        assertEquals(new Long(1337), blank.getId());
     }
 }

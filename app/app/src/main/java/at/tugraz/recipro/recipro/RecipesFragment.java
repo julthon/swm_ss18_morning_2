@@ -94,7 +94,7 @@ public class RecipesFragment extends Fragment {
                 View view = getActivity().getCurrentFocus();
                 if (view != null) {
                     view.clearFocus();
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
@@ -118,10 +118,12 @@ public class RecipesFragment extends Fragment {
 
         TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -178,7 +180,8 @@ public class RecipesFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         // testing
@@ -260,23 +263,23 @@ public class RecipesFragment extends Fragment {
                 List<String> ingredientsInclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE).stream().map(x -> x.getText()).collect(Collectors.toList());
 
                 queryParams.put(WSConstants.QUERY_TITLE, Arrays.asList(query));
-                if(!mintime.isEmpty())
+                if (!mintime.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(mintime));
-                if(!maxtime.isEmpty())
+                if (!maxtime.isEmpty())
                     queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(maxtime));
-                if(type != null && !type.isEmpty())
+                if (type != null && !type.isEmpty())
                     queryParams.put(WSConstants.QUERY_TYPES, Arrays.asList(type));
-                if(!rating.isEmpty())
+                if (!rating.isEmpty())
                     queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(rating));
-                if(!allergens.isEmpty())
+                if (!allergens.isEmpty())
                     queryParams.put(WSConstants.QUERY_ALLERGENS, allergens);
-                if(!ingredientsExclude.isEmpty())
+                if (!ingredientsExclude.isEmpty())
                     queryParams.put(WSConstants.QUERY_INGREDIENT_EXCLUDE, ingredientsExclude);
-                if(!ingredientsInclude.isEmpty())
+                if (!ingredientsInclude.isEmpty())
                     queryParams.put(WSConstants.QUERY_INGREDIENT_INCLUDE, ingredientsInclude);
 
                 try {
-                    if(queryParams.isEmpty()){
+                    if (queryParams.isEmpty()) {
                         return null;
                     }
                     List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);

@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,13 +8,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolBar);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
             actionBar.setDisplayUseLogoEnabled(false);
@@ -61,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (fragment == null) {
                     fragment = new GroceryListFragment();
+                }
+            } else if (item.getItemId() == R.id.navMyPantry) {
+                tag = MyPantryFragment.FRAGMENT_TAG;
+                fragment = fragmentManager.findFragmentByTag(MyPantryFragment.FRAGMENT_TAG);
+
+                if (fragment == null) {
+                    fragment = new MyPantryFragment();
                 }
             }
 
