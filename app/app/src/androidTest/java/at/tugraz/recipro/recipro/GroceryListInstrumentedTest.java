@@ -7,10 +7,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,9 +30,9 @@ public class GroceryListInstrumentedTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
-    GroceryListHelper helper;
+    private GroceryListHelper helper;
 
-    List<String> ingredientNames = new ArrayList<>();
+    private List<String> ingredientNames = new ArrayList<>();
 
     @Before
     public void initTestData() {
@@ -45,11 +42,11 @@ public class GroceryListInstrumentedTest {
         SQLiteDatabase db = helper.getWritableDatabase();
         for(int i = 1; i <= 10; i++) {
             ContentValues values = new ContentValues();
-            values.put(helper.COLUMN_ID, i);
-            values.put(helper.COLUMN_NAME, "Ingredient" + i);
-            values.put(helper.COLUMN_QUANTITY, i);
-            values.put(helper.COLUMN_UNIT, Unit.NONE.toString());
-            db.insert(helper.TABLE_NAME, null, values);
+            values.put(GroceryListHelper.COLUMN_ID, i);
+            values.put(GroceryListHelper.COLUMN_NAME, "Ingredient" + i);
+            values.put(GroceryListHelper.COLUMN_QUANTITY, i);
+            values.put(GroceryListHelper.COLUMN_UNIT, Unit.NONE.toString());
+            db.insert(GroceryListHelper.TABLE_NAME, null, values);
             ingredientNames.add("Ingredient" + i);
         }
         onView(withId(R.id.dlDrawer)).perform(DrawerActions.open());

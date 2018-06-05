@@ -34,20 +34,21 @@ public class GroceryListHelper extends DatabaseHelper {
     public void addIngredient(RecipeIngredient ingredient) {
         // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
+        String[] idArg = {Integer.toString(ingredient.getIngredient().getId())};
         Cursor cur = db.query(TABLE_NAME,
-                new String[]{COLUMN_ID},
+                new String[]{COLUMN_ID, COLUMN_QUANTITY},
                 COLUMN_ID + "=?",
-                new String[]{Integer.toString(ingredient.getIngredient().getId())},
+                idArg,
                 null,
                 null,
                 null);
         if(cur.moveToNext()) {
             // found element
-            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ID));
+            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_QUANTITY));
 
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_QUANTITY, ingredient.getQuantity() + oldValue);
-            db.update(TABLE_NAME, cv, COLUMN_ID + "=?", null);
+            db.update(TABLE_NAME, cv, COLUMN_ID + "=?", idArg);
         } else {
             // nothing found, insert new element
             db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES(" +

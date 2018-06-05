@@ -27,10 +27,6 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
-import com.plumillonforge.android.chipview.Chip;
-import com.plumillonforge.android.chipview.ChipView;
-import com.plumillonforge.android.chipview.OnChipClickListener;
-
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -306,7 +302,7 @@ public class RecipesFragment extends Fragment {
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
                 if(recipes != null)
-                    addRecipes(recipes);
+                    setSearchResults(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -320,7 +316,7 @@ public class RecipesFragment extends Fragment {
         }
     }
 
-    public void addRecipes(List<Recipe> recipes) {
+    public void setSearchResults(List<Recipe> recipes) {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
         adapter.addAll(recipes);
