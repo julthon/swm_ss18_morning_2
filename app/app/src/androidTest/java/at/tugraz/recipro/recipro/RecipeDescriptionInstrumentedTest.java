@@ -2,6 +2,7 @@ package at.tugraz.recipro.recipro;
 
 import android.os.Bundle;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
@@ -37,6 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,15 +50,18 @@ public class RecipeDescriptionInstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    private List<RecipeIngredient> recipeIngredients = null;
+
     @Before
     public void setUp() throws Exception {
-        ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
+        recipeIngredients = new ArrayList<>();
         recipeIngredients.add(new RecipeIngredient(new Ingredient(1, "Kalbschnitzel"), 4.5f));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), 1000f, Unit.GRAM));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Bier"), 2000f, Unit.MILLILITER));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Zucker"), 200f, Unit.GRAM));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Milch"), 150f, Unit.MILLILITER));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(3, "Eier"), 3f));
+        recipeIngredients = Collections.unmodifiableList(recipeIngredients);
 
         String description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
                 "\n" +
@@ -192,5 +198,16 @@ public class RecipeDescriptionInstrumentedTest {
         checkIngredients(3, "Zucker", "200", "g");
         checkIngredients(4, "Milch", "150", "ml");
         checkIngredients(5, "Eier", "3", "");
+    }
+
+    @Test
+    public void addRecipeToGroceryList() {
+        onView(withId(R.id.ibGroceryList)).perform(click());
+        onView(withId(R.id.dlDrawer)).perform(DrawerActions.open());
+        onView(withText("Grocery List")).perform(click());
+        recipeIngredients.forEach(ri -> {
+            onView(withText(ri.getIngredient().getName())).check(matches(isDisplayed()));
+        });
+
     }
 }

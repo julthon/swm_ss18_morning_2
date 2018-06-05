@@ -1,5 +1,6 @@
 package at.tugraz.recipro.recipro;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -49,6 +50,7 @@ public class RecipeDescriptionFragment extends Fragment {
     TextView tvDescription;
     EditText etServings;
     ImageButton ibFavourites;
+    ImageButton ibGrocery;
     OurChipView ocvAllergens;
 
     Recipe recipe;
@@ -58,6 +60,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
     int currentServings;
 
+    @SuppressLint("StaticFieldLeak")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class RecipeDescriptionFragment extends Fragment {
         this.etServings = view.findViewById(R.id.etServings);
         this.ibFavourites = view.findViewById(R.id.ibFavourite);
         this.ocvAllergens = view.findViewById(R.id.ocvAllergens);
+        this.ibGrocery = view.findViewById(R.id.ibGroceryList);
 
         if (fHelper.exists(this.getId())){
             this.ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
@@ -224,6 +228,10 @@ public class RecipeDescriptionFragment extends Fragment {
                     ibFavourites.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
                     ibFavourites.setTag(R.drawable.ic_star_yellow_24dp);
                 }
+        });
+        ibGrocery.setOnClickListener((View view) -> {
+            recipe.getIngredients().forEach(i -> dbHelper.addIngredient(i));
+            Toast.makeText(getActivity(), getResources().getString(R.string.grocery_list_add_recipe_message), Toast.LENGTH_SHORT).show();
         });
     }
 
