@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class RecipeTest {
 
@@ -118,6 +118,6 @@ public class RecipeTest {
 
         blank.setId(1337);
 
-        assertEquals(new Long (1337), blank.getId());
+        assertEquals(new Long(1337), blank.getId());
     }
 }

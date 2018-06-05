@@ -1,7 +1,6 @@
 package at.tugraz.recipro.recipro;
 
 import android.os.Bundle;
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
@@ -37,7 +35,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class RecipeDescriptionInstrumentedTest {
@@ -88,7 +85,7 @@ public class RecipeDescriptionInstrumentedTest {
 
         final MainActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(() -> {
-            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            RecipesFragment recipesFragment = (RecipesFragment) activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
             if (recipesFragment != null) {
                 recipesFragment.addRecipes(Arrays.asList(this.recipe));
             }

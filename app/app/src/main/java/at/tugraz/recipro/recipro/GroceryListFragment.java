@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,7 +17,7 @@ import at.tugraz.recipro.helper.GroceryListHelper;
 
 public class GroceryListFragment extends Fragment {
     public static final String FRAGMENT_TAG = "GroceryListFragment";
-    
+
     ListView lvGroceryListView = null;
     GroceryListHelper dbHelper;
 
@@ -28,7 +27,7 @@ public class GroceryListFragment extends Fragment {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             view.clearFocus();
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         view = inflater.inflate(R.layout.fragment_grocery_list, container, false);

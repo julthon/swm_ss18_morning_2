@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +13,8 @@ public class FavoritesHelper extends DatabaseHelper {
     public static final String COLUMN_RECIPE = "recipe_id";
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-                                               COLUMN_RECIPE +   " INTEGER PRIMARY KEY" +
-                                              ")";
+            COLUMN_RECIPE + " INTEGER PRIMARY KEY" +
+            ")";
 
     public FavoritesHelper(Context context) {
         super(context);
@@ -32,7 +30,7 @@ public class FavoritesHelper extends DatabaseHelper {
                 null,
                 null);
 
-        if(!cur.moveToNext()) {
+        if (!cur.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(COLUMN_RECIPE, recipeId);
 

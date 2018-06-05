@@ -2,15 +2,12 @@ package at.tugraz.recipro.recipro;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +18,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.plumillonforge.android.chipview.Chip;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -38,9 +29,7 @@ import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
-import at.tugraz.recipro.helper.GroceryListHelper;
 import at.tugraz.recipro.helper.MyPantryListHelper;
-import at.tugraz.recipro.views.OurTagImplementation;
 import at.tugraz.recipro.ws.WSConnection;
 
 public class MyPantryFragment extends Fragment {
@@ -62,7 +51,7 @@ public class MyPantryFragment extends Fragment {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             view.clearFocus();
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         view = inflater.inflate(R.layout.fragment_mypantry, container, false);
@@ -89,20 +78,20 @@ public class MyPantryFragment extends Fragment {
         });
 
         btAddIngredient.setOnClickListener(v -> {
-            if(selection != null && !tvAutoCompleteIngredients.getText().toString().isEmpty()) {
+            if (selection != null && !tvAutoCompleteIngredients.getText().toString().isEmpty()) {
                 int quantity = 0;
                 try {
                     quantity = Integer.parseInt(tvQuantity.getText().toString());
-                } catch(NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     return;
                 }
                 Unit unit = null;
                 try {
                     unit = (Unit) spUnit.getSelectedItem();
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     return;
                 }
-                if(unit.shortName.isEmpty())
+                if (unit.shortName.isEmpty())
                     return;
                 dbHelper.addIngredient(new RecipeIngredient(selection, quantity, unit));
                 fireDbChangedEvent(lvMyPantryView);
@@ -152,7 +141,7 @@ public class MyPantryFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().isEmpty())
+                if (s.toString().isEmpty())
                     selection = null;
             }
         });

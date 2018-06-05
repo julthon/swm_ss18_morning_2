@@ -1,7 +1,6 @@
 package at.tugraz.recipro.recipro;
 
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -22,7 +21,6 @@ import at.tugraz.recipro.helper.MyPantryListHelper;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -30,9 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class MyPantryInstrumentedTest {
@@ -43,7 +39,7 @@ public class MyPantryInstrumentedTest {
     public void fillSearchResultList() {
         final MainActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(() -> {
-            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            RecipesFragment recipesFragment = (RecipesFragment) activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
             if (recipesFragment != null) {
                 recipesFragment.fillWithTestData();
             }
