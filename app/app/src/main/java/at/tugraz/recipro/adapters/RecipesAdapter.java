@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.List;
 
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.helper.FavoritesHelper;
 import at.tugraz.recipro.recipro.R;
 import at.tugraz.recipro.ws.WSConnection;
 
@@ -26,6 +27,8 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         ImageView ivThumbnail;
         TextView tvTime;
         RatingBar rbRating;
+        ImageView ivFavourite;
+        FavoritesHelper fHelper;
     }
 
     public RecipesAdapter(@NonNull Context context, List<Recipe> recipes) {
@@ -41,7 +44,10 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             rowView = inflater.inflate(R.layout.item_recipe, parent, false);
 
+
             viewHolder = new ViewHolder();
+            viewHolder.fHelper = new FavoritesHelper(this.getContext());
+            viewHolder.ivFavourite = (ImageView) rowView.findViewById(R.id.ivShowFavourite);
             viewHolder.tvTitle = (TextView) rowView.findViewById(R.id.tvTitle);
             viewHolder.ivThumbnail = (ImageView) rowView.findViewById(R.id.ivThumbnail);
             viewHolder.tvTime = (TextView) rowView.findViewById(R.id.tvTime);
@@ -55,6 +61,13 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         viewHolder.tvTitle.setText(recipe.getTitle());
         viewHolder.tvTime.setText(String.valueOf(recipe.getTime()) + this.getContext().getResources().getString(R.string.minutes));
         viewHolder.rbRating.setRating((float) recipe.getRating());
+        if (viewHolder.fHelper.exists(recipe.getId())){
+            viewHolder.ivFavourite.setBackgroundResource(R.drawable.ic_star_yellow_24dp);
+            viewHolder.ivFavourite.setTag(R.drawable.ic_star_yellow_24dp);
+        }
+
+
+
 
         new AsyncTask<Void, Void, Bitmap>() {
             @Override

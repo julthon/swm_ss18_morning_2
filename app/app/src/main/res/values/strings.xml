@@ -4,7 +4,12 @@
     <string name="error_connect">Could not connect to server</string>
     <string name="with_ing">Include Ingredient</string>
     <string name="without_ing">Exclude Ingredient</string>
-    <string name="allergens">Allergens</string>
+    <string name="min_time">Min Time</string>
+    <string name="max_time">Max Time</string>
+    <string name="allergens">Exclude Allergens</string>
+    <string name="type_of_food">Category</string>
+    <string name="min_rating">Min Rating</string>
+    <string name="only_favorites">Only Favorites</string>
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
@@ -16,12 +21,14 @@
     <string name="nav_grocery_list">Grocery List</string>
     <string name="minutes">min</string>
     <string name="grocery_list_title">Grocery List</string>
+    <string name="grocery_list_add_message">Added %1$s to your grocery list</string>
     <string name="grocery_list_remove_message">Removed %1$s from your grocery list</string>
+    <string name="mypantry_list_add_message">Added %1$s to your pantry list</string>
+    <string name="mypantry_list_remove_message">Removed %1$s from your pantry list</string>
     <string name="unit_gram">g</string>
     <string name="unit_kilogram">kg</string>
     <string name="unit_milliliter">ml</string>
     <string name="unit_liter">l</string>
-    <string name="only_favorites">only favorites</string>
     <string-array name="recipe_types">
         <item></item>
         <item>@string/type_dessert</item>

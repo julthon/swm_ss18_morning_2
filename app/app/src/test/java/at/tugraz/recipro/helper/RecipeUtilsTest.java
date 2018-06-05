@@ -28,9 +28,9 @@ public class RecipeUtilsTest {
         RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), 120f, Unit.GRAM);
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
-        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cheese, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
-        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
+        Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cheese, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 4, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
@@ -58,9 +58,9 @@ public class RecipeUtilsTest {
         RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), 120f, Unit.GRAM);
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
-        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
-        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
+        Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 4, 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 4, 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
@@ -86,9 +86,9 @@ public class RecipeUtilsTest {
         RecipeIngredient cacao = new RecipeIngredient(new Ingredient(4, "cacao"), 120f, Unit.GRAM);
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
-        Recipe recipe1 = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
-        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 5.0, Arrays.asList(flour), "Good schnitzel");
+        Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 4, 5.0, Arrays.asList(flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
@@ -104,7 +104,7 @@ public class RecipeUtilsTest {
         RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), 120f, Unit.GRAM);
         RecipeIngredient flour2 = new RecipeIngredient(new Ingredient(2, "flour"), 120f, Unit.GRAM);
 
-        Recipe recipe = new Recipe(1, "cake", 120, 5.0, Arrays.asList(flour), "Good cake");
+        Recipe recipe = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour), "Good cake");
         List<Recipe> recipes = Arrays.asList(recipe);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
@@ -120,9 +120,9 @@ public class RecipeUtilsTest {
         List<Long> favorites = Arrays.asList(2L, 3L);
 
         List<Recipe> recipes = Arrays.asList(
-                new Recipe(1, "Title1", 30, 3.5, new ArrayList<>(), ""),
-                new Recipe(2, "Title2", 50, 4.5, new ArrayList<>(), ""),
-                new Recipe(3, "Title3", 10, 5.0, new ArrayList<>(), ""));
+                new Recipe(1, "Title1", 30, 4, 3.5, new ArrayList<>(), ""),
+                new Recipe(2, "Title2", 50, 4, 4.5, new ArrayList<>(), ""),
+                new Recipe(3, "Title3", 10, 4, 5.0, new ArrayList<>(), ""));
 
         List<Recipe> filteredRecipes = RecipeUtils.filterByFavorites(recipes, favorites);
 
@@ -137,9 +137,9 @@ public class RecipeUtilsTest {
         List<Long> favorites = Arrays.asList();
 
         List<Recipe> recipes = Arrays.asList(
-                new Recipe(1, "Title1", 30, 3.5, new ArrayList<>(), ""),
-                new Recipe(2, "Title2", 50, 4.5, new ArrayList<>(), ""),
-                new Recipe(3, "Title3", 10, 5.0, new ArrayList<>(), ""));
+                new Recipe(1, "Title1", 30, 4, 3.5, new ArrayList<>(), ""),
+                new Recipe(2, "Title2", 50, 4, 4.5, new ArrayList<>(), ""),
+                new Recipe(3, "Title3", 10, 4, 5.0, new ArrayList<>(), ""));
 
         List<Recipe> filteredRecipes = RecipeUtils.filterByFavorites(recipes, favorites);
 
