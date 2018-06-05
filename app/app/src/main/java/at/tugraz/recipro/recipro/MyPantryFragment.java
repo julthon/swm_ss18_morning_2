@@ -50,6 +50,7 @@ public class MyPantryFragment extends Fragment {
     ImageButton btAddIngredient = null;
     ListView lvMyPantryView = null;
     Spinner spUnit = null;
+    AutoCompleteTextView tvQuantity = null;
 
     MyPantryListHelper dbHelper;
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
@@ -72,8 +73,9 @@ public class MyPantryFragment extends Fragment {
         btAddIngredient = view.findViewById(R.id.btAddIngredient);
         tvAutoCompleteIngredients = view.findViewById(R.id.tvAutoCompleteIngredients);
         spUnit = view.findViewById(R.id.spUnit);
+        tvQuantity = view.findViewById(R.id.npQuantity);
 
-        spUnit.setAdapter(new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, Arrays.asList(Unit.values()).stream().map((Unit u) -> u.shortName).collect(Collectors.toList())));
+        spUnit.setAdapter(new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, Unit.values()));
 
         initializeIngredients();
         initializeIngredientsFilter();
@@ -88,7 +90,21 @@ public class MyPantryFragment extends Fragment {
 
         btAddIngredient.setOnClickListener(v -> {
             if(selection != null && !tvAutoCompleteIngredients.getText().toString().isEmpty()) {
-                dbHelper.addIngredient(new RecipeIngredient(selection, 1, Unit.GRAM));
+                int quantity = 0;
+                try {
+                    quantity = Integer.parseInt(tvQuantity.getText().toString());
+                } catch(NumberFormatException ex) {
+                    return;
+                }
+                Unit unit = null;
+                try {
+                    unit = (Unit) spUnit.getSelectedItem();
+                } catch(Exception ex) {
+                    return;
+                }
+                if(unit.shortName.isEmpty())
+                    return;
+                dbHelper.addIngredient(new RecipeIngredient(selection, quantity, unit));
                 fireDbChangedEvent(lvMyPantryView);
             }
         });

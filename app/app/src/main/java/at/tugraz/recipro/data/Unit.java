@@ -11,4 +11,8 @@ public enum Unit {
         this.shortName = shortName;
     }
 
+    @Override
+    public String toString() {
+        return shortName;
+    }
 }

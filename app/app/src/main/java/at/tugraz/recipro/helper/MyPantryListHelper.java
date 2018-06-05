@@ -22,7 +22,6 @@ public class MyPantryListHelper extends AbstractListHelper {
 
     public MyPantryListHelper(Context context) {
         super(context, db_name);
-        addIngredient(new RecipeIngredient(new Ingredient(1, "Banane"), 12));
     }
 
     protected String[] getColumnNames(){
@@ -60,7 +59,7 @@ public class MyPantryListHelper extends AbstractListHelper {
                     ingredient.getIngredient().getId() + ", '" +
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
-                    ingredient.getUnit() + "');");
+                    ingredient.getUnit().name() + "');");
         }
     }
 

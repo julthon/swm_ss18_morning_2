@@ -17,8 +17,8 @@ public class GroceryListHelper extends AbstractListHelper {
     public final String table_name = "grocery";
     public static final String db_name = "recipro.grocerylist";
 
-    protected final String[] columns = {"id", "name", "quantity", "unit"};
-    protected final String[] columns_type = {"INTEGER PRIMARY KEY", "TEXT", "FLOAT", "TEXT"};
+    public final String[] columns = {"id", "name", "quantity", "unit"};
+    public final String[] columns_type = {"INTEGER PRIMARY KEY", "TEXT", "FLOAT", "TEXT"};
 
     public GroceryListHelper(Context context) {
         super(context, db_name);
@@ -61,7 +61,7 @@ public class GroceryListHelper extends AbstractListHelper {
                     ingredient.getIngredient().getId() + ", '" +
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
-                    ingredient.getUnit() + "');");
+                    ingredient.getUnit().name() + "');");
             return true;
         }
     }
