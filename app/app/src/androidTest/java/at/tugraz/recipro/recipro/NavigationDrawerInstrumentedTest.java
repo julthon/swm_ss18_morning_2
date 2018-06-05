@@ -65,4 +65,11 @@ public class NavigationDrawerInstrumentedTest {
         onView(withText(R.string.nav_grocery_list)).perform(click());
         onView(withId(R.id.lvGroceryList)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void navigateToMyPantry() {
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+        onView(withText(R.string.nav_pantry)).perform(click());
+        onView(withId(R.id.spUnit)).check(matches(isDisplayed()));
+    }
 }

@@ -67,5 +67,8 @@ public abstract class AbstractListHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
+    public void clear() {
+        onUpgrade(this.getWritableDatabase(), 0, 1);
+    }
 
 }
