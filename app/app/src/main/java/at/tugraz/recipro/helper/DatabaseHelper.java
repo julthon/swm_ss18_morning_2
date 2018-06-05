@@ -16,7 +16,6 @@ public abstract class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(FavoritesHelper.CREATE_TABLE);
-        db.execSQL(GroceryListHelper.CREATE_TABLE);
     }
 
     @Override

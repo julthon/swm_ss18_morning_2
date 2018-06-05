@@ -14,4 +14,8 @@ public class WSConstants {
     public static final String QUERY_INGREDIENT_EXCLUDE = "ingredientsexclude";
 
     public static final String HTTP_LOCATION_HEADER = "location";
+
+    public static boolean getFalse() {
+        return false;
+    }
 }

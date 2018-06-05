@@ -67,6 +67,13 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
         }
     }
 
+    public static float getConvertedQuantity(float quantity) {
+        if (quantity >= 1000f)
+            return quantity / 1000f;
+        else
+            return quantity;
+    }
+  
     public static String getConvertedQuantityHumanreadable(float quantity) {
         float convertedQuantity = quantity;
 
