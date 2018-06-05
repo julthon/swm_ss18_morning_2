@@ -19,7 +19,7 @@ public class AllergenTest {
 
     @Before
     public void setUpAllergen() {
-        this.allergen = new Allergen("Test", "Test");
+        this.allergen = new Allergen("Test", "Test", "Test");
     }
 
     @Test
