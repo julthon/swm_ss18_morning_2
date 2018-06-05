@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +108,7 @@ public class RecipesFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                searchFor(s);
                 return true;
             }
         });
@@ -114,6 +117,36 @@ public class RecipesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchFor(searchBar.getQuery().toString());
+            }
+        };
+
+        etMaxTime.addTextChangedListener(textWatcher);
+        etMinTime.addTextChangedListener(textWatcher);
+
+        cbFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchFor(searchBar.getQuery().toString());
+            }
+        });
+
+        rbMinRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                searchFor(searchBar.getQuery().toString());
             }
         });
 
@@ -142,6 +175,15 @@ public class RecipesFragment extends Fragment {
                 R.array.recipe_types, android.R.layout.simple_spinner_item);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRecipeType.setAdapter(typeAdapter);
+        spRecipeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                searchFor(searchBar.getQuery().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
 
         // testing
         final OurChipView chipView = (OurChipView) view.findViewById(R.id.ocvTagView);
@@ -173,6 +215,7 @@ public class RecipesFragment extends Fragment {
             List<Ingredient> ingredientSuggestions = ingredients.stream().filter(i -> ingredientChips.stream().noneMatch(e -> e.getText().equals(i.getName()))).collect(Collectors.toList());
             adapter.clear();
             adapter.addAll(ingredientSuggestions);
+            searchFor(lastQuery);
         });
     }
 
@@ -180,6 +223,7 @@ public class RecipesFragment extends Fragment {
         Ingredient ingredient = (Ingredient) atIngredient.getAdapter().getItem(position);
         ocvTagView.add(new OurTagImplementation(ingredient, ingredient.getName(), type));
         atIngredient.setText("");
+        searchFor(lastQuery);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -236,12 +280,13 @@ public class RecipesFragment extends Fragment {
                     queryParams.put(WSConstants.QUERY_INGREDIENT_INCLUDE, ingredientsInclude);
 
                 try {
+                    if(queryParams.isEmpty()){
+                        return null;
+                    }
                     List<Recipe> recipes = WSConnection.getInstance().requestRecipes(queryParams);
 
                     if (cbFavorites.isChecked())
                         recipes = RecipeUtils.filterByFavorites(recipes, new FavoritesHelper(getActivity()).getFavorites());
-
-
 
                     return recipes;
 
@@ -260,7 +305,8 @@ public class RecipesFragment extends Fragment {
 
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
-                addRecipes(recipes);
+                if(recipes != null)
+                    addRecipes(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
