@@ -37,10 +37,6 @@ public class GroceryListHelper extends AbstractListHelper {
         return table_name;
     }
 
-    public GroceryListHelper(Context context) {
-        super(context);
-    }
-
     public boolean addIngredient(RecipeIngredient ingredient) {
         // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
