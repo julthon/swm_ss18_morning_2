@@ -10,6 +10,8 @@ public class WSConstants {
     public static final String QUERY_MIN_RATING = "minrating";
     public static final String QUERY_TYPES = "types";
     public static final String QUERY_ALLERGENS = "allergens";
+    public static final String QUERY_INGREDIENT_INCLUDE = "ingredientsinclude";
+    public static final String QUERY_INGREDIENT_EXCLUDE = "ingredientsexclude";
 
     public static final String HTTP_LOCATION_HEADER = "location";
 }
