@@ -98,4 +98,20 @@ public class RecipeTest {
         assertEquals(ingredients.get(1).getIngredient().getName(), secondIngredient.getName());
         assertThat(ingredients.get(1).getQuantity(), is(INGREDIENT2_QUANTITY));
     }
+
+    @Test
+    public void testRecipeConstructor() {
+        Recipe blank = new Recipe();
+
+        assertEquals(0, blank.getIngredients().size());
+    }
+
+    @Test
+    public void testRecipeId() {
+        Recipe blank = new Recipe();
+
+        blank.setId(1337);
+
+        assertEquals(new Long (1337), blank.getId());
+    }
 }
