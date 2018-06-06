@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
@@ -53,6 +54,7 @@ import at.tugraz.recipro.ws.WSConstants;
 public class RecipesFragment extends Fragment {
     public static final String FRAGMENT_TAG = "RecipesFragment";
 
+    private SearchView searchBar;
     private ListView lvSearchResults;
     private EditText etMinTime;
     private EditText etMaxTime;
@@ -65,12 +67,11 @@ public class RecipesFragment extends Fragment {
     private AutoCompleteTextView atIngredientInclude;
     private CheckBox cbFavorites;
 
-    private String lastQuery = null;
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
 
         tlFilters = view.findViewById(R.id.tlFilters);
@@ -83,7 +84,7 @@ public class RecipesFragment extends Fragment {
         atIngredientInclude = view.findViewById(R.id.atIngredientInclude);
         cbFavorites = view.findViewById(R.id.cbFavorites);
 
-        final SearchView searchBar = view.findViewById(R.id.searchbar);
+        searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
         searchBar.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchBar.setSubmitButtonEnabled(true);
@@ -98,13 +99,13 @@ public class RecipesFragment extends Fragment {
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                searchFor(s);
+                performSearch();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                searchFor(s);
+                performSearch();
                 return true;
             }
         });
@@ -122,16 +123,16 @@ public class RecipesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchFor(searchBar.getQuery().toString());
+                performSearch();
             }
         };
 
         etMaxTime.addTextChangedListener(textWatcher);
         etMinTime.addTextChangedListener(textWatcher);
 
-        cbFavorites.setOnClickListener(v -> searchFor(searchBar.getQuery().toString()));
+        cbFavorites.setOnClickListener(v -> performSearch());
 
-        rbMinRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> searchFor(searchBar.getQuery().toString()));
+        rbMinRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> performSearch());
 
         lvSearchResults = view.findViewById(android.R.id.list);
         ArrayList<Recipe> recipes = new ArrayList<>();
@@ -158,7 +159,7 @@ public class RecipesFragment extends Fragment {
         spRecipeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                searchFor(searchBar.getQuery().toString());
+                performSearch();
             }
 
             @Override
@@ -166,9 +167,7 @@ public class RecipesFragment extends Fragment {
             }
         });
 
-        // testing
-        final OurChipView chipView = view.findViewById(R.id.ocvTagView);
-        chipView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
+        ocvTagView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
 
         initializeIngredients();
         initializeIngredientsFilter();
@@ -196,15 +195,15 @@ public class RecipesFragment extends Fragment {
             List<Ingredient> ingredientSuggestions = ingredients.stream().filter(i -> ingredientChips.stream().noneMatch(e -> e.getText().equals(i.getName()))).collect(Collectors.toList());
             adapter.clear();
             adapter.addAll(ingredientSuggestions);
-            searchFor(lastQuery);
+            performSearch();
         });
     }
 
     private void handleIngredientSelected(int position, AutoCompleteTextView atIngredient, OurTagImplementation.TagType type) {
         Ingredient ingredient = (Ingredient) atIngredient.getAdapter().getItem(position);
-        ocvTagView.add(new OurTagImplementation(ingredient, ingredient.getName(), type));
+        ocvTagView.add(new OurTagImplementation<>(ingredient, ingredient.getName(), type));
         atIngredient.setText("");
-        searchFor(lastQuery);
+        performSearch();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -224,12 +223,12 @@ public class RecipesFragment extends Fragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private void searchFor(final String query) {
-        lastQuery = query;
+    private void performSearch() {
 
         new AsyncTask<Void, Void, List<Recipe>>() {
             @Override
             protected List<Recipe> doInBackground(Void... voids) {
+                String query = searchBar.getQuery().toString();
                 MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
                 String mintime = etMinTime.getText().toString();
                 String maxtime = etMaxTime.getText().toString();
@@ -290,10 +289,7 @@ public class RecipesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (lastQuery != null) {
-            searchFor(lastQuery);
-        }
+        performSearch();
     }
 
     public void setSearchResults(List<Recipe> recipes) {

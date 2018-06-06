@@ -26,6 +26,11 @@ public class AllergenSpinner extends AbstractSpinner<Allergen> {
 
     @Override
     protected OurTagImplementation getTagImplementation(Allergen value) {
-        return new OurTagImplementation(value, value.getName(), tagType);
+        return new OurTagImplementation<>(value, value.getName(), tagType);
+    }
+
+    @Override
+    protected OurTagImplementation.TagType getTagType() {
+        return OurTagImplementation.TagType.ALLERGEN_EXCLUDE;
     }
 }

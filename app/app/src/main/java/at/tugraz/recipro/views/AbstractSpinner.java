@@ -34,6 +34,8 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
 
     protected abstract OurTagImplementation getTagImplementation(T value);
 
+    protected abstract OurTagImplementation.TagType getTagType();
+
     private void setupArrayAdapter() {
         if (adapter == null) {
             adapter = new ArrayAdapter<>(super.getContext(), R.layout.spinner_item, R.id.spinnerItem, new ArrayList<>());
@@ -79,7 +81,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
     private void setupChipview(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbstractSpinner, 0, 0);
         chipviewId = a.getResourceId(R.styleable.AbstractSpinner_refChipView, -1);
-        tagType = OurTagImplementation.getEnumFromString(this.getTooltipText().toString());
+        tagType = getTagType();
         a.recycle();
     }
 

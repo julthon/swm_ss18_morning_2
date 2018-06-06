@@ -37,12 +37,4 @@ public class OurTagImplementation<T> implements Chip {
         }
         return false;
     }
-
-    public static TagType getEnumFromString(String name) {
-        for (TagType tt : TagType.class.getEnumConstants()) {
-            if (tt.name().equals(name))
-                return tt;
-        }
-        return null;
-    }
 }
