@@ -50,12 +50,10 @@ public class MyPantryListHelper extends AbstractListHelper {
                 null,
                 null);
         if (cur.moveToNext()) {
-            // found element
-            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ID));
-
+            // replace
             ContentValues cv = new ContentValues();
-            cv.put(COLUMN_QUANTITY, ingredient.getQuantity() + oldValue);
-            db.update(TABLE_NAME, cv, COLUMN_ID + "=?", null);
+            cv.put(COLUMN_QUANTITY, ingredient.getQuantity());
+            db.update(TABLE_NAME, cv, COLUMN_ID + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
         } else {
             // nothing found, insert new element
             db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES(" +
