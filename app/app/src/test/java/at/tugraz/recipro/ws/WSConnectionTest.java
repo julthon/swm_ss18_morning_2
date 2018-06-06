@@ -7,10 +7,18 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowLog;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -28,6 +36,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class WSConnectionTest {
@@ -103,7 +113,7 @@ public class WSConnectionTest {
     }
 
     @Test
-    public void testGetImageFailure() {
+    public void testGetNonexistingImage() {
         int random = TestUtils.getRandomBetween(5000, 10000);
         Bitmap receivedImage = this.wsConnection.getImage(random);
         assertNull(receivedImage);
@@ -143,10 +153,5 @@ public class WSConnectionTest {
             assertNotNull(allergen.getName());
             assertThat(allergen.getName().isEmpty(), is(false));
         }
-    }
-
-    @Test
-    public void dummyConstantTest() {
-        assertFalse(WSConstants.getFalse());
     }
 }
