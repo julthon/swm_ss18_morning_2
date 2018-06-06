@@ -105,8 +105,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
         this.currentServings = this.recipe.getServings();
 
-        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), this.recipe.getIngredients());
-        this.lvIngredients.setAdapter(ingredientsAdapter);
+        updateIngredientsList();
 
         this.tvDescTitle.setText(this.recipe.getTitle());
         this.tvDescTime.setText(String.valueOf(this.recipe.getTime()) + getResources().getString(R.string.minutes));
@@ -215,6 +214,7 @@ public class RecipeDescriptionFragment extends Fragment {
             Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message),
                     IngredientsAdapter.getConvertedQuantityHumanreadable(ingredient.getQuantity()) + "" + IngredientsAdapter.getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity())
                             + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
+            updateIngredientsList();
         });
 
         ibFavourites.setOnClickListener((View view) -> {
@@ -231,7 +231,14 @@ public class RecipeDescriptionFragment extends Fragment {
         ibGrocery.setOnClickListener((View view) -> {
             recipe.getIngredients().forEach(i -> dbHelper.addIngredient(i));
             Toast.makeText(getActivity(), getResources().getString(R.string.grocery_list_add_recipe_message), Toast.LENGTH_SHORT).show();
+            updateIngredientsList();
         });
+    }
+
+    private void updateIngredientsList() {
+        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), this.recipe.getIngredients());
+        this.lvIngredients.setAdapter(ingredientsAdapter);
+        ingredientsAdapter.notifyDataSetChanged();
     }
 
     private void showPopup(String title, String message) {

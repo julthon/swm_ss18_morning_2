@@ -50,8 +50,8 @@ public class MyPantryInstrumentedTest {
 
         this.helper = new MyPantryListHelper(mActivityRule.getActivity());
         this.helper.clear();
-        this.helper.addIngredient(new RecipeIngredient(new Ingredient(1, "Predefined 1"), 100, Unit.GRAM));
-        this.helper.addIngredient(new RecipeIngredient(new Ingredient(2, "Predefined 2"), 200, Unit.GRAM));
+        this.helper.addIngredient(new RecipeIngredient(new Ingredient(-1, "Predefined 1"), 100, Unit.GRAM));
+        this.helper.addIngredient(new RecipeIngredient(new Ingredient(-2, "Predefined 2"), 200, Unit.GRAM));
 
         getInstrumentation().waitForIdleSync();
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());

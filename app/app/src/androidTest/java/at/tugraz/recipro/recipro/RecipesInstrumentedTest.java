@@ -249,12 +249,12 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void filterAllergens(){
+    public void filterAllergens() {
         onView(withId(R.id.searchbar)).perform(click());
         onView(withId(R.id.ibFilters)).perform(click());
         onView(withId(R.id.ibFilters)).perform(closeSoftKeyboard());
         onView(withId(R.id.isAllergenes)).perform(click());
-        onView(withText("Eggs")).perform(click());
+        onView(withText("Milk")).perform(click());
 
         onView(withId(android.R.id.list)).check(matches(not(hasDescendant(withText("Allergencake")))));
     }

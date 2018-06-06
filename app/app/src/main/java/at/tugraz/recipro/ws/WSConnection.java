@@ -56,7 +56,7 @@ public class WSConnection {
         return instance;
     }
 
-    private String backend_uri = "http://192.168.42.1:8080/recipro-backend/api";
+    private String backend_uri = "http://192.168.1.101:8080/recipro-backend/api";
     private String backend_path_recipes = "/recipes";
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
@@ -71,7 +71,7 @@ public class WSConnection {
 
         Context context = ResourceAccessHelper.getAppContext();
         AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+        builder = new AlertDialog.Builder(context);
         builder.setTitle("Error")
                 .setMessage(ResourceAccessHelper.getStringFromId(R.string.cannot_connect_message))
                 .setNegativeButton(R.string.close, (dialog, which) -> System.exit(0))
@@ -190,6 +190,8 @@ public class WSConnection {
                 Log.d(LOG_TAG, "could not decode image");
                 return null;
             }
+        } catch(HttpClientErrorException ex) {
+            throw ex;
         } catch(RestClientException ex) {
             Log.e(getClass().getSimpleName(), "Could not connect to backend...");
             showAlertDialog();
