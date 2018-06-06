@@ -3,8 +3,6 @@ package at.tugraz.recipro.recipro;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -50,34 +48,6 @@ public class GroceryListInstrumentedTest {
     @After
     public void tearDown() throws Exception {
         this.helper.clear();
-    }
-
-    @Test
-    public void ingredientsInit() {
-        Assert.assertEquals(10, this.helper.getIngredients().size());
-    }
-
-    @Test
-    public void insertIngredient() {
-        this.helper.addIngredient(new RecipeIngredient(new Ingredient(11, "inserted ing"), 11f, Unit.GRAM));
-        Assert.assertEquals(11, this.helper.getIngredients().size());
-    }
-
-    @Test
-    public void removeIngredient() {
-        this.helper.removeIngredient(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.GRAM));
-        this.helper.removeIngredient(new RecipeIngredient(new Ingredient(10, "don't care"), 1f, Unit.GRAM));
-        Assert.assertEquals(8, this.helper.getIngredients().size());
-    }
-
-    @Test
-    public void ingredientExists() {
-        Assert.assertTrue(this.helper.exists(new RecipeIngredient(new Ingredient(9, "don't care"), 1f, Unit.GRAM)));
-    }
-
-    @Test
-    public void ingredientNotExists() {
-        Assert.assertFalse(this.helper.exists(new RecipeIngredient(new Ingredient(32794, "don't care"), 1f, Unit.GRAM)));
     }
 
     @Test

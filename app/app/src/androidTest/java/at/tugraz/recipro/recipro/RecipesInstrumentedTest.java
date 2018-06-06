@@ -212,7 +212,7 @@ public class RecipesInstrumentedTest {
     @Test
     public void filterFavorites() {
         FavoritesHelper favoritesHelper = new FavoritesHelper(mActivityRule.getActivity());
-        favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+        favoritesHelper.clear();
         favoritesHelper.addFavorite(1);
 
         onView(withId(R.id.ibFilters)).perform(click());
@@ -223,7 +223,7 @@ public class RecipesInstrumentedTest {
         onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("kuchen"), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withId(android.R.id.list)).check(matches(hasDescendant(withId(R.id.tvTitle))));
 
-        favoritesHelper.onDowngrade(favoritesHelper.getWritableDatabase(), 0, 1);
+        favoritesHelper.clear();
     }
 
     @Test
