@@ -62,23 +62,32 @@ public class MyPantryListHelper extends AbstractListHelper {
                     ingredient.getQuantity() + "', '" +
                     ingredient.getUnit().name() + "');");
         }
+        cur.close();
+        db.close();
     }
 
     public void removeIngredient(RecipeIngredient ingredient) {
-        getWritableDatabase().delete(TABLE_NAME,
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME,
                 COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())});
+        db.close();
     }
 
     public boolean exists(RecipeIngredient ingredient) {
-        return getReadableDatabase().query(TABLE_NAME,
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.query(TABLE_NAME,
                 new String[]{COLUMN_ID},
                 COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())},
                 null,
                 null,
-                null)
-                .moveToNext();
+                null);
+
+        boolean exists = cur.moveToNext();
+        cur.close();
+        db.close();
+        return exists;
     }
 
     public List<RecipeIngredient> getIngredients() {
@@ -100,6 +109,8 @@ public class MyPantryListHelper extends AbstractListHelper {
 
             ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, Unit.valueOf(unit)));
         }
+        cur.close();
+        db.close();
         return ingList;
     }
 }

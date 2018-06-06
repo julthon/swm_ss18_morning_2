@@ -1,7 +1,12 @@
 package at.tugraz.recipro.ws;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import org.springframework.core.io.Resource;
@@ -22,12 +27,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
+import at.tugraz.recipro.helper.ResourceAccessHelper;
+import at.tugraz.recipro.recipro.R;
+import at.tugraz.recipro.recipro.RecipesFragment;
 
 public class WSConnection {
 
@@ -46,7 +56,7 @@ public class WSConnection {
         return instance;
     }
 
-    private String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
+    private String backend_uri = "http://192.168.42.1:8080/recipro-backend/api";
     private String backend_path_recipes = "/recipes";
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
@@ -54,22 +64,48 @@ public class WSConnection {
 
     private static final String LOG_TAG = WSConnection.class.getName();
 
+    private Object obj = new Object();
+
+    private void showAlertDialog() {
+        Looper.prepare();
+
+        Context context = ResourceAccessHelper.getAppContext();
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle("Error")
+                .setMessage(ResourceAccessHelper.getStringFromId(R.string.cannot_connect_message))
+                .setNegativeButton(R.string.close, (dialog, which) -> System.exit(0))
+                .setIcon(android.R.drawable.ic_dialog_alert);
+        builder.show();
+
+        while(true) {
+            Looper.loop();
+        }
+    }
+
     private ResponseEntity getRequest(String path, MultiValueMap<String, String> queryParams, Class clazz) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path);
+        try {
+            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path);
 
-        if (queryParams != null)
-            uriBuilder.queryParams(queryParams);
+            if (queryParams != null)
+                uriBuilder.queryParams(queryParams);
 
-        String uri = uriBuilder.build().toString();
-        Log.d(LOG_TAG, "request_uri=" + uri);
+            String uri = uriBuilder.build().toString();
+            Log.d(LOG_TAG, "request_uri=" + uri);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        return restTemplate.exchange(uri, HttpMethod.GET, entity, clazz);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+            return restTemplate.exchange(uri, HttpMethod.GET, entity, clazz);
+        } catch(RestClientException ex) {
+            Log.e(getClass().getSimpleName(), "Could not connect to backend... bye bye");
+            showAlertDialog();
+            System.exit(1);
+            return null;
+        }
     }
 
     public List<Ingredient> requestIngredients() throws RestClientException {
@@ -79,7 +115,7 @@ public class WSConnection {
     }
 
     public List<Allergen> requestAllergens() throws RestClientException {
-        ResponseEntity<Allergen[]> response = getRequest(backend_path_allergens, null, Allergen[].class);
+            ResponseEntity<Allergen[]> response = getRequest(backend_path_allergens, null, Allergen[].class);
         Log.i(LOG_TAG, "status=" + response.getStatusCode() + " length=" + response.getBody().length);
         return Arrays.asList(response.getBody());
     }
@@ -91,59 +127,73 @@ public class WSConnection {
     }
 
     public boolean postImage(long recipeId, byte[] image, ImageType imageType) {
-        String path = String.format(backend_path_image, recipeId);
-        String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
+        try {
+            String path = String.format(backend_path_image, recipeId);
+            String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
-        Log.d(LOG_TAG, "post_image_uri=" + uri);
+            Log.d(LOG_TAG, "post_image_uri=" + uri);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(imageType == ImageType.JPEG ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG);
-        HttpEntity<byte[]> entity = new HttpEntity<>(image, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(imageType == ImageType.JPEG ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG);
+            HttpEntity<byte[]> entity = new HttpEntity<>(image, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 
-        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
-        Log.d(LOG_TAG, "status=" + response.getStatusCode());
+            ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
 
-        if (response.getStatusCode() == HttpStatus.CREATED) {
-            Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
-            return true;
+            Log.d(LOG_TAG, "status=" + response.getStatusCode());
+
+            if (response.getStatusCode() == HttpStatus.CREATED) {
+                Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
+                return true;
+            }
+           return false;
+        } catch(RestClientException ex) {
+            Log.e(getClass().getSimpleName(), "Could not connect to backend...");
+            showAlertDialog();
+            System.exit(1);
+            return false;
         }
-
-        return false;
     }
 
     public Bitmap getImage(long recipeId) {
-        String path = String.format(backend_path_image, recipeId);
-
-        String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
-
-        Log.d(LOG_TAG, "get_image_uri=" + uri);
-
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new ResourceHttpMessageConverter());
-
         try {
-            ResponseEntity<Resource> response = restTemplate.exchange(uri, HttpMethod.GET, entity, Resource.class);
-            Log.d(LOG_TAG, "status=" + response.getStatusCode());
+            String path = String.format(backend_path_image, recipeId);
 
-            InputStream responseInputStream;
-            responseInputStream = response.getBody().getInputStream();
+            String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
-            return BitmapFactory.decodeStream(responseInputStream);
+            Log.d(LOG_TAG, "get_image_uri=" + uri);
 
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-                Log.d(LOG_TAG, "image not found");
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new ResourceHttpMessageConverter());
+
+            try {
+                ResponseEntity<Resource> response = restTemplate.exchange(uri, HttpMethod.GET, entity, Resource.class);
+                Log.d(LOG_TAG, "status=" + response.getStatusCode());
+
+                InputStream responseInputStream;
+                responseInputStream = response.getBody().getInputStream();
+
+                return BitmapFactory.decodeStream(responseInputStream);
+
+            } catch (HttpClientErrorException ex) {
+                if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    Log.d(LOG_TAG, "image not found");
+                    return null;
+                }
+                throw ex;
+            } catch (IOException ex) {
+                Log.d(LOG_TAG, "could not decode image");
                 return null;
             }
-            throw ex;
-        } catch (IOException ex) {
-            Log.d(LOG_TAG, "could not decode image");
+        } catch(RestClientException ex) {
+            Log.e(getClass().getSimpleName(), "Could not connect to backend...");
+            showAlertDialog();
+            System.exit(1);
             return null;
         }
     }

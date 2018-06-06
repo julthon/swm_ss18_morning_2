@@ -50,6 +50,8 @@ public class FavoritesHelper extends AbstractListHelper {
 
             db.insert(TABLE_NAME, null, values);
         }
+        cur.close();
+        db.close();
     }
 
     public void removeFavorite(long recipeId) {
@@ -57,17 +59,22 @@ public class FavoritesHelper extends AbstractListHelper {
         db.delete(TABLE_NAME,
                 COLUMN_ID + "=?",
                 new String[]{Long.toString(recipeId)});
+        db.close();
     }
 
     public boolean exists(long recipeId) {
         SQLiteDatabase db = getWritableDatabase();
-        return db.query(TABLE_NAME,
+        Cursor cur = db.query(TABLE_NAME,
                 new String[]{COLUMN_ID},
                 COLUMN_ID + "=?",
                 new String[]{Long.toString(recipeId)},
                 null,
                 null,
-                null).moveToNext();
+                null);
+        boolean exists = cur.moveToNext();
+        cur.close();
+        db.close();
+        return exists;
     }
 
     public List<Long> getFavorites() {
@@ -86,6 +93,9 @@ public class FavoritesHelper extends AbstractListHelper {
 
             recipeList.add(recipeId);
         }
+
+        cur.close();
+        db.close();
 
         return recipeList;
     }

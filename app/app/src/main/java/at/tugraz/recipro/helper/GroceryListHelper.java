@@ -49,6 +49,7 @@ public class GroceryListHelper extends AbstractListHelper {
                 null,
                 null,
                 null);
+        boolean retval;
         if (cur.moveToNext()) {
             // found element
             float oldValue = cur.getFloat(cur.getColumnIndexOrThrow(COLUMN_QUANTITY));
@@ -56,7 +57,7 @@ public class GroceryListHelper extends AbstractListHelper {
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_QUANTITY, ingredient.getQuantity() + oldValue);
             db.update(TABLE_NAME, cv, COLUMN_ID + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
-            return false;
+            retval = false;
         } else {
             // nothing found, insert new element
             db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES(" +
@@ -64,25 +65,37 @@ public class GroceryListHelper extends AbstractListHelper {
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
                     ingredient.getUnit().name() + "');");
-            return true;
+
+            retval = true;
         }
+        cur.close();
+        db.close();
+        return retval;
     }
 
     public void removeIngredient(RecipeIngredient ingredient) {
-        getWritableDatabase().delete(TABLE_NAME,
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME,
                 COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())});
+
+        db.close();
     }
 
     public boolean exists(RecipeIngredient ingredient) {
-        return getReadableDatabase().query(TABLE_NAME,
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.query(TABLE_NAME,
                 new String[]{COLUMN_ID},
                 COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())},
                 null,
                 null,
-                null)
-                .moveToNext();
+                null);
+
+        boolean exists = cur.moveToNext();
+        cur.close();
+        db.close();
+        return exists;
     }
 
     public List<RecipeIngredient> getIngredients() {
@@ -104,6 +117,8 @@ public class GroceryListHelper extends AbstractListHelper {
 
             ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, Unit.valueOf(unit)));
         }
+        cur.close();
+        db.close();
         return ingList;
     }
 }
