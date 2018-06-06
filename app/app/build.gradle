@@ -38,7 +38,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     buildTypes {
         debug {
@@ -66,9 +65,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR'
-    }
 }
 
 dependencies {
@@ -84,7 +80,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
-    androidTestUtil 'com.android.support.test:orchestrator:1.0.2-alpha1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
