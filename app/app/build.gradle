@@ -1,4 +1,33 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+android.testOptions {
+    unitTests.all {
+        jacoco {
+            includeNoLocationClasses = true
+        }
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+    reports {
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/chipview/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
+}
 
 android {
     compileSdkVersion 27
@@ -9,6 +38,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     buildTypes {
         debug {
@@ -36,6 +66,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+    }
 }
 
 dependencies {
@@ -51,6 +84,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.2-alpha1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
@@ -60,5 +94,4 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:1.10.19'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '1.7.4'
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
-
 }
