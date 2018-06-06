@@ -32,7 +32,7 @@
     <string name="unit_milliliter">ml</string>
     <string name="unit_liter">l</string>
     <string name="close">close</string>
-    <string name="cannot_connect_message">Cannot connect to server.\nReciPro will close itself.</string>
+    <string name="cannot_connect_message">Cannot connect to server.\nReciPro will now close itself.</string>
     <string-array name="recipe_types">
         <item />
         <item>@string/type_dessert</item>

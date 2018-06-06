@@ -67,7 +67,7 @@ public class WSConnection {
         Context context = ResourceAccessHelper.getAppContext();
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
-        builder.setTitle("Error")
+        builder.setTitle(ResourceAccessHelper.getStringFromId(R.string.error_connect))
                 .setMessage(ResourceAccessHelper.getStringFromId(R.string.cannot_connect_message))
                 .setNegativeButton(R.string.close, (dialog, which) -> System.exit(0))
                 .setIcon(android.R.drawable.ic_dialog_alert);
