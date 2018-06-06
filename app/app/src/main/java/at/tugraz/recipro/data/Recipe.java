@@ -59,13 +59,17 @@ public class Recipe implements Serializable {
         this.time = time;
     }
 
-    public void setServings(int servings) { this.servings = servings; }
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
 
     public double getRating() {
         return rating;
     }
 
-    public int getServings() { return servings; }
+    public int getServings() {
+        return servings;
+    }
 
     public void setRating(double rating) {
         this.rating = rating;

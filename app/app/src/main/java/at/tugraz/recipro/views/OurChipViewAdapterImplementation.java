@@ -21,7 +21,7 @@ public class OurChipViewAdapterImplementation extends ChipViewAdapter {
     @Override
     public int getBackgroundRes(int position) {
         OurTagImplementation c = (OurTagImplementation) getChip(position);
-        switch(c.getTagType()) {
+        switch (c.getTagType()) {
             case INGREDIENT_INCLUDE:
                 return R.color.tag_ingredient_include;
             case INGREDIENT_EXCLUDE:

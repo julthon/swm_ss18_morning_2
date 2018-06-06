@@ -20,7 +20,7 @@ public class RecipeIngredientTest {
     @Before
     public void setUpRecipeIngredient() {
 
-        this.ingredient = new Ingredient (ID, NAME);
+        this.ingredient = new Ingredient(ID, NAME);
 
         this.recipe_ingredient = new RecipeIngredient(ingredient, QUANTITY, Unit.MILLILITER);
 

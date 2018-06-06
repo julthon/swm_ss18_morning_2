@@ -6,20 +6,13 @@ import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.KeyEvent;
-import android.widget.ListView;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.function.Predicate;
-
-import at.tugraz.recipro.adapters.RecipesAdapter;
 import at.tugraz.recipro.data.Ingredient;
-import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.FavoritesHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -28,13 +21,13 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
@@ -52,7 +45,7 @@ public class RecipesInstrumentedTest {
     public void fillSearchResultList() {
         final MainActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(() -> {
-            RecipesFragment recipesFragment = (RecipesFragment)activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
+            RecipesFragment recipesFragment = (RecipesFragment) activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
             if (recipesFragment != null) {
                 recipesFragment.fillWithTestData();
             }
@@ -248,11 +241,10 @@ public class RecipesInstrumentedTest {
     }
 
     @Test
-    public void testSearchEvent(){
+    public void testSearchEvent() {
         onView(withId(R.id.searchbar)).perform(click());
         onView(withId(R.id.searchbar)).perform(ViewActions.typeTextIntoFocusedView("ku"));
 
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).onChildView(withId(R.id.tvTitle)).check(matches(withText(containsString("ku"))));
     }
-
 }

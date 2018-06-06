@@ -1,13 +1,10 @@
 package at.tugraz.recipro.views;
 
 import android.content.Context;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.util.AttributeSet;
-import android.widget.AdapterView;
 
 import com.plumillonforge.android.chipview.Chip;
 import com.plumillonforge.android.chipview.ChipView;
-import com.plumillonforge.android.chipview.OnChipClickListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,7 +16,7 @@ public class OurChipView extends ChipView {
 
     @Override
     public void add(Chip chip) {
-        if(!mAdapter.getChipList().contains(chip)) {
+        if (!mAdapter.getChipList().contains(chip)) {
             super.add(chip);
             notifyOnSomethingChangedListeners();
         }
@@ -56,7 +53,7 @@ public class OurChipView extends ChipView {
         return tags;
     }
 
-    public interface OnSomethingChangedListener{
+    public interface OnSomethingChangedListener {
         void onSomethingChanged();
     }
 }

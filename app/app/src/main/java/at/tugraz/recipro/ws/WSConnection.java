@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
@@ -34,19 +33,20 @@ public class WSConnection {
 
     private static WSConnection instance;
 
-    private WSConnection() { }
+    private WSConnection() {
+    }
 
     public void init(String uri) {
         this.backend_uri = uri;
     }
 
     public static WSConnection getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new WSConnection();
         return instance;
     }
 
-    private String backend_uri = "http://192.168.42.20:8080/recipro-backend/api";
+    private String backend_uri = "http://10.0.2.2:8080/recipro-backend/api";
     private String backend_path_recipes = "/recipes";
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
@@ -57,7 +57,7 @@ public class WSConnection {
     private ResponseEntity getRequest(String path, MultiValueMap<String, String> queryParams, Class clazz) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path);
 
-        if(queryParams != null)
+        if (queryParams != null)
             uriBuilder.queryParams(queryParams);
 
         String uri = uriBuilder.build().toString();
@@ -92,7 +92,7 @@ public class WSConnection {
 
     public boolean postImage(long recipeId, byte[] image, ImageType imageType) {
         String path = String.format(backend_path_image, recipeId);
-        String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
+        String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
         Log.d(LOG_TAG, "post_image_uri=" + uri);
 
@@ -117,7 +117,7 @@ public class WSConnection {
     public Bitmap getImage(long recipeId) {
         String path = String.format(backend_path_image, recipeId);
 
-        String uri  = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
+        String uri = UriComponentsBuilder.fromHttpUrl(backend_uri).path(path).build().toString();
 
         Log.d(LOG_TAG, "get_image_uri=" + uri);
 
