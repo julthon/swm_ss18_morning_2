@@ -13,13 +13,12 @@ import static org.junit.Assert.assertNotEquals;
 
 public class IngredientTest {
 
-    private Ingredient ingredient;
-
     private final int ID = 666;
     private final String NAME = "SATAN";
     private final List<Allergen> ALLERGENS = new ArrayList<Allergen>() {{
         add(new Allergen("allergenShortName", "allergenName", "allergenDescription"));
     }};
+    private Ingredient ingredient;
 
     @Before
     public void setUpIngredient() {

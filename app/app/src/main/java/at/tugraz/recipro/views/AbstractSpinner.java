@@ -1,7 +1,6 @@
 package at.tugraz.recipro.views;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
@@ -39,7 +38,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
 
     private void setupArrayAdapter() {
         if (adapter == null) {
-            adapter = new ArrayAdapter<T>(super.getContext(), R.layout.spinner_item, R.id.spinnerItem, new ArrayList<>());
+            adapter = new ArrayAdapter<>(super.getContext(), R.layout.spinner_item, R.id.spinnerItem, new ArrayList<>());
             new Thread(() -> {
                 completeList = getValueList();
                 filteredList = completeList;
@@ -79,8 +78,8 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
         }
     }
 
-    private void setupChipview(Context context, AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbstractSpinner, defStyleAttr, 0);
+    private void setupChipview(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbstractSpinner, 0, 0);
         chipviewId = a.getResourceId(R.styleable.AbstractSpinner_refChipView, -1);
         tagType = getTagType();
         a.recycle();
@@ -88,7 +87,7 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
 
     public AbstractSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setupChipview(context, attrs, 0);
+        setupChipview(context, attrs);
         setupArrayAdapter();
     }
 }

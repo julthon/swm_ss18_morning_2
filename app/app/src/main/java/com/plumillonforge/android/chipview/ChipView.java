@@ -170,12 +170,7 @@ public class ChipView extends ViewGroup implements Observer {
                 childView.layout((childX + layoutParams.leftMargin), (childY + layoutParams.topMargin), (lineWidth - layoutParams.rightMargin), (childY + childHeight - layoutParams.bottomMargin));
 
                 if (mListener != null) {
-                    childView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mListener.onChipClick(chip);
-                        }
-                    });
+                    childView.setOnClickListener(v -> mListener.onChipClick(chip));
                 }
             }
         }
@@ -224,8 +219,7 @@ public class ChipView extends ViewGroup implements Observer {
      * @return float
      */
     public static float dpToPx(float dp) {
-        float px = dp * (Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
+        return dp * (Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
     /**

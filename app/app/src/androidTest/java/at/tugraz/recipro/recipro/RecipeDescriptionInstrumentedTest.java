@@ -1,10 +1,8 @@
 package at.tugraz.recipro.recipro;
 
-import android.os.Bundle;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import org.junit.After;
@@ -15,9 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
@@ -35,6 +35,7 @@ import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -47,7 +48,7 @@ public class RecipeDescriptionInstrumentedTest {
     private Recipe recipe;
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     private List<RecipeIngredient> recipeIngredients = null;
     private GroceryListHelper helper;
@@ -61,7 +62,7 @@ public class RecipeDescriptionInstrumentedTest {
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), 1000f, Unit.GRAM));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(3, "Bier"), 2000f, Unit.MILLILITER));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(4, "Zucker"), 200f, Unit.GRAM));
-        recipeIngredients.add(new RecipeIngredient(new Ingredient(5, "Milch"), 150f, Unit.MILLILITER));
+        recipeIngredients.add(new RecipeIngredient(new Ingredient(5, "Milch", Arrays.asList(new Allergen("M", "milk", "milk is bad"))), 150f, Unit.MILLILITER));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(6, "Eier"), 3f));
         recipeIngredients = Collections.unmodifiableList(recipeIngredients);
 
@@ -212,12 +213,36 @@ public class RecipeDescriptionInstrumentedTest {
     }
 
     @Test
+    public void servingsEmpty() {
+        onView(withId(R.id.etServings)).perform(click());
+        onView(withId(R.id.etServings)).perform(replaceText(""), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(R.id.etServings)).perform(closeSoftKeyboard());
+
+        checkIngredients(0, "Kalbschnitzel", "4.5", "");
+        checkIngredients(1, "Salz", "1", "kg");
+        checkIngredients(2, "Bier", "2", "l");
+        checkIngredients(3, "Zucker", "200", "g");
+        checkIngredients(4, "Milch", "150", "ml");
+        checkIngredients(5, "Eier", "3", "");
+    }
+
+    @Test
     public void addRecipeToGroceryList() {
         onView(withId(R.id.ibGroceryList)).perform(click());
         onView(withId(R.id.dlDrawer)).perform(DrawerActions.open());
         onView(withText("Grocery List")).perform(click());
-        recipeIngredients.forEach(ri -> {
-            onView(withText(ri.getIngredient().getName())).check(matches(isDisplayed()));
-        });
+        recipeIngredients.forEach(ri -> onView(withText(ri.getIngredient().getName())).check(matches(isDisplayed())));
+    }
+
+    @Test
+    public void recipeAllergens() {
+        onView(withId(R.id.ocvAllergens)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withText("milk")).check(matches(isDisplayed()));
+
+        onView(withText("milk")).perform(click());
+
+        // dialog is displayed
+        onView(withText("milk (M)")).check(matches(isDisplayed()));
+        onView(withText("milk is bad")).check(matches(isDisplayed()));
     }
 }

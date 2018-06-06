@@ -7,9 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 public class UnitTest {
 
-    private Unit unit;
-
     private final String SHORT_NAME = "ml";
+    private Unit unit;
 
     @Before
     public void setUpUnit() {

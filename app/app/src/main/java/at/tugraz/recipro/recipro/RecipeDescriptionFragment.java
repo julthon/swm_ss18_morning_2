@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import java.util.List;
 
 import at.tugraz.recipro.adapters.IngredientsAdapter;
 import at.tugraz.recipro.data.Allergen;
+import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.FavoritesHelper;
@@ -105,8 +105,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
         this.currentServings = this.recipe.getServings();
 
-        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), this.recipe.getIngredients());
-        this.lvIngredients.setAdapter(ingredientsAdapter);
+        updateIngredientsList();
 
         this.tvDescTitle.setText(this.recipe.getTitle());
         this.tvDescTime.setText(String.valueOf(this.recipe.getTime()) + getResources().getString(R.string.minutes));
@@ -115,42 +114,39 @@ public class RecipeDescriptionFragment extends Fragment {
         this.etServings.setText(Integer.toString(this.currentServings));
 
 
-        etServings.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView tvServings, int i, KeyEvent keyEvent) {
-                View view = getActivity().getCurrentFocus();
-                if (view != null) {
-                    view.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+        etServings.setOnEditorActionListener((tvServings, i, keyEvent) -> {
+            View view1 = getActivity().getCurrentFocus();
+            if (view1 != null) {
+                view1.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+            }
 
-                if (tvServings.getText().toString().isEmpty()) {
-                    tvServings.setText(Integer.toString(currentServings));
-                    return true;
-                }
-
-                int servings = Integer.parseInt(tvServings.getText().toString());
-
-                if (servings <= 0 || servings > 1000) {
-                    tvServings.setText(Integer.toString(currentServings));
-                    return true;
-                }
-
-                float factor = (float) servings / (float) currentServings;
-
-                List<RecipeIngredient> ingredients = recipe.getIngredients();
-                for (RecipeIngredient ingredient : ingredients) {
-                    ingredient.setQuantity(ingredient.getQuantity() * factor);
-                }
-
-                IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), ingredients);
-                lvIngredients.setAdapter(ingredientsAdapter);
-
-                currentServings = servings;
-
+            if (tvServings.getText().toString().isEmpty()) {
+                tvServings.setText(Integer.toString(currentServings));
                 return true;
             }
+
+            int servings = Integer.parseInt(tvServings.getText().toString());
+
+            if (servings <= 0 || servings > 1000) {
+                tvServings.setText(Integer.toString(currentServings));
+                return true;
+            }
+
+            float factor = (float) servings / (float) currentServings;
+
+            List<RecipeIngredient> ingredients = recipe.getIngredients();
+            for (RecipeIngredient ingredient : ingredients) {
+                ingredient.setQuantity(ingredient.getQuantity() * factor);
+            }
+
+            IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), ingredients);
+            lvIngredients.setAdapter(ingredientsAdapter);
+
+            currentServings = servings;
+
+            return true;
         });
 
         if (fHelper.exists(recipe.getId())) {
@@ -174,11 +170,11 @@ public class RecipeDescriptionFragment extends Fragment {
         HashSet<Allergen> allergens = new HashSet<>();
         this.recipe.getIngredients()
                 .stream()
-                .map(x -> x.getIngredient())
-                .map(x -> x.getAllergens())
-                .forEach(x -> allergens.addAll(x));
+                .map(RecipeIngredient::getIngredient)
+                .map(Ingredient::getAllergens)
+                .forEach(allergens::addAll);
 
-        allergens.forEach(allergen -> ocvAllergens.add(new OurTagImplementation(allergen, allergen.getName(), OurTagImplementation.TagType.ALLERGEN_EXCLUDE)));
+        allergens.forEach(allergen -> ocvAllergens.add(new OurTagImplementation<Allergen>(allergen, allergen.getName(), OurTagImplementation.TagType.ALLERGEN_EXCLUDE)));
         if (this.ocvAllergens.getAdapter().count() == 0) {
             this.ocvAllergens.setVisibility(View.GONE);
         }
@@ -186,11 +182,7 @@ public class RecipeDescriptionFragment extends Fragment {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... voids) {
-                try {
-                    return WSConnection.getInstance().getImage(recipe.getId());
-                } catch (RestClientException ex) {
-                    return null;
-                }
+                return WSConnection.getInstance().getImage(recipe.getId());
             }
 
             @Override
@@ -215,6 +207,7 @@ public class RecipeDescriptionFragment extends Fragment {
             Toast.makeText(RecipeDescriptionFragment.this.getActivity(), String.format(getResources().getString(R.string.grocery_list_add_message),
                     IngredientsAdapter.getConvertedQuantityHumanreadable(ingredient.getQuantity()) + "" + IngredientsAdapter.getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity())
                             + " " + ingredient.getIngredient().getName()), Toast.LENGTH_SHORT).show();
+            updateIngredientsList();
         });
 
         ibFavourites.setOnClickListener((View view) -> {
@@ -231,7 +224,14 @@ public class RecipeDescriptionFragment extends Fragment {
         ibGrocery.setOnClickListener((View view) -> {
             recipe.getIngredients().forEach(i -> dbHelper.addIngredient(i));
             Toast.makeText(getActivity(), getResources().getString(R.string.grocery_list_add_recipe_message), Toast.LENGTH_SHORT).show();
+            updateIngredientsList();
         });
+    }
+
+    private void updateIngredientsList() {
+        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(getContext(), this.recipe.getIngredients());
+        this.lvIngredients.setAdapter(ingredientsAdapter);
+        ingredientsAdapter.notifyDataSetChanged();
     }
 
     private void showPopup(String title, String message) {

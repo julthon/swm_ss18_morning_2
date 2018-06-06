@@ -12,9 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 public class RecipeTest {
 
-    private Recipe recipe;
-    private List<RecipeIngredient> recipeIngredients;
-
     private final String TITLE = "TestRecipe";
     private final String DESC = "Do something";
     private final String INGREDIENT1_NAME = "Potatoes";
@@ -24,6 +21,8 @@ public class RecipeTest {
     private final int TIME = 50;
     private final int SERVINGS = 4;
     private final double RATING = 4.5;
+    private Recipe recipe;
+    private List<RecipeIngredient> recipeIngredients;
 
     @Before
     public void setUp() throws Exception {

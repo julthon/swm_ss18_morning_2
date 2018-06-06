@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -119,15 +118,9 @@ public class MyPantryFragment extends Fragment {
 
     private void initializeIngredientsFilter() {
         tvAutoCompleteIngredients.setThreshold(1);
-        ArrayAdapter<Ingredient> adapter = new ArrayAdapter<Ingredient>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, ingredients);
+        ArrayAdapter<Ingredient> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_dropdown_item_1line, ingredients);
         tvAutoCompleteIngredients.setAdapter(adapter);
-        tvAutoCompleteIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selection = (Ingredient) parent.getItemAtPosition(position);
-
-            }
-        });
+        tvAutoCompleteIngredients.setOnItemClickListener((parent, view, position, id) -> selection = (Ingredient) parent.getItemAtPosition(position));
         tvAutoCompleteIngredients.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

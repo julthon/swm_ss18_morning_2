@@ -240,8 +240,8 @@ public class RecipesFragment extends Fragment {
                         .map(x -> x.getValue().getShortName())
                         .collect(Collectors.toList());
 
-                List<String> ingredientsExclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE).stream().map(x -> x.getText()).collect(Collectors.toList());
-                List<String> ingredientsInclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE).stream().map(x -> x.getText()).collect(Collectors.toList());
+                List<String> ingredientsExclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_EXCLUDE).stream().map(OurTagImplementation::getText).collect(Collectors.toList());
+                List<String> ingredientsInclude = ocvTagView.getListOfType(OurTagImplementation.TagType.INGREDIENT_INCLUDE).stream().map(OurTagImplementation::getText).collect(Collectors.toList());
 
                 queryParams.put(WSConstants.QUERY_TITLE, Collections.singletonList(query));
                 if (!mintime.isEmpty())

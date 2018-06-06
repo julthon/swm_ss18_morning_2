@@ -15,7 +15,7 @@ public abstract class AbstractListHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
-    protected AbstractListHelper(Context context, String name) {
+    AbstractListHelper(Context context, String name) {
         this(context, name, null, DATABASE_VERSION);
     }
 
@@ -31,7 +31,7 @@ public abstract class AbstractListHelper extends SQLiteOpenHelper {
         String[] columnTypes = getColumnTypes();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE " + getTableName() + " (");
+        sb.append("CREATE TABLE ").append(getTableName()).append(" (");
         for (int i = 0; i < columnNames.length; i++) {
             sb.append(columnNames[i]);
             sb.append(" ");
