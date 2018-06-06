@@ -41,8 +41,9 @@ public class WSConnection {
     private WSConnection() {
     }
 
-    public void init(String uri) {
+    public void init(String uri, boolean testhandling) {
         this.backend_uri = uri;
+        this.testhandling = testhandling;
     }
 
     public static WSConnection getInstance() {
@@ -56,25 +57,26 @@ public class WSConnection {
     private String backend_path_image = "/recipes/%d/image";
     private String backend_path_ingredients = "/recipes/ingredients";
     private String backend_path_allergens = "/allergens";
+    private boolean testhandling = false;
 
     private static final String LOG_TAG = WSConnection.class.getName();
 
-    private Object obj = new Object();
-
     private void showAlertDialog() {
-        Looper.prepare();
+        if(!testhandling) {
+            Looper.prepare();
 
-        Context context = ResourceAccessHelper.getAppContext();
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(context);
-        builder.setTitle(ResourceAccessHelper.getStringFromId(R.string.error_connect))
-                .setMessage(ResourceAccessHelper.getStringFromId(R.string.cannot_connect_message))
-                .setNegativeButton(R.string.close, (dialog, which) -> System.exit(0))
-                .setIcon(android.R.drawable.ic_dialog_alert);
-        builder.show();
+            Context context = ResourceAccessHelper.getAppContext();
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(context);
+            builder.setTitle(ResourceAccessHelper.getStringFromId(R.string.error_connect))
+                    .setMessage(ResourceAccessHelper.getStringFromId(R.string.cannot_connect_message))
+                    .setNegativeButton(R.string.close, (dialog, which) -> System.exit(0))
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            builder.show();
 
-        while(true) {
-            Looper.loop();
+            while (true) {
+                Looper.loop();
+            }
         }
     }
 
