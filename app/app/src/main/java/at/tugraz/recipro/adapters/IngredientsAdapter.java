@@ -58,9 +58,17 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
         viewHolder.tvQuantity.setText(getConvertedQuantityHumanreadable(ingredient.getQuantity()));
         viewHolder.tvUnit.setText(getConvertedUnitHumanreadable(ingredient.getUnit(), ingredient.getQuantity()));
         viewHolder.tvIngredient.setText(ingredient.getIngredient().getName());
-        if(!myPantryListHelper.getIngredients().stream().anyMatch((RecipeIngredient ri) -> ingredient.getIngredient().equals(ri.getIngredient())))
+        if(myPantryListHelper.getIngredients().stream().noneMatch((RecipeIngredient ri) -> ingredient.getIngredient().equals(ri.getIngredient())))
             viewHolder.ivOwned.setVisibility(ImageView.INVISIBLE);
-        if(!groceryListHelper.getIngredients().stream().anyMatch((RecipeIngredient ri) -> ingredient.getIngredient().equals(ri.getIngredient())))
+
+        boolean match = false;
+        for(RecipeIngredient i1 : groceryListHelper.getIngredients()) {
+            if(i1.getIngredient().equals(ingredient.getIngredient()))
+                match = true;
+        }
+        if(match)
+            viewHolder.ivOnGroceryList.setVisibility(ImageView.VISIBLE);
+        else
             viewHolder.ivOnGroceryList.setVisibility(ImageView.INVISIBLE);
 
         return rowView;
