@@ -166,7 +166,6 @@ public class RecipesFragment extends Fragment {
             }
         });
 
-        // testing
         final OurChipView chipView = view.findViewById(R.id.ocvTagView);
         chipView.setAdapter(new OurChipViewAdapterImplementation(getContext()));
 

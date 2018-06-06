@@ -206,13 +206,11 @@ public abstract class ChipViewAdapter extends Observable {
         int backgroundColor = (getBackgroundColor(position) != 0 ? getBackgroundColor(position) : mChipBackgroundColor);
         int backgroundColorSelected = (getBackgroundColorSelected(position) != 0 ? getBackgroundColorSelected(position) : mChipBackgroundColorSelected);
 
-        // Default state
         GradientDrawable background = new GradientDrawable();
         background.setShape(GradientDrawable.RECTANGLE);
         background.setCornerRadius(mChipCornerRadius);
         background.setColor(backgroundColor);
 
-        // Selected state
         GradientDrawable selectedBackground = new GradientDrawable();
         selectedBackground.setShape(GradientDrawable.RECTANGLE);
         selectedBackground.setCornerRadius(mChipCornerRadius);
