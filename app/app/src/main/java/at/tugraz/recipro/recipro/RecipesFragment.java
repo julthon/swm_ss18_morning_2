@@ -304,8 +304,8 @@ public class RecipesFragment extends Fragment {
 
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
-                if (recipes != null)
-                    addRecipes(recipes);
+                if(recipes != null)
+                    setSearchResults(recipes);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -319,7 +319,7 @@ public class RecipesFragment extends Fragment {
         }
     }
 
-    public void addRecipes(List<Recipe> recipes) {
+    public void setSearchResults(List<Recipe> recipes) {
         RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
         adapter.clear();
         adapter.addAll(recipes);
