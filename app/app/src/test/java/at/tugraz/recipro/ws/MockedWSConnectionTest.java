@@ -42,7 +42,7 @@ public class MockedWSConnectionTest {
     public void setUp() {
         ShadowLog.stream = System.out;
         this.wsConnection = WSConnection.getInstance();
-        this.wsConnection.init("http://localhost:8080/recipro-backend/api");
+        this.wsConnection.init("https://aughrany.com/recipro-backend/api");
         PowerMockito.mockStatic(Log.class);
     }
 
