@@ -31,6 +31,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -88,11 +89,6 @@ public class RecipeDescriptionInstrumentedTest {
 
         this.recipe = new Recipe(1, "Schnitzel", 50, 4, 4.5, recipeIngredients, description);
 
-        Fragment fragmentDescription = new RecipeDescriptionFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable("Recipe", this.recipe);
-        fragmentDescription.setArguments(arguments);
-
         final MainActivity activity = mActivityRule.getActivity();
         activity.runOnUiThread(() -> {
             RecipesFragment recipesFragment = (RecipesFragment) activity.getSupportFragmentManager().findFragmentByTag("RecipesFragment");
@@ -104,6 +100,8 @@ public class RecipeDescriptionInstrumentedTest {
         getInstrumentation().waitForIdleSync();
 
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
+
+        getInstrumentation().waitForIdleSync();
     }
 
     @After
@@ -113,14 +111,14 @@ public class RecipeDescriptionInstrumentedTest {
 
     @Test
     public void exists() {
-        onView(withId(R.id.tvDescTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.tvDescTime)).check(matches(isDisplayed()));
-        onView(withId(R.id.rbDescRating)).check(matches(isDisplayed()));
-        onView(withId(R.id.lvIngredients)).check(matches(isDisplayed()));
-        onView(withId(R.id.tvDescription)).check(matches(isDisplayed()));
-        onView(withId(R.id.ivGroup)).check(matches(isDisplayed()));
-        onView(withId(R.id.etServings)).check(matches(isDisplayed()));
-        onView(withId(R.id.ibFavourite)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDescTitle)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDescTime)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.rbDescRating)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.lvIngredients)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDescription)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.ivGroup)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.etServings)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.ibFavourite)).perform(scrollTo()).check(matches(isDisplayed()));
     }
 
     private void checkIngredients(int position, String ingredient, String quantity, String unit) {
@@ -131,9 +129,16 @@ public class RecipeDescriptionInstrumentedTest {
 
     @Test
     public void recipeContent() {
+        onView(withId(R.id.tvDescTitle)).perform(scrollTo());
         onView(withText(this.recipe.getTitle())).check(matches(isDisplayed()));
+
+        onView(withId(R.id.tvDescTime)).perform(scrollTo());
         onView(withText(String.valueOf(this.recipe.getTime()) + "min")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.tvDescription)).perform(scrollTo());
         onView(withText(this.recipe.getDescription())).check(matches(isDisplayed()));
+
+        onView(withId(R.id.etServings)).perform(scrollTo());
         onView(withText(String.valueOf(this.recipe.getServings()))).check(matches(isDisplayed()));
 
         checkIngredients(0, "Kalbschnitzel", "4.5", "");
