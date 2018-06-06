@@ -10,7 +10,7 @@
     <string name="type_of_food">Category</string>
     <string name="min_rating">Min Rating</string>
     <string name="only_favorites">Only Favorites</string>
-    <string name="owned_ingredients">Only Owned Ingredient</string>
+    <string name="owned_ingredients">Only Owned Ingredients</string>
     <string name="recipe">Recipe</string>
     <string name="ingredients_header">Ingredients:</string>
     <string name="description_header">Description:</string>
