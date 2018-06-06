@@ -11,13 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout dlDrawer;
-    private FrameLayout flContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +44,31 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment fragment = null;
             String tag = "";
-            if (item.getItemId() == R.id.navHome) {
-                tag = RecipesFragment.FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
+            switch (item.getItemId()) {
+                case R.id.navHome:
+                    tag = RecipesFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
 
-                if (fragment == null) {
-                    fragment = new RecipesFragment();
-                }
-            } else if (item.getItemId() == R.id.navGroceryList) {
-                tag = GroceryListFragment.FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
+                    if (fragment == null) {
+                        fragment = new RecipesFragment();
+                    }
+                    break;
+                case R.id.navGroceryList:
+                    tag = GroceryListFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
 
-                if (fragment == null) {
-                    fragment = new GroceryListFragment();
-                }
-            } else if (item.getItemId() == R.id.navMyPantry) {
-                tag = MyPantryFragment.FRAGMENT_TAG;
-                fragment = fragmentManager.findFragmentByTag(MyPantryFragment.FRAGMENT_TAG);
+                    if (fragment == null) {
+                        fragment = new GroceryListFragment();
+                    }
+                    break;
+                case R.id.navMyPantry:
+                    tag = MyPantryFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(MyPantryFragment.FRAGMENT_TAG);
 
-                if (fragment == null) {
-                    fragment = new MyPantryFragment();
-                }
+                    if (fragment == null) {
+                        fragment = new MyPantryFragment();
+                    }
+                    break;
             }
 
             boolean ret = false;
@@ -86,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
             return ret;
         });
 
-        flContent = findViewById(R.id.flContent);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.flContent, new RecipesFragment(), RecipesFragment.FRAGMENT_TAG)

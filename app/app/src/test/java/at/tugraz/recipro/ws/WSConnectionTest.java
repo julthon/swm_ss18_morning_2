@@ -7,22 +7,14 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowLog;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import at.tugraz.recipro.TestUtils;
@@ -32,12 +24,9 @@ import at.tugraz.recipro.data.Recipe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class WSConnectionTest {
@@ -57,8 +46,8 @@ public class WSConnectionTest {
         int maxpreptime = 200;
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(Integer.toString(minpreptime)));
-        queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(Integer.toString(maxpreptime)));
+        queryParams.put(WSConstants.QUERY_MIN_PREP, Collections.singletonList(Integer.toString(minpreptime)));
+        queryParams.put(WSConstants.QUERY_MAX_PREP, Collections.singletonList(Integer.toString(maxpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -72,7 +61,7 @@ public class WSConnectionTest {
         int minpreptime = 50;
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_PREP, Arrays.asList(Integer.toString(minpreptime)));
+        queryParams.put(WSConstants.QUERY_MIN_PREP, Collections.singletonList(Integer.toString(minpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -85,7 +74,7 @@ public class WSConnectionTest {
         int maxpreptime = 200;
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.put(WSConstants.QUERY_MAX_PREP, Arrays.asList(Integer.toString(maxpreptime)));
+        queryParams.put(WSConstants.QUERY_MAX_PREP, Collections.singletonList(Integer.toString(maxpreptime)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {
@@ -124,7 +113,7 @@ public class WSConnectionTest {
         double minrating = 2;
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.put(WSConstants.QUERY_MIN_RATING, Arrays.asList(Double.toString(minrating)));
+        queryParams.put(WSConstants.QUERY_MIN_RATING, Collections.singletonList(Double.toString(minrating)));
         List<Recipe> recipes = this.wsConnection.requestRecipes(queryParams);
 
         for (Recipe recipe : recipes) {

@@ -7,15 +7,12 @@ import static org.junit.Assert.assertEquals;
 
 public class RecipeIngredientTest {
 
-    private RecipeIngredient recipe_ingredient;
-
-    private Ingredient ingredient;
-
-    private Unit unit;
-
     private final float QUANTITY = 999.99f;
     private final int ID = 666;
     private final String NAME = "SATAN";
+    private RecipeIngredient recipe_ingredient;
+    private Ingredient ingredient;
+    private Unit unit;
 
     @Before
     public void setUpRecipeIngredient() {

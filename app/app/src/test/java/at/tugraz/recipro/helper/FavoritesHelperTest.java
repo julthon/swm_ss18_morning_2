@@ -30,7 +30,7 @@ public class FavoritesHelperTest {
 
     @Test
     public void insertFavorites() {
-        List<Long> favorites = new ArrayList<Long>(Arrays.asList(1L, 2L, 3L, 4L));
+        List<Long> favorites = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L));
 
         for (Long favorite : favorites) {
             this.helper.addFavorite(favorite);
@@ -45,7 +45,7 @@ public class FavoritesHelperTest {
 
     @Test
     public void removeFavorites() {
-        List<Long> favorites = new ArrayList<Long>(Arrays.asList(1L, 2L, 3L, 4L));
+        List<Long> favorites = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L));
 
         for (Long favorite : favorites) {
             this.helper.addFavorite(favorite);

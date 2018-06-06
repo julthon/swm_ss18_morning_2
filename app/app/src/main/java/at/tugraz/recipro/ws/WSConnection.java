@@ -2,10 +2,8 @@ package at.tugraz.recipro.ws;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
 
@@ -27,17 +25,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import at.tugraz.recipro.data.Allergen;
 import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 import at.tugraz.recipro.recipro.R;
-import at.tugraz.recipro.recipro.RecipesFragment;
 
 public class WSConnection {
 
@@ -166,7 +161,7 @@ public class WSConnection {
             Log.d(LOG_TAG, "get_image_uri=" + uri);
 
             HttpHeaders headers = new HttpHeaders();
-            HttpEntity<String> entity = new HttpEntity<String>(headers);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new ResourceHttpMessageConverter());

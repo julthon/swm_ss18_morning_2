@@ -1,7 +1,5 @@
 package at.tugraz.recipro.helper;
 
-import android.util.Log;
-
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -12,7 +10,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 import at.tugraz.recipro.data.Ingredient;
-import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 

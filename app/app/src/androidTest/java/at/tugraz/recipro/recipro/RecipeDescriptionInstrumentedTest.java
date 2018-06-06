@@ -1,10 +1,8 @@
 package at.tugraz.recipro.recipro;
 
-import android.os.Bundle;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import org.junit.After;
@@ -47,7 +45,7 @@ public class RecipeDescriptionInstrumentedTest {
     private Recipe recipe;
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     private List<RecipeIngredient> recipeIngredients = null;
     private GroceryListHelper helper;
@@ -216,8 +214,6 @@ public class RecipeDescriptionInstrumentedTest {
         onView(withId(R.id.ibGroceryList)).perform(click());
         onView(withId(R.id.dlDrawer)).perform(DrawerActions.open());
         onView(withText("Grocery List")).perform(click());
-        recipeIngredients.forEach(ri -> {
-            onView(withText(ri.getIngredient().getName())).check(matches(isDisplayed()));
-        });
+        recipeIngredients.forEach(ri -> onView(withText(ri.getIngredient().getName())).check(matches(isDisplayed())));
     }
 }

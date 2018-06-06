@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import at.tugraz.recipro.data.Ingredient;
@@ -28,7 +29,7 @@ public class RecipeUtilsTest {
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cheese, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Collections.singletonList(cheese), "Good cheesecake");
         Recipe recipe3 = new Recipe(3, "schnitzel", 120, 4, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
@@ -58,7 +59,7 @@ public class RecipeUtilsTest {
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 4, 120, 5.0, Arrays.asList(cheese), "Good cheesecake");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 4, 120, 5.0, Collections.singletonList(cheese), "Good cheesecake");
         Recipe recipe3 = new Recipe(3, "schnitzel", 4, 120, 5.0, Arrays.asList(salt, flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
@@ -86,8 +87,8 @@ public class RecipeUtilsTest {
         RecipeIngredient cheese = new RecipeIngredient(new Ingredient(5, "cheese"), 120f, Unit.GRAM);
 
         Recipe recipe1 = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour, cacao, sugar), "Good cake");
-        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Arrays.asList(cheese), "Good cheesecake");
-        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 4, 5.0, Arrays.asList(flour), "Good schnitzel");
+        Recipe recipe2 = new Recipe(2, "cheesecake", 120, 4, 5.0, Collections.singletonList(cheese), "Good cheesecake");
+        Recipe recipe3 = new Recipe(3, "schnitzel", 120, 4, 5.0, Collections.singletonList(flour), "Good schnitzel");
         List<Recipe> recipes = Arrays.asList(recipe1, recipe2, recipe3);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
@@ -103,8 +104,8 @@ public class RecipeUtilsTest {
         RecipeIngredient flour = new RecipeIngredient(new Ingredient(1, "flour"), 120f, Unit.GRAM);
         RecipeIngredient flour2 = new RecipeIngredient(new Ingredient(2, "flour"), 120f, Unit.GRAM);
 
-        Recipe recipe = new Recipe(1, "cake", 120, 4, 5.0, Arrays.asList(flour), "Good cake");
-        List<Recipe> recipes = Arrays.asList(recipe);
+        Recipe recipe = new Recipe(1, "cake", 120, 4, 5.0, Collections.singletonList(flour), "Good cake");
+        List<Recipe> recipes = Collections.singletonList(recipe);
 
         List<RecipeIngredient> filterIngredients = new ArrayList<>();
         filterIngredients.add(flour2);
@@ -133,7 +134,7 @@ public class RecipeUtilsTest {
 
     @Test
     public void filterByFavoritesEmpty() {
-        List<Long> favorites = Arrays.asList();
+        List<Long> favorites = Collections.emptyList();
 
         List<Recipe> recipes = Arrays.asList(
                 new Recipe(1, "Title1", 30, 4, 3.5, new ArrayList<>(), ""),
