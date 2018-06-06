@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,6 +33,8 @@ import static org.hamcrest.Matchers.instanceOf;
 
 @RunWith(AndroidJUnit4.class)
 public class MyPantryInstrumentedTest {
+    private MyPantryListHelper helper;
+
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -45,10 +48,10 @@ public class MyPantryInstrumentedTest {
             }
         });
 
-        MyPantryListHelper helper = new MyPantryListHelper(mActivityRule.getActivity());
-        helper.clear();
-        helper.addIngredient(new RecipeIngredient(new Ingredient(1, "Predefined 1"), 100, Unit.GRAM));
-        helper.addIngredient(new RecipeIngredient(new Ingredient(2, "Predefined 2"), 200, Unit.GRAM));
+        this.helper = new MyPantryListHelper(mActivityRule.getActivity());
+        this.helper.clear();
+        this.helper.addIngredient(new RecipeIngredient(new Ingredient(1, "Predefined 1"), 100, Unit.GRAM));
+        this.helper.addIngredient(new RecipeIngredient(new Ingredient(2, "Predefined 2"), 200, Unit.GRAM));
 
         getInstrumentation().waitForIdleSync();
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
@@ -56,10 +59,14 @@ public class MyPantryInstrumentedTest {
         onView(withId(R.id.spUnit)).check(matches(isDisplayed()));
     }
 
+    @After
+    public void tearDown() throws Exception {
+        this.helper.clear();
+    }
+
     @Test
     public void insertIngredient() {
-        MyPantryListHelper helper = new MyPantryListHelper(mActivityRule.getActivity());
-        Assert.assertEquals(2, helper.getIngredients().size());
+        Assert.assertEquals(2, this.helper.getIngredients().size());
 
         onView(withId(R.id.tvAutoCompleteIngredients)).perform(ViewActions.typeText("Flour"));
         onData(instanceOf(Ingredient.class)).inRoot(RootMatchers.isPlatformPopup()).check(matches(withText("Flour"))).perform(click());
@@ -73,16 +80,15 @@ public class MyPantryInstrumentedTest {
 
         onView(withId(R.id.btAddIngredient)).perform(click());
 
-        Assert.assertEquals(3, helper.getIngredients().size());
+        Assert.assertEquals(3, this.helper.getIngredients().size());
     }
 
     @Test
     public void removeIngredients() {
-        MyPantryListHelper helper = new MyPantryListHelper(mActivityRule.getActivity());
-        Assert.assertEquals(2, helper.getIngredients().size());
+        Assert.assertEquals(2, this.helper.getIngredients().size());
         onView(withText("Predefined 1")).perform(click());
-        Assert.assertEquals(1, helper.getIngredients().size());
+        Assert.assertEquals(1, this.helper.getIngredients().size());
         onView(withText("Predefined 2")).perform(click());
-        Assert.assertEquals(0, helper.getIngredients().size());
+        Assert.assertEquals(0, this.helper.getIngredients().size());
     }
 }
