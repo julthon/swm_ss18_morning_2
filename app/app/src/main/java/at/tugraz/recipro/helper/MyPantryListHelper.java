@@ -40,7 +40,6 @@ public class MyPantryListHelper extends AbstractListHelper {
     }
 
     public void addIngredient(RecipeIngredient ingredient) {
-        // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
         Cursor cur = db.query(TABLE_NAME,
                 new String[]{COLUMN_ID},
@@ -50,12 +49,10 @@ public class MyPantryListHelper extends AbstractListHelper {
                 null,
                 null);
         if (cur.moveToNext()) {
-            // replace
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_QUANTITY, ingredient.getQuantity());
             db.update(TABLE_NAME, cv, COLUMN_ID + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
         } else {
-            // nothing found, insert new element
             db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES(" +
                     ingredient.getIngredient().getId() + ", '" +
                     ingredient.getIngredient().getName() + "', '" +

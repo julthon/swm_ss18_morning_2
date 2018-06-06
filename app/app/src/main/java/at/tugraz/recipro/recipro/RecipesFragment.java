@@ -44,6 +44,7 @@ import at.tugraz.recipro.data.Ingredient;
 import at.tugraz.recipro.data.Recipe;
 import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.FavoritesHelper;
+import at.tugraz.recipro.helper.MyPantryListHelper;
 import at.tugraz.recipro.helper.RecipeUtils;
 import at.tugraz.recipro.views.OurChipView;
 import at.tugraz.recipro.views.OurChipViewAdapterImplementation;
@@ -66,6 +67,7 @@ public class RecipesFragment extends Fragment {
     private AutoCompleteTextView atIngredientExclude;
     private AutoCompleteTextView atIngredientInclude;
     private CheckBox cbFavorites;
+    private CheckBox cbMyPantry;
 
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
@@ -83,6 +85,7 @@ public class RecipesFragment extends Fragment {
         atIngredientExclude = view.findViewById(R.id.atIngredientExclude);
         atIngredientInclude = view.findViewById(R.id.atIngredientInclude);
         cbFavorites = view.findViewById(R.id.cbFavorites);
+        cbMyPantry = view.findViewById(R.id.cbOwned);
 
         searchBar = view.findViewById(R.id.searchbar);
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -131,6 +134,7 @@ public class RecipesFragment extends Fragment {
         etMinTime.addTextChangedListener(textWatcher);
 
         cbFavorites.setOnClickListener(v -> performSearch());
+        cbMyPantry.setOnClickListener(v -> performSearch());
 
         rbMinRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> performSearch());
 
@@ -267,6 +271,12 @@ public class RecipesFragment extends Fragment {
 
                     if (cbFavorites.isChecked())
                         recipes = RecipeUtils.filterByFavorites(recipes, new FavoritesHelper(getActivity()).getFavorites());
+                    if (cbMyPantry.isChecked())
+                        recipes = RecipeUtils.filterByIngredients(recipes, new MyPantryListHelper(getContext())
+                                .getIngredients()
+                                .stream()
+                                .map(RecipeIngredient::getIngredient)
+                                .collect(Collectors.toList()));
 
                     return recipes;
 

@@ -38,7 +38,7 @@ public class IngredientsAdapter extends ArrayAdapter<RecipeIngredient> {
 
         View rowView = convertView;
 
-        ViewHolder viewHolder; // view holder pattern
+        ViewHolder viewHolder;
         if (rowView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             rowView = inflater.inflate(R.layout.item_ingredient, parent, false);

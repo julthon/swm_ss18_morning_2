@@ -38,7 +38,6 @@ public class ChipView extends ViewGroup implements Observer {
     protected ChipViewAdapter mAdapter;
     private OnChipClickListener mListener;
 
-    // Data
     private List<Integer> mLineHeightList;
 
     public ChipView(Context context) {

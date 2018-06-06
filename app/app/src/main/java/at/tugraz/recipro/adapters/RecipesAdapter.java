@@ -39,7 +39,7 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
 
-        final ViewHolder viewHolder; // view holder pattern
+        final ViewHolder viewHolder;
         if (rowView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             rowView = inflater.inflate(R.layout.item_recipe, parent, false);
