@@ -1,22 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.boundary;
 
+import at.tugraz.recipro.recipes.control.AllergensManager;
 import at.tugraz.recipro.recipes.control.RecipesManager;
-import at.tugraz.recipro.recipes.entity.Recipe;
-import at.tugraz.recipro.recipes.entity.RecipeType;
+import at.tugraz.recipro.recipes.entity.*;
 import io.swagger.annotations.Api;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,7 +31,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  *
- * @author Dominik
+ * @author Dominik, Julian
  */
 @Path("recipes")
 @Stateless
@@ -40,9 +42,20 @@ public class RecipesResource {
     public static final String FILTER_MIN_PREPARATION_TIME = "minpreptime";
     public static final String FILTER_MAX_PREPARATION_TIME = "maxpreptime";
     public static final String FILTER_TYPES = "types";
+    public static final String FILTER_ALLERGENS = "allergens";
+    public static final String FILTER_INGREDIENTS_EXCLUDE = "ingredientsexclude";
+    public static final String FILTER_INGREDIENTS_INCLUDE = "ingredientsinclude";
+    public static final String FILTER_MIN_RATING = "minrating";
+    public static final String FILTER_MAX_RATING = "maxrating";
     
     @Inject
     RecipesManager recipesManager;
+    
+    @Inject
+    AllergensManager allergensManager;
+    
+    @Context
+    ServletContext servletContext;
     
     @POST
     public Response create(Recipe recipe, @Context UriInfo uriInfo) {
@@ -64,22 +77,89 @@ public class RecipesResource {
     public List<Recipe> filter(@DefaultValue("") @QueryParam(FILTER_TITLE) String title,
                                @DefaultValue("0") @QueryParam(FILTER_MIN_PREPARATION_TIME) int minpreptime,
                                @DefaultValue("999999") @QueryParam(FILTER_MAX_PREPARATION_TIME) int maxpreptime,
-                               @QueryParam(FILTER_TYPES) List<String> types) {
-        ArrayList<RecipeType> typeList = new ArrayList<>();
-        if(types != null)
-            typeList.addAll(types.stream()
-                                 .map((String s) -> (RecipeType.fromString(s)))
-                                 .collect(Collectors.toList()));
+                               @DefaultValue("0.0") @QueryParam(FILTER_MIN_RATING) double minrating,
+                               @DefaultValue("5.0") @QueryParam(FILTER_MAX_RATING) double maxrating,
+                               @QueryParam(FILTER_TYPES) List<String> types,
+                               @QueryParam(FILTER_ALLERGENS) List<String> allergensShortNames,
+                               @QueryParam(FILTER_INGREDIENTS_INCLUDE) List<String> ingredientsNameInclude,
+                               @QueryParam(FILTER_INGREDIENTS_EXCLUDE) List<String> ingredientsNameExclude) {
+        List<RecipeType> typeList = types.stream().map((String s) -> (RecipeType.fromString(s))).collect(Collectors.toList());
+
         return recipesManager
                 .findAll()
                 .stream()
-                .filter((Recipe r) -> (
-                        (title.isEmpty() || r.getTitle().toLowerCase().contains(title.toLowerCase())) && 
-                        (r.getPreparationTime() > minpreptime && 
-                         r.getPreparationTime() < maxpreptime)) && 
-                        (typeList.size() == 0 || r.getRecipeTypes()
-                                                  .stream()
-                                                  .allMatch((RecipeType t) -> typeList.contains(t))))
+                .filter(recipe -> recipe.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .filter(recipe -> recipe.getPreparationTime() > minpreptime)
+                .filter(recipe -> recipe.getPreparationTime() < maxpreptime)
+                .filter(recipe -> recipe.getRating() >= minrating)
+                .filter(recipe -> recipe.getRating() <= maxrating)
+                .filter(recipe -> recipe.getRecipeTypes().containsAll(typeList))
+                .filter(recipe -> recipe.getIngredients().stream().flatMap(i -> i.getIngredient().getAllergens().stream())
+                        .noneMatch(a -> allergensShortNames.stream().anyMatch(asn -> asn.equals(a.getShortName()))))
+                .filter(recipe -> ingredientsNameInclude.stream()
+                        .allMatch(ing -> recipe.getIngredients().stream()
+                                .anyMatch(i -> i.getIngredient().getName().equals(ing))))
+                .filter(recipe -> recipe.getIngredients().stream()
+                        .noneMatch(i -> ingredientsNameExclude.stream()
+                                .anyMatch(ine -> ine.equals(i.getIngredient().getName()))))
                 .collect(Collectors.toList());
+    }
+
+
+    @GET
+    @Path("/types")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<RecipeType> getAllTypes() {
+        return recipesManager.findAllTypes();
+    }
+  
+    @GET
+    @Path("/ingredients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Ingredient> getAllIngredients() {
+        return recipesManager.findAllIngredients();
+    }
+    
+        private java.nio.file.Path getImagePath(long id, String fileType) {
+        String fileName = id + "." + fileType;
+        java.nio.file.Path fullPath = Paths.get(servletContext.getRealPath("WEB-INF"), fileName);
+        return fullPath;
+    }
+    
+    @POST
+    @Consumes({"image/jpeg", "image/png"})
+    @Path("{id}/image")
+    public Response storeImage(@PathParam("id") long id, @Context UriInfo uriInfo, InputStream in, @HeaderParam("Content-Type") String fileType) throws IOException {
+        
+        java.nio.file.Path fullPath;
+        
+        if(fileType.equals("image/jpeg")) {    
+            fullPath = getImagePath(id, "jpeg");
+        } else {
+            fullPath = getImagePath(id, "png");
+        }    
+        
+        System.out.println("create image: " + fullPath);
+        Files.copy(in, fullPath, StandardCopyOption.REPLACE_EXISTING);
+        
+        URI uri = uriInfo.getAbsolutePathBuilder().path("").build();
+        return Response.created(uri).build();
+    }
+    
+    @GET
+    @Produces({"image/jpeg", "image/png"})
+    @Path("{id}/image")
+    public Response getImage(@PathParam("id") long id) throws IOException {
+        
+        java.nio.file.Path fullPathJpeg = getImagePath(id, "jpeg");
+        java.nio.file.Path fullPathPng = getImagePath(id, "png");
+        
+        if (Files.exists(fullPathJpeg)) {
+            return Response.ok().entity(Files.newInputStream(fullPathJpeg)).type("image/jpeg").build();   
+        } else if (Files.exists(fullPathPng)) {
+            return Response.ok().entity(Files.newInputStream(fullPathPng)).type("image/png").build();   
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();  
+        } 
     }
 }

@@ -6,13 +6,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe implements Serializable{
+public class Recipe implements Serializable {
+
+    @SerializedName("id")
+    private long id;
 
     @SerializedName("title")
     private String title;
 
     @SerializedName("preparationTime")
     private int time;
+
+    @SerializedName("servings")
+    private int servings;
 
     @SerializedName("rating")
     private double rating;
@@ -23,9 +29,11 @@ public class Recipe implements Serializable{
     @SerializedName("ingredients")
     private List<RecipeIngredient> ingredients;
 
-    public Recipe(String title, int time, double rating, List<RecipeIngredient> ingredients, String description) {
+    public Recipe(long id, String title, int time, int servings, double rating, List<RecipeIngredient> ingredients, String description) {
+        this.id = id;
         this.title = title;
         this.time = time;
+        this.servings = servings;
         this.rating = rating;
         this.ingredients = ingredients;
         this.description = description;
@@ -51,8 +59,16 @@ public class Recipe implements Serializable{
         this.time = time;
     }
 
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
     public double getRating() {
         return rating;
+    }
+
+    public int getServings() {
+        return servings;
     }
 
     public void setRating(double rating) {
@@ -75,14 +91,11 @@ public class Recipe implements Serializable{
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                "title='" + title + '\'' +
-                ", time=" + time +
-                ", rating=" + rating +
-                ", description='" + description + '\'' +
-                ", ingredients=" + ingredients +
-                '}';
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

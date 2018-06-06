@@ -1,22 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.tugraz.recipro.recipes.entity;
 
-import java.io.Serializable;
 import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,19 +28,20 @@ public class Recipe {
     private String description;
     private List<RecipeIngredient> ingredients;
     private double rating;
-
-    
+    private int servings;
     
     static final String PREFIX = "recipes.entity.Recipe.";
     public static final String FIND_ALL = PREFIX + "findAll";
     public static final String FIND_BY_TITLE = PREFIX + "findByTitle";
 
     public Recipe() {
+        this.servings = 1;
     }
 
     public Recipe(String title, int preparationTime) {
         this.title = title;
         this.preparationTime = preparationTime;
+        this.servings = 1;
     } 
 
     public long getId() {
@@ -105,6 +95,13 @@ public class Recipe {
     public void setRating(double rating) {
         this.rating = rating;
     }
-    
+
+    public int getServings() {
+        return servings;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
    
 }

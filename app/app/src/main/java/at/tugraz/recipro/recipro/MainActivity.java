@@ -1,156 +1,108 @@
 package at.tugraz.recipro.recipro;
 
-import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.annotation.VisibleForTesting;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.*;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 
-import org.springframework.web.client.RestClientException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import at.tugraz.recipro.adapters.RecipesAdapter;
-import at.tugraz.recipro.data.Recipe;
-import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.helper.ResourceAccessHelper;
 
 public class MainActivity extends AppCompatActivity {
+    private DrawerLayout dlDrawer;
 
-    private ListView lvSearchResults;
-    private EditText etMinTime;
-    private EditText etMaxTime;
-    private Spinner spRecipeType;
-    private TableLayout tlFilters;
-    private ImageButton ibFilters;
-  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         ResourceAccessHelper.setApp(this);
+        setContentView(R.layout.activity_main);
 
-        tlFilters = findViewById(R.id.tlFilters);
-        ibFilters = findViewById(R.id.ibFilters);
-        etMinTime = findViewById(R.id.etMinTime);
-        etMaxTime = findViewById(R.id.etMaxTime);
+        dlDrawer = findViewById(R.id.dlDrawer);
 
-        final SearchView searchBar = findViewById(R.id.searchbar);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchBar.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchBar.setSubmitButtonEnabled(true);
-        searchBar.setIconifiedByDefault(false);
-        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                searchFor(s);
-                return true;
-            }
+        Toolbar toolBar = findViewById(R.id.tbToolbar);
+        setSupportActionBar(toolBar);
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return true;
-            }
-        });
-
-        ibFilters.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tlFilters.setVisibility(tlFilters.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            searchFor(query);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setDisplayUseLogoEnabled(false);
         }
 
-        lvSearchResults = (ListView) findViewById(android.R.id.list);
-        ArrayList<Recipe> recipies = new ArrayList<>();
-        final RecipesAdapter recipesAdapter = new RecipesAdapter(this, recipies);
-        lvSearchResults.setAdapter(recipesAdapter);
+        NavigationView navigationView = findViewById(R.id.nvNavigation);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Log.i("RECIPES", "Open fragment: " + item.toString());
 
-        lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, RecipeDescriptionActivity.class);
-                intent.putExtra(getResources().getString(R.string.recipe), recipesAdapter.getItem(position));
-                startActivity(intent);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            Fragment fragment = null;
+            String tag = "";
+            switch (item.getItemId()) {
+                case R.id.navHome:
+                    tag = RecipesFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(RecipesFragment.FRAGMENT_TAG);
+
+                    if (fragment == null) {
+                        fragment = new RecipesFragment();
+                    }
+                    break;
+                case R.id.navGroceryList:
+                    tag = GroceryListFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(GroceryListFragment.FRAGMENT_TAG);
+
+                    if (fragment == null) {
+                        fragment = new GroceryListFragment();
+                    }
+                    break;
+                case R.id.navMyPantry:
+                    tag = MyPantryFragment.FRAGMENT_TAG;
+                    fragment = fragmentManager.findFragmentByTag(MyPantryFragment.FRAGMENT_TAG);
+
+                    if (fragment == null) {
+                        fragment = new MyPantryFragment();
+                    }
+                    break;
             }
+
+            boolean ret = false;
+            if (fragment != null) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flContent, fragment, tag)
+                        .addToBackStack(null)
+                        .commit();
+
+                item.setChecked(true);
+                setTitle(item.getTitle());
+                ret = true;
+            }
+
+            dlDrawer.closeDrawers();
+
+            return ret;
         });
 
-
-        spRecipeType = (Spinner) findViewById(R.id.spRecipeType);
-        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.recipe_types, android.R.layout.simple_spinner_item);
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spRecipeType.setAdapter(typeAdapter);
-        
-        
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.flContent, new RecipesFragment(), RecipesFragment.FRAGMENT_TAG)
+                .commitNow();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private void searchFor(final String query) {
-        final RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
-        adapter.clear();
-
-        new AsyncTask<Void, Void, List<Recipe>>() {
-            @Override
-            protected List<Recipe> doInBackground(Void... voids) {
-                Map<String, String> queryParams = new HashMap<>();
-                String mintime = etMinTime.getText().toString();
-                String maxtime = etMaxTime.getText().toString();
-                String type = spRecipeType.getSelectedItem().toString().replace(" ", "_");
-
-                queryParams.put(getResources().getString(R.string.request_title), query);
-                if(!mintime.isEmpty())
-                    queryParams.put(getResources().getString(R.string.min_prep), mintime);
-                if(!maxtime.isEmpty())
-                    queryParams.put(getResources().getString(R.string.max_prep), maxtime);
-                if(type != null && !type.isEmpty())
-                    queryParams.put(getResources().getString(R.string.filter_types), type);
-
-                try {
-                    return WSConnection.sendQuery(queryParams);
-                } catch (RestClientException ex) {
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this,
-                                    getResources().getString(R.string.error_connect),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    return new ArrayList<>();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<Recipe> recipes) {
-                adapter.addAll(recipes);
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                dlDrawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public void fillWithTestData() {
-        RecipesAdapter adapter = (RecipesAdapter) lvSearchResults.getAdapter();
-        adapter.clear();
-        ArrayList<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        adapter.add(new Recipe("Recipe #1", 20, 5.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #2", 40, 4.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #3", 10, 1.0, recipeIngredients, ""));
-        adapter.add(new Recipe("Recipe #4", 30, 3.0, recipeIngredients, ""));
-    }
+
 }
