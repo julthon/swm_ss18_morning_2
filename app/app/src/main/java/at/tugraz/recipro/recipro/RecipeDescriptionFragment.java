@@ -186,11 +186,7 @@ public class RecipeDescriptionFragment extends Fragment {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... voids) {
-                try {
-                    return WSConnection.getInstance().getImage(recipe.getId());
-                } catch (RestClientException ex) {
-                    return null;
-                }
+                return WSConnection.getInstance().getImage(recipe.getId());
             }
 
             @Override
