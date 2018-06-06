@@ -12,28 +12,8 @@ import at.tugraz.recipro.ws.WSConnection;
 
 public class AllergenSpinner extends AbstractSpinner<Allergen> {
 
-    public AllergenSpinner(Context context) {
-        super(context);
-    }
-
-    public AllergenSpinner(Context context, int mode) {
-        super(context, mode);
-    }
-
     public AllergenSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public AllergenSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public AllergenSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode) {
-        super(context, attrs, defStyleAttr, mode);
-    }
-
-    public AllergenSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode, Resources.Theme popupTheme) {
-        super(context, attrs, defStyleAttr, mode, popupTheme);
     }
 
     @Override
