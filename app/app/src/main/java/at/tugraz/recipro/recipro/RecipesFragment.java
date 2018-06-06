@@ -153,19 +153,16 @@ public class RecipesFragment extends Fragment {
         final RecipesAdapter recipesAdapter = new RecipesAdapter(getContext(), recipes);
         lvSearchResults.setAdapter(recipesAdapter);
 
-        lvSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment fragmentDescription = new RecipeDescriptionFragment();
+        lvSearchResults.setOnItemClickListener((parent, view1, position, id) -> {
+            Fragment fragmentDescription = new RecipeDescriptionFragment();
 
-                Bundle arguments = new Bundle();
-                arguments.putSerializable(getResources().getString(R.string.recipe), recipesAdapter.getItem(position));
-                fragmentDescription.setArguments(arguments);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.flContent, fragmentDescription, "RecipeDescription")
-                        .addToBackStack(null)
-                        .commit();
-            }
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(getResources().getString(R.string.recipe), recipesAdapter.getItem(position));
+            fragmentDescription.setArguments(arguments);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.flContent, fragmentDescription, "RecipeDescription")
+                    .addToBackStack(null)
+                    .commit();
         });
 
         spRecipeType = (Spinner) view.findViewById(R.id.spRecipeType);
