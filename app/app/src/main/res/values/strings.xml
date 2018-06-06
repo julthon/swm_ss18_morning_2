@@ -34,7 +34,7 @@
     <string name="close">close</string>
     <string name="cannot_connect_message">Cannot connect to server.\nReciPro will close itself.</string>
     <string-array name="recipe_types">
-        <item/>
+        <item />
         <item>@string/type_dessert</item>
         <item>@string/type_snack</item>
         <item>@string/type_main</item>
