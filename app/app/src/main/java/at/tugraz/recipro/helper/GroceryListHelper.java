@@ -25,15 +25,15 @@ public class GroceryListHelper extends AbstractListHelper {
         super(context, db_name);
     }
 
-    protected String[] getColumnNames(){
+    protected String[] getColumnNames() {
         return columns;
     }
 
-    protected String[] getColumnTypes(){
+    protected String[] getColumnTypes() {
         return columns_type;
     }
 
-    protected String getTableName(){
+    protected String getTableName() {
         return table_name;
     }
 
@@ -47,7 +47,7 @@ public class GroceryListHelper extends AbstractListHelper {
                 null,
                 null,
                 null);
-        if(cur.moveToNext()) {
+        if (cur.moveToNext()) {
             // found element
             float oldValue = cur.getFloat(cur.getColumnIndexOrThrow(columns[2]));
 
@@ -55,6 +55,8 @@ public class GroceryListHelper extends AbstractListHelper {
             cv.put(columns[2], ingredient.getQuantity() + oldValue);
             //Log.i(this.getClass().getName(), "old value: " + oldValue + "new value: " + cv.get(columns[2]));
             db.update(table_name, cv, columns[0] + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
+            cur.close();
+            db.close();
             return false;
         } else {
             // nothing found, insert new element
@@ -63,38 +65,44 @@ public class GroceryListHelper extends AbstractListHelper {
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
                     ingredient.getUnit().name() + "');");
+            cur.close();
+            db.close();
             return true;
         }
     }
 
     public void removeIngredient(RecipeIngredient ingredient) {
         getWritableDatabase().delete(table_name,
-                "id=?",
+                columns[0] + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())});
     }
 
     public boolean isPresent(RecipeIngredient ingredient) {
-        return getReadableDatabase().query(table_name,
-                                           new String[]{columns[0]},
-                                           "id=?",
-                                           new String[]{Integer.toString(ingredient.getIngredient().getId())},
-                                           null,
-                                           null,
-                                           null)
-                                    .moveToNext();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.query(table_name,
+                new String[]{columns[0]},
+                columns[0] + "=?",
+                new String[]{Integer.toString(ingredient.getIngredient().getId())},
+                null,
+                null,
+                null);
+        boolean exists = cur.moveToNext();
+        cur.close();
+        db.close();
+        return exists;
     }
 
     public List<RecipeIngredient> getIngredients() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cur = db.query(table_name,
-                              new String[]{columns[0], columns[1], columns[2], columns[3]},
-                              null,
-                              null,
-                              null,
-                              null,
+                new String[]{columns[0], columns[1], columns[2], columns[3]},
+                null,
+                null,
+                null,
+                null,
                 columns[1]);
         ArrayList<RecipeIngredient> ingList = new ArrayList<>();
-        while(cur.moveToNext()) {
+        while (cur.moveToNext()) {
             int id = cur.getInt(cur.getColumnIndexOrThrow(columns[0]));
             String name = cur.getString(cur.getColumnIndexOrThrow(columns[1]));
             float quantity = cur.getFloat(cur.getColumnIndexOrThrow(columns[2]));
@@ -102,6 +110,9 @@ public class GroceryListHelper extends AbstractListHelper {
 
             ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, Unit.valueOf(unit)));
         }
+        cur.close();
+        db.close();
+        db.close();
         return ingList;
     }
 }

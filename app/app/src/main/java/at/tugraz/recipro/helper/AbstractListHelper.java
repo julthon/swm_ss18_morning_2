@@ -1,18 +1,9 @@
 package at.tugraz.recipro.helper;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import at.tugraz.recipro.data.Ingredient;
-import at.tugraz.recipro.data.RecipeIngredient;
-import at.tugraz.recipro.data.Unit;
 
 public abstract class AbstractListHelper extends SQLiteOpenHelper {
 
@@ -41,13 +32,11 @@ public abstract class AbstractListHelper extends SQLiteOpenHelper {
 
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE " + getTableName() + " (");
-        for(int i = 0; i < columnNames.length; i++)
-        {
+        for (int i = 0; i < columnNames.length; i++) {
             sb.append(columnNames[i]);
             sb.append(" ");
             sb.append(columnTypes[i]);
-            if(i <= (columnNames.length - 2))
-            {
+            if (i <= (columnNames.length - 2)) {
                 sb.append(",");
             }
         }
