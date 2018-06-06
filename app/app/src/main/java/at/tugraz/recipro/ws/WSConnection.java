@@ -143,12 +143,6 @@ public class WSConnection {
             ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
 
             Log.d(LOG_TAG, "status=" + response.getStatusCode());
-            Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
-
-            if (response.getStatusCode() == HttpStatus.CREATED)
-                return true;
-            ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
-            Log.d(LOG_TAG, "status=" + response.getStatusCode());
 
             if (response.getStatusCode() == HttpStatus.CREATED) {
                 Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
