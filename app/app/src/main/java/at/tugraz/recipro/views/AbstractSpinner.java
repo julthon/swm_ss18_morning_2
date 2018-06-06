@@ -84,43 +84,9 @@ public abstract class AbstractSpinner<T> extends AppCompatSpinner {
         a.recycle();
     }
 
-    public AbstractSpinner(Context context) {
-        super(context);
-        setupArrayAdapter();
-    }
-
-    public AbstractSpinner(Context context, int mode) {
-        super(context, mode);
-        setupArrayAdapter();
-    }
-
     public AbstractSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupChipview(context, attrs, 0);
         setupArrayAdapter();
-    }
-
-    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setupChipview(context, attrs, defStyleAttr);
-        setupArrayAdapter();
-    }
-
-    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode) {
-        super(context, attrs, defStyleAttr, mode);
-        setupChipview(context, attrs, defStyleAttr);
-        setupArrayAdapter();
-    }
-
-    public AbstractSpinner(Context context, AttributeSet attrs, int defStyleAttr, int mode, Resources.Theme popupTheme) {
-        super(context, attrs, defStyleAttr, mode, popupTheme);
-        setupChipview(context, attrs, defStyleAttr);
-        setupArrayAdapter();
-    }
-
-    public T getValue() {
-        if (getSelectedItemPosition() == 0)
-            return null;
-        return adapter.getItem(getSelectedItemPosition() + 1);
     }
 }

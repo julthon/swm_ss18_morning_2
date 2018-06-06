@@ -39,10 +39,6 @@ public class OurChipView extends ChipView {
         super(context, attrs);
     }
 
-    public OurChipView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     public <T> List<OurTagImplementation<T>> getListOfType(OurTagImplementation.TagType tagType) {
         ArrayList<OurTagImplementation<T>> tags = new ArrayList<>();
         for (Chip chip : super.getChipList()) {

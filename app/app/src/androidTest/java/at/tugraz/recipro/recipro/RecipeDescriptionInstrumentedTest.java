@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,9 +49,12 @@ public class RecipeDescriptionInstrumentedTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     private List<RecipeIngredient> recipeIngredients = null;
+    private GroceryListHelper helper;
 
     @Before
     public void setUp() throws Exception {
+        helper = new GroceryListHelper(mActivityRule.getActivity());
+        helper.clear();
         recipeIngredients = new ArrayList<>();
         recipeIngredients.add(new RecipeIngredient(new Ingredient(1, "Kalbschnitzel"), 4.5f));
         recipeIngredients.add(new RecipeIngredient(new Ingredient(2, "Salz"), 1000f, Unit.GRAM));
@@ -99,10 +103,12 @@ public class RecipeDescriptionInstrumentedTest {
 
         getInstrumentation().waitForIdleSync();
 
-        GroceryListHelper helper = new GroceryListHelper(mActivityRule.getActivity());
-        helper.getIngredients().forEach(helper::removeIngredient);
-
         onData(anything()).inAdapterView(withId(android.R.id.list)).atPosition(0).perform(click());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        this.helper.clear();
     }
 
     @Test
