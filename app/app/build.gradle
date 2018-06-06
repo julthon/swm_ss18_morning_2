@@ -33,7 +33,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "at.tugraz.recipro.recipro"
-        minSdkVersion 14
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
