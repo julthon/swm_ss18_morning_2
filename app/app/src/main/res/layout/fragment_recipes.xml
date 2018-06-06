@@ -134,7 +134,6 @@
                 android:id="@+id/isAllergenes"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:tooltipText="ALLERGEN_EXCLUDE"
                 chip:refChipView="@+id/ocvTagView" />
         </TableRow>
 
