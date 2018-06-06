@@ -56,7 +56,6 @@ public class GroceryListHelper extends AbstractListHelper {
 
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_QUANTITY, ingredient.getQuantity() + oldValue);
-            //Log.i(this.getClass().getName(), "old value: " + oldValue + "new value: " + cv.get(COLUMN_QUANTITY));
             db.update(TABLE_NAME, cv, COLUMN_ID + "=?", new String[]{Integer.toString(ingredient.getIngredient().getId())});
             retval = false;
         } else {

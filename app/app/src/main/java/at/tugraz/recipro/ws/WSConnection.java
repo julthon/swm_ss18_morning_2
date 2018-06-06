@@ -147,8 +147,14 @@ public class WSConnection {
 
             if (response.getStatusCode() == HttpStatus.CREATED)
                 return true;
+            ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
+            Log.d(LOG_TAG, "status=" + response.getStatusCode());
 
-            return false;
+            if (response.getStatusCode() == HttpStatus.CREATED) {
+                Log.d(LOG_TAG, "location_uri=" + response.getHeaders().getFirst(WSConstants.HTTP_LOCATION_HEADER));
+                return true;
+            }
+           return false;
         } catch(RestClientException ex) {
             Log.e(getClass().getSimpleName(), "Could not connect to backend...");
             showAlertDialog();

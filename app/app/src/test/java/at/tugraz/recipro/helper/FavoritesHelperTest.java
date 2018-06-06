@@ -1,36 +1,31 @@
 package at.tugraz.recipro.helper;
 
-import android.support.test.rule.ActivityTestRule;
-
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import at.tugraz.recipro.helper.FavoritesHelper;
-import at.tugraz.recipro.recipro.MainActivity;
-
+@RunWith(RobolectricTestRunner.class)
 public class FavoritesHelperTest {
     private FavoritesHelper helper;
 
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
-
     @Before
     public void setUp() throws Exception {
-        this.helper = new FavoritesHelper(mActivityRule.getActivity());
-        this.helper.clear();
+        this.helper = new FavoritesHelper(RuntimeEnvironment.application);
+        this.helper.onDowngrade(this.helper.getWritableDatabase(), 0, 1);
     }
 
     @After
-    public void tearDown() throws Exception {
-        this.helper.clear();
+    public void tearDown() {
+        this.helper.onDowngrade(this.helper.getWritableDatabase(), 0, 1);
     }
 
     @Test
