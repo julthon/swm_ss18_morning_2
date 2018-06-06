@@ -13,49 +13,52 @@ import at.tugraz.recipro.data.RecipeIngredient;
 import at.tugraz.recipro.data.Unit;
 
 public class MyPantryListHelper extends AbstractListHelper {
+    private static final String DB_NAME = "recipro.mypantry";
+    private final String TABLE_NAME = "mypantry";
 
-    public final String table_name = "mypantry";
-    public static final String db_name = "recipro.mypantry";
+    private final String COLUMN_ID = "recipe_id";
+    private final String COLUMN_NAME = "name";
+    private final String COLUMN_QUANTITY = "quantity";
+    private final String COLUMN_UNIT = "unit";
 
-    protected final String[] columns = {"id", "name", "quantity", "unit"};
-    protected final String[] columns_type = {"INTEGER PRIMARY KEY", "TEXT", "FLOAT", "TEXT"};
+    public final String[] COLUMN_TYPES = {"INTEGER PRIMARY KEY", "TEXT", "FLOAT", "TEXT"};
 
     public MyPantryListHelper(Context context) {
-        super(context, db_name);
+        super(context, DB_NAME);
     }
 
     protected String[] getColumnNames() {
-        return columns;
+        return new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_QUANTITY, COLUMN_UNIT};
     }
 
     protected String[] getColumnTypes() {
-        return columns_type;
+        return COLUMN_TYPES;
     }
 
     protected String getTableName() {
-        return table_name;
+        return TABLE_NAME;
     }
 
     public void addIngredient(RecipeIngredient ingredient) {
         // check if ingredient is already there
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cur = db.query(table_name,
-                new String[]{columns[0]},
-                columns[0] + "=?",
+        Cursor cur = db.query(TABLE_NAME,
+                new String[]{COLUMN_ID},
+                COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())},
                 null,
                 null,
                 null);
         if (cur.moveToNext()) {
             // found element
-            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(columns[0]));
+            int oldValue = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ID));
 
             ContentValues cv = new ContentValues();
-            cv.put(columns[2], ingredient.getQuantity() + oldValue);
-            db.update(table_name, cv, columns[0] + "=?", null);
+            cv.put(COLUMN_QUANTITY, ingredient.getQuantity() + oldValue);
+            db.update(TABLE_NAME, cv, COLUMN_ID + "=?", null);
         } else {
             // nothing found, insert new element
-            db.execSQL("INSERT INTO " + table_name + " VALUES(" +
+            db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES(" +
                     ingredient.getIngredient().getId() + ", '" +
                     ingredient.getIngredient().getName() + "', '" +
                     ingredient.getQuantity() + "', '" +
@@ -64,15 +67,15 @@ public class MyPantryListHelper extends AbstractListHelper {
     }
 
     public void removeIngredient(RecipeIngredient ingredient) {
-        getWritableDatabase().delete(table_name,
-                "id=?",
+        getWritableDatabase().delete(TABLE_NAME,
+                COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())});
     }
 
-    public boolean isPresent(RecipeIngredient ingredient) {
-        return getReadableDatabase().query(table_name,
-                new String[]{columns[0]},
-                "id=?",
+    public boolean exists(RecipeIngredient ingredient) {
+        return getReadableDatabase().query(TABLE_NAME,
+                new String[]{COLUMN_ID},
+                COLUMN_ID + "=?",
                 new String[]{Integer.toString(ingredient.getIngredient().getId())},
                 null,
                 null,
@@ -82,19 +85,20 @@ public class MyPantryListHelper extends AbstractListHelper {
 
     public List<RecipeIngredient> getIngredients() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cur = db.query(table_name,
-                new String[]{columns[0], columns[1], columns[2], columns[3]},
+        Cursor cur = db.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_QUANTITY, COLUMN_UNIT},
                 null,
                 null,
                 null,
                 null,
-                columns[1]);
+                COLUMN_NAME);
+
         ArrayList<RecipeIngredient> ingList = new ArrayList<>();
         while (cur.moveToNext()) {
-            int id = cur.getInt(cur.getColumnIndexOrThrow(columns[0]));
-            String name = cur.getString(cur.getColumnIndexOrThrow(columns[1]));
-            float quantity = cur.getFloat(cur.getColumnIndexOrThrow(columns[2]));
-            String unit = cur.getString(cur.getColumnIndexOrThrow(columns[3]));
+            int id = cur.getInt(cur.getColumnIndexOrThrow(COLUMN_ID));
+            String name = cur.getString(cur.getColumnIndexOrThrow(COLUMN_NAME));
+            float quantity = cur.getFloat(cur.getColumnIndexOrThrow(COLUMN_QUANTITY));
+            String unit = cur.getString(cur.getColumnIndexOrThrow(COLUMN_UNIT));
 
             ingList.add(new RecipeIngredient(new Ingredient(id, name), quantity, Unit.valueOf(unit)));
         }
