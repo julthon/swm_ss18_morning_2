@@ -164,7 +164,7 @@ public abstract class ChipViewAdapter extends Observable {
             }
 
             if (view != null) {
-                TextView text = (TextView) view.findViewById(android.R.id.text1);
+                TextView text = view.findViewById(android.R.id.text1);
                 View content = view.findViewById(android.R.id.content);
 
                 if (text != null) {

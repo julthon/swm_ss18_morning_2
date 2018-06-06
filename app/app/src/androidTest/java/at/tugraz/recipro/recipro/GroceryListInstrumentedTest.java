@@ -46,14 +46,12 @@ public class GroceryListInstrumentedTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.helper.clear();
     }
 
     @Test
     public void allIngredientsVisible() {
-        this.ingredientNames.forEach(in -> {
-            onView(withText(in)).check(matches(isDisplayed()));
-        });
+        this.ingredientNames.forEach(in -> onView(withText(in)).check(matches(isDisplayed())));
     }
 }

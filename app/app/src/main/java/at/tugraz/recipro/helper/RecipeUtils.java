@@ -16,13 +16,11 @@ public abstract class RecipeUtils {
         recipes.stream().forEach(r -> ingredientMatchings.put(r,
                 ingredients.stream().filter(i -> r.getIngredients().contains(i)).count()));
 
-        List<Recipe> sortedRecipes = ingredientMatchings.entrySet().stream()
+        return ingredientMatchings.entrySet().stream()
                 .filter(e -> e.getValue() != 0L)
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-
-        return sortedRecipes;
     }
 
     public static List<Recipe> filterByFavorites(List<Recipe> recipes, List<Long> favorites) {

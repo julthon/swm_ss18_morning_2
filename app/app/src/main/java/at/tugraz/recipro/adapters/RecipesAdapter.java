@@ -47,11 +47,11 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
 
             viewHolder = new ViewHolder();
             viewHolder.fHelper = new FavoritesHelper(this.getContext());
-            viewHolder.ivFavourite = (ImageView) rowView.findViewById(R.id.ivShowFavourite);
-            viewHolder.tvTitle = (TextView) rowView.findViewById(R.id.tvTitle);
-            viewHolder.ivThumbnail = (ImageView) rowView.findViewById(R.id.ivThumbnail);
-            viewHolder.tvTime = (TextView) rowView.findViewById(R.id.tvTime);
-            viewHolder.rbRating = (RatingBar) rowView.findViewById(R.id.rbRating);
+            viewHolder.ivFavourite = rowView.findViewById(R.id.ivShowFavourite);
+            viewHolder.tvTitle = rowView.findViewById(R.id.tvTitle);
+            viewHolder.ivThumbnail = rowView.findViewById(R.id.ivThumbnail);
+            viewHolder.tvTime = rowView.findViewById(R.id.tvTime);
+            viewHolder.rbRating = rowView.findViewById(R.id.rbRating);
             rowView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) rowView.getTag();
