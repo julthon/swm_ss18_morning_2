@@ -3,6 +3,11 @@ package at.tugraz.recipro.data;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -12,31 +17,42 @@ public class IngredientTest {
 
     private final int ID = 666;
     private final String NAME = "SATAN";
+    private final List<Allergen> ALLERGENS = new ArrayList<Allergen>() {{
+        add(new Allergen("allergenShortName", "allergenName", "allergenDescription"));
+    }};
 
     @Before
     public void setUpIngredient() {
-        this.ingredient = new Ingredient(1, "Primus");
+        this.ingredient = new Ingredient(1, "Primus", ALLERGENS);
     }
 
     @Test
     public void testIngredientsGetterStuff() {
         int ingredient_id = this.ingredient.getId();
         String ingredient_name = this.ingredient.getName();
+        List<Allergen> allergen = this.ingredient.getAllergens();
 
         assertEquals(1, ingredient_id);
         assertEquals("Primus", ingredient_name);
+        assertThat(allergen.size(), is(1));
     }
 
     @Test
     public void testIngredientsSetterStuff() {
+        List<Allergen> newAllergens = new ArrayList<>();
+        newAllergens.add(new Allergen("shortName1", "name1", "description1"));
+        newAllergens.add(new Allergen("shortName2", "name2", "description2"));
+
         this.ingredient.setId(ID);
         this.ingredient.setName(NAME);
+        this.ingredient.setAllergens(newAllergens);
 
         int ingredient_id = this.ingredient.getId();
         String ingredient_name = this.ingredient.getName();
 
         assertEquals(666, ingredient_id);
         assertEquals("SATAN", ingredient_name);
+        assertThat(this.ingredient.getAllergens().size(), is(2));
     }
 
     @Test
