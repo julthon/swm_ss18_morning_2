@@ -38,7 +38,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     buildTypes {
         debug {
@@ -65,9 +64,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-    testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR'
     }
 }
 

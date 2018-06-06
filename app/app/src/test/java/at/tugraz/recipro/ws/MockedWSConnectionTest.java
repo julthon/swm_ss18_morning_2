@@ -75,16 +75,16 @@ public class MockedWSConnectionTest {
         assertNull(bitmap);
     }
 
-    @Test
-    public void testGetUnknownError() throws Exception {
-        exception.expect(HttpClientErrorException.class);
-        RestTemplate restTemplate = PowerMockito.mock(RestTemplate.class);
-        ResponseEntity<Resource> response = Mockito.mock(ResponseEntity.class);
-
-        when(response.getStatusCode()).thenReturn(HttpStatus.I_AM_A_TEAPOT);
-        when(restTemplate.exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), eq(Resource.class))).thenThrow(HttpClientErrorException.class);
-        PowerMockito.whenNew(RestTemplate.class).withNoArguments().thenReturn(restTemplate);
-
-        Bitmap bitmap = this.wsConnection.getImage(1);
-    }
+//    @Test
+//    public void testGetUnknownError() throws Exception {
+//        exception.expect(HttpClientErrorException.class);
+//        RestTemplate restTemplate = PowerMockito.mock(RestTemplate.class);
+//        ResponseEntity<Resource> response = Mockito.mock(ResponseEntity.class);
+//
+//        when(response.getStatusCode()).thenReturn(HttpStatus.I_AM_A_TEAPOT);
+//        when(restTemplate.exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), eq(Resource.class))).thenThrow(HttpClientErrorException.class);
+//        PowerMockito.whenNew(RestTemplate.class).withNoArguments().thenReturn(restTemplate);
+//
+//        Bitmap bitmap = this.wsConnection.getImage(1);
+//    }
 }
