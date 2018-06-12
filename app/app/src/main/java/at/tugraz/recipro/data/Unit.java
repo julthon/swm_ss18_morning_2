@@ -1,6 +1,8 @@
 package at.tugraz.recipro.data;
 
-public enum Unit {
+import java.io.Serializable;
+
+public enum Unit implements Serializable {
     NONE(""),
     MILLILITER("ml"),
     GRAM("g");

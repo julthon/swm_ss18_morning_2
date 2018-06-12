@@ -2,9 +2,10 @@ package at.tugraz.recipro.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Allergen {
+public class Allergen implements Serializable {
     @SerializedName("shortName")
     private String shortName;
 
